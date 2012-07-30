@@ -11,13 +11,22 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120730172153) do
+ActiveRecord::Schema.define(:version => 20120730223456) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
     t.float    "balance",    :default => 0.0
     t.datetime "created_at",                  :null => false
     t.datetime "updated_at",                  :null => false
+  end
+
+  create_table "transactions", :force => true do |t|
+    t.integer  "bank_account_id"
+    t.float    "debit",           :default => 0.0
+    t.float    "credit",          :default => 0.0
+    t.date     "date"
+    t.datetime "created_at",                       :null => false
+    t.datetime "updated_at",                       :null => false
   end
 
 end
