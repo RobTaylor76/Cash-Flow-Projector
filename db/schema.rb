@@ -15,9 +15,9 @@ ActiveRecord::Schema.define(:version => 20120730172153) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
-    t.float    "balance"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.float    "balance",    :default => 0.0
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
 end

@@ -1,3 +1,7 @@
 class BankAccount < ActiveRecord::Base
-  # attr_accessible :title, :body
+  
+  #Initailise new bank accounts
+  def initialise 
+    @balance = 0
+  end
 end
