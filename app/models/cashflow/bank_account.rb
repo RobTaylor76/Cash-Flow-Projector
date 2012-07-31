@@ -1,21 +1,18 @@
 module Cashflow 
   class BankAccount < ActiveRecord::Base
 
-    after_initialize :init
-
     has_many :transactions
 
     def deposit ammount
-      self.balance += ammount
+      transactions.create!(:debit => ammount)
     end
 
     def withdraw ammount
-      self.balance -= ammount
+      transactions.create!(:credit => ammount)
     end
 
-    #Initailise new bank accounts
-    def init
-      self.balance = 0 
+    def balance 
+      transactions.sum(:debit) - transactions.sum(:credit)
     end
   end
 end
