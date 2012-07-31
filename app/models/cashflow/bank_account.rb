@@ -18,6 +18,17 @@ module Cashflow
     def activity(date)
       transactions.for_date(date).sum(:debit) - transactions.for_date(date).sum(:credit)
     end
+    # return daily balances for a date range...
+    def daily_balances(start_date, end_date)
+      balance = balance(start_date)
+      balances = Array.new
+      balances << {:date => start_date, :balance => balance }
+      ((start_date+1)..(end_date)).each do |date|
+        balance += activity(date-1) 
+        balances << {:date => date, :balance => balance }
+      end 
+      balances
+    end
   end
 end
 

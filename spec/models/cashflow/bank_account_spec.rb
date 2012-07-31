@@ -81,10 +81,28 @@ describe Cashflow::BankAccount do
       @bank_account.balance(Date.today+4).should == (100.02+234.00+111.02+321.00)
 
     end
+
+    it "should return a list of daily balances for a given date range" do
+
+      @bank_account.deposit 100.02, Date.today
+      @bank_account.deposit 234.00, Date.tomorrow
+      @bank_account.deposit 111.02, Date.today+2
+      @bank_account.deposit 321.00, Date.today+3
+
+      balances = @bank_account.daily_balances Date.today, Date.today+4
+
+      balances.size.should == 5
+
+      balances.inject(Date.today) do |date,balance|
+        balance[:date].should == date
+        balance[:balance].should ==  @bank_account.balance(date)
+        date+=1
+      end
+    end
   end
   
   describe :get_daily_balance_transaction_totals do
-    it "should list the daily transaction totals for a given date" do
+    it "should list the daily transaction totals (activity) for a given date" do
   
       @bank_account.deposit 100.02, Date.today
       @bank_account.withdraw 234.00, Date.tomorrow
@@ -97,7 +115,5 @@ describe Cashflow::BankAccount do
       @bank_account.activity(Date.today+2).should == -133.98
       
     end
-
-
   end
 end
