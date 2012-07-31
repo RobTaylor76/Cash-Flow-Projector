@@ -12,7 +12,11 @@ module Cashflow
     end
     # return the balance at the start of a given date, default to tomorrow to to get up to date balance
     def balance(date=Date.tomorrow)
-      transactions.date_cutoff(date).sum(:debit) - transactions.date_cutoff(date).sum(:credit)
+      transactions.before_date(date).sum(:debit) - transactions.before_date(date).sum(:credit)
+    end
+    # return the bank activity for the specified date
+    def activity(date)
+      transactions.for_date(date).sum(:debit) - transactions.for_date(date).sum(:credit)
     end
   end
 end

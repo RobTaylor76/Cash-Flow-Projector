@@ -4,7 +4,8 @@ module Cashflow
     belongs_to :bank_account
     after_initialize :init
     
-    scope :date_cutoff, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
+    scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
+    scope :for_date, lambda { |required_date| where('transactions.date  == ?', required_date) }
 
     def init
       self.date ||= Date.today
