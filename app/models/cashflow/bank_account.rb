@@ -3,16 +3,16 @@ module Cashflow
 
     has_many :transactions
 
-    def deposit ammount
-      transactions.create!(:debit => ammount)
+    def deposit(ammount, date)
+      transactions.create!(:debit => ammount, :date => date)
     end
 
-    def withdraw ammount
-      transactions.create!(:credit => ammount)
+    def withdraw(ammount, date)
+      transactions.create!(:credit => ammount, :date => date)
     end
-
-    def balance 
-      transactions.sum(:debit) - transactions.sum(:credit)
+    # return the balance at the start of a given date, default to tomorrow to to get up to date balance
+    def balance(date=Date.tomorrow)
+      transactions.date_cutoff(date).sum(:debit) - transactions.date_cutoff(date).sum(:credit)
     end
   end
 end
