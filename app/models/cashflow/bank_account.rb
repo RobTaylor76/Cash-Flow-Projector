@@ -2,6 +2,7 @@ module Cashflow
   class BankAccount < ActiveRecord::Base
 
     has_many :transactions
+    belongs_to :user
 
     def deposit(ammount, date)
       transactions.create!(:debit => ammount, :date => date)
