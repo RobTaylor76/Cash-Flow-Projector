@@ -1,4 +1,6 @@
 Cashflowprojector::Application.routes.draw do
+  devise_for :users
+
   resources :bank_accounts
 
   # The priority is based upon order of creation:
