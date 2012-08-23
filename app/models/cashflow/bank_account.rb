@@ -1,6 +1,7 @@
 module Cashflow
   class BankAccount < ActiveRecord::Base
 
+    attr_accessible :name
     has_many :transactions
     belongs_to :user
 
