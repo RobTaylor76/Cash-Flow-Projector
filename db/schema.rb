@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120822191014) do
+ActiveRecord::Schema.define(:version => 20121021222057) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
@@ -20,13 +20,27 @@ ActiveRecord::Schema.define(:version => 20120822191014) do
     t.integer  "user_id"
   end
 
+  create_table "recurring_transactions", :force => true do |t|
+    t.date     "start_date"
+    t.date     "end_date"
+    t.integer  "debit_bank_account_id"
+    t.integer  "credit_bank_account_id"
+    t.decimal  "amount",                 :precision => 14, :scale => 2
+    t.decimal  "debit_percentage",       :precision => 14, :scale => 2
+    t.decimal  "credit_percentage",      :precision => 14, :scale => 2
+    t.integer  "day_of_month"
+    t.datetime "created_at",                                            :null => false
+    t.datetime "updated_at",                                            :null => false
+  end
+
   create_table "transactions", :force => true do |t|
     t.integer  "bank_account_id"
-    t.decimal  "debit",           :precision => 14, :scale => 2, :default => 0.0
-    t.decimal  "credit",          :precision => 14, :scale => 2, :default => 0.0
+    t.decimal  "debit",                    :precision => 14, :scale => 2, :default => 0.0
+    t.decimal  "credit",                   :precision => 14, :scale => 2, :default => 0.0
     t.date     "date"
-    t.datetime "created_at",                                                      :null => false
-    t.datetime "updated_at",                                                      :null => false
+    t.datetime "created_at",                                                               :null => false
+    t.datetime "updated_at",                                                               :null => false
+    t.integer  "recurring_transaction_id"
   end
 
   create_table "users", :force => true do |t|

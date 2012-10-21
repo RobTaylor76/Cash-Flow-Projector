@@ -1,6 +1,6 @@
 module Cashflow
   class Transaction < ActiveRecord::Base
-    attr_accessible :credit, :debit, :date
+    attr_accessible :credit, :debit, :date, :bank_account_id
     belongs_to :bank_account
     after_initialize :init
     
