@@ -11,13 +11,30 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121021222057) do
+ActiveRecord::Schema.define(:version => 20121024202533) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
     t.integer  "user_id"
+  end
+
+  create_table "ledger_accounts", :force => true do |t|
+    t.integer  "accountable_id",   :null => false
+    t.string   "accountable_type", :null => false
+    t.string   "name"
+    t.datetime "created_at",       :null => false
+    t.datetime "updated_at",       :null => false
+  end
+
+  create_table "ledger_entries", :force => true do |t|
+    t.integer  "ledger_account_id"
+    t.decimal  "debit",             :precision => 14, :scale => 2, :default => 0.0
+    t.decimal  "credit",            :precision => 14, :scale => 2, :default => 0.0
+    t.date     "date"
+    t.datetime "created_at",                                                        :null => false
+    t.datetime "updated_at",                                                        :null => false
   end
 
   create_table "recurring_transactions", :force => true do |t|

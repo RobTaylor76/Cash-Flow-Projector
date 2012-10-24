@@ -4,6 +4,7 @@ describe Cashflow::BankAccount do
 
   describe :relationships do
     it { should belong_to :user }
+    it { should have_one :ledger_account }
   end
 
   before :each do
@@ -18,13 +19,11 @@ describe Cashflow::BankAccount do
 
   describe :new_bank_account do 
     its(:balance) { should == 0 }
+    its(:ledger_account) { should_not == nil }
   end
 
   describe :deposits do
 
-    it "will create a single transaction" do
-      expect { @bank_account.deposit 100 , Date.tomorrow}.to change { Cashflow::Transaction.count }.by(1)
-    end
 
     it "will total up all deposits" do
       @bank_account.deposit 100.01, Date.today
@@ -39,10 +38,6 @@ describe Cashflow::BankAccount do
   end
   describe :withdrals do
 
-    it "will create a single transaction" do
-      expect { @bank_account.withdraw 100, Date.today }.to change { Cashflow::Transaction.count }.by(1)
-    end
-
     it "will total up all withdrawls" do
       @bank_account.withdraw 100.01, Date.today
       @bank_account.withdraw 300.03, Date.today
@@ -55,20 +50,6 @@ describe Cashflow::BankAccount do
     end
   end
 
-  describe :transactions_for_specific_dates do
-
-    it "should find transactions created on a specific date" do
-      @bank_account.withdraw 100.02, Date.today
-      @bank_account.withdraw 234.00, Date.tomorrow
-      @bank_account.deposit 100.02, Date.today
-      @bank_account.deposit 234.00, Date.tomorrow
-
-      transactions = @bank_account.transactions.find_all_by_date(Date.today)
-      transactions.size.should == 2  
-      transactions.each { |tran| tran.date.should == Date.today }
-
-    end
-  end
 
   describe :balance do
     it "should be possible to find the balance at the start of any given day" do

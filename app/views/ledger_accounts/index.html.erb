@@ -1,0 +1,21 @@
+<h1>Listing ledger_accounts</h1>
+
+<table>
+  <tr>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @ledger_accounts.each do |ledger_account| %>
+  <tr>
+    <td><%= link_to 'Show', ledger_account %></td>
+    <td><%= link_to 'Edit', edit_ledger_account_path(ledger_account) %></td>
+    <td><%= link_to 'Destroy', ledger_account, confirm: 'Are you sure?', method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New Ledger account', new_ledger_account_path %>

@@ -2,36 +2,39 @@ module Cashflow
   class BankAccount < ActiveRecord::Base
 
     attr_accessible :name
-    has_many :transactions
     belongs_to :user
 
+    after_initialize :create_ledger_account
+
+    has_one :ledger_account, :class_name => Cashflow::LedgerAccount,
+                  :as => :accountable, :inverse_of => :accountable
+
     def deposit(ammount, date)
-      transactions.create!(:debit => ammount, :date => date)
+      ledger_account.debit(ammount, date)
     end
 
     def withdraw(ammount, date)
-      transactions.create!(:credit => ammount, :date => date)
+      ledger_account.credit(ammount, date)
     end
 
-    # return the balance at the start of a given date, default to tomorrow to to get up to date balance
     def balance(date=Date.tomorrow)
-      transactions.before_date(date).sum(:debit) - transactions.before_date(date).sum(:credit)
+      ledger_account.balance(date)
     end
 
     # return the bank activity for the specified date
     def activity(date)
-      transactions.for_date(date).sum(:debit) - transactions.for_date(date).sum(:credit)
+      ledger_account.activity(date)
     end
 
     # return daily balances for a date range...
     def daily_balances(start_date, end_date)
-      balance = balance(start_date)
-      balances = Array.new
-      ((start_date)..(end_date)).each do |date|
-        balance += activity(date-1) unless date == start_date
-        balances << {:date => date, :balance => balance }
-      end 
-      balances
+      ledger_account.daily_balances(start_date, end_date)
+    end
+
+    private
+
+    def create_ledger_account
+      build_ledger_account
     end
   end
 end

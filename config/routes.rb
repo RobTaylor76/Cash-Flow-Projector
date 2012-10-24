@@ -1,8 +1,10 @@
 Cashflowprojector::Application.routes.draw do
+
   devise_for :users
 
   scope :module => 'cashflow' do
     resources :bank_accounts
+    resources :ledger_accounts
   end
   # The priority is based upon order of creation:
   # first created -> highest priority.
