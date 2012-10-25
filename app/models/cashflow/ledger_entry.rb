@@ -1,9 +1,10 @@
 module Cashflow
   class LedgerEntry < ActiveRecord::Base
-    attr_accessible :credit, :debit, :date, :ledger_account_id
+    attr_accessible :credit, :debit, :date, :ledger_account_id, :transaction
     belongs_to :ledger_account
+    belongs_to :transaction
     after_initialize :init
-    
+
     scope :before_date, lambda { |cutoff|  where('ledger_entries.date < ?', cutoff) }
     scope :for_date, lambda { |required_date| where('ledger_entries.date  == ?', required_date) }
 

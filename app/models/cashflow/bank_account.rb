@@ -2,12 +2,10 @@ module Cashflow
   class BankAccount < ActiveRecord::Base
 
     attr_accessible :name
-    belongs_to :user
-
     after_initialize :create_ledger_account
 
-    has_one :ledger_account, :class_name => Cashflow::LedgerAccount,
-                  :as => :accountable, :inverse_of => :accountable
+    belongs_to :user
+    belongs_to :ledger_account
 
     def deposit(ammount, date)
       ledger_account.debit(ammount, date)
@@ -34,7 +32,7 @@ module Cashflow
     private
 
     def create_ledger_account
-      build_ledger_account
+      self.ledger_account ||= user.ledger_accounts.build(:name => self.name)
     end
   end
 end

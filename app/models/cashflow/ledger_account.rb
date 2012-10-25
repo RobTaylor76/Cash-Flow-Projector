@@ -1,17 +1,17 @@
 module Cashflow
   class LedgerAccount < ActiveRecord::Base
     has_many :ledger_entries, :class_name => Cashflow::LedgerEntry
-    belongs_to :accountable, :polymorphic => true
+    belongs_to :user
 
-    validates :accountable, :presence => true
+    attr_accessible :name
 
     # return the balance at the start of a given date, default to tomorrow to to get up to date balance
-    def debit(ammount, date)
-      ledger_entries.create!(:debit => ammount, :date => date)
+    def debit(ammount, date, transaction = nil)
+      ledger_entries.build(:debit => ammount, :date => date, :transaction => transaction)
     end
 
-    def credit(ammount, date)
-      ledger_entries.create!(:credit => ammount, :date => date)
+    def credit(ammount, date, transaction = nil)
+      ledger_entries.build(:credit => ammount, :date => date, :transaction => transaction)
     end
 
     def balance(date=Date.tomorrow)

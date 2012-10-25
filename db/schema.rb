@@ -15,21 +15,22 @@ ActiveRecord::Schema.define(:version => 20121024202533) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.integer  "ledger_account_id"
     t.integer  "user_id"
+    t.datetime "created_at",        :null => false
+    t.datetime "updated_at",        :null => false
   end
 
   create_table "ledger_accounts", :force => true do |t|
-    t.integer  "accountable_id",   :null => false
-    t.string   "accountable_type", :null => false
+    t.integer  "user_id",    :null => false
     t.string   "name"
-    t.datetime "created_at",       :null => false
-    t.datetime "updated_at",       :null => false
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "ledger_entries", :force => true do |t|
     t.integer  "ledger_account_id"
+    t.integer  "transaction_id"
     t.decimal  "debit",             :precision => 14, :scale => 2, :default => 0.0
     t.decimal  "credit",            :precision => 14, :scale => 2, :default => 0.0
     t.date     "date"
@@ -40,8 +41,8 @@ ActiveRecord::Schema.define(:version => 20121024202533) do
   create_table "recurring_transactions", :force => true do |t|
     t.date     "start_date"
     t.date     "end_date"
-    t.integer  "debit_bank_account_id"
-    t.integer  "credit_bank_account_id"
+    t.integer  "from_ledger_account_id"
+    t.integer  "to_ledger_account_id"
     t.decimal  "amount",                 :precision => 14, :scale => 2
     t.decimal  "debit_percentage",       :precision => 14, :scale => 2
     t.decimal  "credit_percentage",      :precision => 14, :scale => 2
@@ -51,12 +52,11 @@ ActiveRecord::Schema.define(:version => 20121024202533) do
   end
 
   create_table "transactions", :force => true do |t|
-    t.integer  "bank_account_id"
-    t.decimal  "debit",                    :precision => 14, :scale => 2, :default => 0.0
-    t.decimal  "credit",                   :precision => 14, :scale => 2, :default => 0.0
+    t.integer  "user_id"
+    t.string   "reference",                :default => ""
     t.date     "date"
-    t.datetime "created_at",                                                               :null => false
-    t.datetime "updated_at",                                                               :null => false
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
     t.integer  "recurring_transaction_id"
   end
 

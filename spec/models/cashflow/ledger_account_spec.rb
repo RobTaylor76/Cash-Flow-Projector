@@ -2,19 +2,16 @@ require 'spec_helper'
 
 describe Cashflow::LedgerAccount do
 
-  let(:bank_account)  { Cashflow::BankAccount.create!}
 
   describe :relationships do
     it { should have_many :ledger_entries }
-    it { should belong_to :accountable }
+    it { should belong_to :user}
   end
 
-  describe "Validation" do
-    it { should validate_presence_of :accountable }
-  end
 
   before :each do
-    @ledger_account = bank_account.ledger_account
+    user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @ledger_account = user.ledger_accounts.create!( :name => 'test' )
   end
 
   subject { @ledger_account }
@@ -30,13 +27,17 @@ describe Cashflow::LedgerAccount do
   describe :debits do
 
     it "will create a single transaction" do
-      expect { @ledger_account.debit 100 , Date.tomorrow}.to change { Cashflow::LedgerEntry.count }.by(1)
+      expect do
+        @ledger_account.debit(100 , Date.tomorrow)
+        @ledger_account.save
+      end.to change { Cashflow::LedgerEntry.count }.by(1)
     end
 
     it "will total up all debits" do
       @ledger_account.debit 100.01, Date.today
       @ledger_account.debit 200.03, Date.today
 
+      @ledger_account.save
       @ledger_account.balance.should == 300.04
     end
 
@@ -44,15 +45,19 @@ describe Cashflow::LedgerAccount do
       @ledger_account.debit 100.02, Date.tomorrow
     end
   end
-  describe :withdrals do
+  describe :credit do
 
     it "will create a single transaction" do
-      expect { @ledger_account.credit 100, Date.today }.to change { Cashflow::LedgerEntry.count }.by(1)
+      expect do
+        @ledger_account.credit(100 , Date.tomorrow)
+        @ledger_account.save
+      end.to change { Cashflow::LedgerEntry.count }.by(1)
     end
 
     it "will total up all creditls" do
       @ledger_account.credit 100.01, Date.today
       @ledger_account.credit 300.03, Date.today
+      @ledger_account.save
       @ledger_account.balance.should == -400.04
 
     end
@@ -70,6 +75,7 @@ describe Cashflow::LedgerAccount do
       @ledger_account.debit 100.02, Date.today
       @ledger_account.debit 234.00, Date.tomorrow
 
+      @ledger_account.save
       ledger_entries = @ledger_account.ledger_entries.find_all_by_date(Date.today)
       ledger_entries.size.should == 2  
       ledger_entries.each { |tran| tran.date.should == Date.today }
@@ -84,6 +90,7 @@ describe Cashflow::LedgerAccount do
       @ledger_account.debit 234.00, Date.tomorrow
       @ledger_account.debit 111.02, Date.today+2
       @ledger_account.debit 321.00, Date.today+3
+      @ledger_account.save
 
       @ledger_account.balance(Date.today).should == 0
       @ledger_account.balance(Date.tomorrow).should == 100.02
@@ -100,6 +107,7 @@ describe Cashflow::LedgerAccount do
       @ledger_account.debit 111.02, Date.today+2
       @ledger_account.debit 321.00, Date.today+3
 
+      @ledger_account.save
       balances = @ledger_account.daily_balances Date.today, Date.today+4
 
       balances.size.should == 5
@@ -120,6 +128,7 @@ describe Cashflow::LedgerAccount do
 
       @ledger_account.debit 100.02, Date.today+2
       @ledger_account.credit 234.00, Date.today+2
+      @ledger_account.save
 
       @ledger_account.activity(Date.today).should == 100.02
       @ledger_account.activity(Date.tomorrow).should == -234.00

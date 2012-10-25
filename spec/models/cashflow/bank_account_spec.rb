@@ -1,14 +1,14 @@
 require 'spec_helper'
 
 describe Cashflow::BankAccount do
-
   describe :relationships do
-    it { should belong_to :user }
-    it { should have_one :ledger_account }
+    it { should belong_to :ledger_account}
+    it { should belong_to :user}
   end
 
   before :each do
-    @bank_account = Cashflow::BankAccount.create!
+    user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @bank_account = user.bank_accounts.create!( :name => 'test' )
   end
 
   subject { @bank_account }
