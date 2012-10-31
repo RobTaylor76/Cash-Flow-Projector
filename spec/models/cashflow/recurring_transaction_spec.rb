@@ -20,7 +20,7 @@ describe Cashflow::RecurringTransaction do
       @recurring.to_ledger_account = @to_ledger_account
     end
 
-    it 'should create a transaction for each month' do
+    xit 'should create a transaction for each month' do
       expect { @recurring.create_recurrences}.to change { Cashflow::Transaction.count }.by(12)
     end
 
