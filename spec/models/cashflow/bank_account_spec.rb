@@ -28,7 +28,6 @@ describe Cashflow::BankAccount do
     it "will total up all deposits" do
       @bank_account.deposit 100.01, Date.today
       @bank_account.deposit 200.03, Date.today
-      @bank_account.save!
       @bank_account.balance.should == 300.04
     end
 
@@ -41,7 +40,6 @@ describe Cashflow::BankAccount do
     it "will total up all withdrawls" do
       @bank_account.withdraw 100.01, Date.today
       @bank_account.withdraw 300.03, Date.today
-      @bank_account.save!
       @bank_account.balance.should == -400.04
 
     end
@@ -60,7 +58,6 @@ describe Cashflow::BankAccount do
       @bank_account.deposit 111.02, Date.today+2
       @bank_account.deposit 321.00, Date.today+3
 
-      @bank_account.save!
       @bank_account.balance(Date.today).should == 0
       @bank_account.balance(Date.tomorrow).should == 100.02
       @bank_account.balance(Date.today+2).should == (100.02+234.00)
@@ -76,7 +73,6 @@ describe Cashflow::BankAccount do
       @bank_account.deposit 111.02, Date.today+2
       @bank_account.deposit 321.00, Date.today+3
 
-      @bank_account.save!
       balances = @bank_account.daily_balances Date.today, Date.today+4
 
       balances.size.should == 5
@@ -98,7 +94,6 @@ describe Cashflow::BankAccount do
       @bank_account.deposit 100.02, Date.today+2
       @bank_account.withdraw 234.00, Date.today+2
 
-      @bank_account.save!
       @bank_account.activity(Date.today).should == 100.02
       @bank_account.activity(Date.tomorrow).should == -234.00
       @bank_account.activity(Date.today+2).should == -133.98

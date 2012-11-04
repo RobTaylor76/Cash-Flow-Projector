@@ -18,6 +18,10 @@ module Cashflow
       ledger_entries.sum(:credit) ==ledger_entries.sum(:debit)
     end
 
+    def move_money(from, to, ammount)
+      from.decrease(ammount, self.date, self)
+      to.increase(ammount, self.date, self)
+    end
     private
 
     def init

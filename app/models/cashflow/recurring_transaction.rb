@@ -6,10 +6,14 @@ module Cashflow
     belongs_to :to_ledger_account, :class_name => Cashflow::LedgerAccount
 
 
-    attr_accessible :start_date, :end_date, :from_bank_account_id,  :to_bank_account_id,
+    attr_accessible :start_date, :end_date, :from_ledger_account_id,  :to_ledger_account_id,
                     :amount, :debit_percentage,:credit_percentage, :day_of_month
     def create_recurrences
-      12.times { Cashflow::Transaction.create!(:bank_account_id => debit_bank_account.id) }
+      12.times.inject(0) do |index| 
+        recurrence_date = start_date + index.months
+        require 'pry'| binding.pry
+        Cashflow::Transaction.create!(:date => recurrence_date)
+      end
     end
   end
 end

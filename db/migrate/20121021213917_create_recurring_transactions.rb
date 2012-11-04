@@ -3,6 +3,7 @@ class CreateRecurringTransactions < ActiveRecord::Migration
     create_table :recurring_transactions do |t|
       t.date :start_date
       t.date :end_date
+      t.references :user, :nil => false
       t.references :from_ledger_account
       t.references :to_ledger_account
       t.decimal :amount, :precision => 14, :scale => 2, :default => nil

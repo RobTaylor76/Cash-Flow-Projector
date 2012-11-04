@@ -10,4 +10,5 @@ class User < ActiveRecord::Base
   has_many :ledger_accounts, :class_name => Cashflow::LedgerAccount
   has_many :bank_accounts, :class_name => Cashflow::BankAccount
   has_many :transactions, :class_name => Cashflow::Transaction
+  has_many :recurring_transactions, :class_name => Cashflow::RecurringTransaction
 end
