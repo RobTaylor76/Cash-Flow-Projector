@@ -41,6 +41,7 @@ ActiveRecord::Schema.define(:version => 20121024202533) do
   create_table "recurring_transactions", :force => true do |t|
     t.date     "start_date"
     t.date     "end_date"
+    t.integer  "user_id"
     t.integer  "from_ledger_account_id"
     t.integer  "to_ledger_account_id"
     t.decimal  "amount",                 :precision => 14, :scale => 2

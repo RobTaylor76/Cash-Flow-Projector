@@ -5,20 +5,20 @@ module Cashflow
 
     attr_accessible :name
 
-    def debit(ammount, date, transaction = nil)
-      ledger_entries.create(:debit => ammount, :date => date, :transaction => transaction)
+    def debit(amount, date, transaction = nil)
+      ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)
     end
 
-    def credit(ammount, date, transaction = nil)
-      ledger_entries.create(:credit => ammount, :date => date, :transaction => transaction)
+    def credit(amount, date, transaction = nil)
+      ledger_entries.create(:credit => amount, :date => date, :transaction => transaction)
     end
 
-    def increase(ammount, date, transaction = nil)
-      debit(ammount, date, transaction)
+    def increase(amount, date, transaction = nil)
+      debit(amount, date, transaction)
     end
 
-    def decrease(ammount, date, transaction = nil)
-      credit(ammount, date, transaction)
+    def decrease(amount, date, transaction = nil)
+      credit(amount, date, transaction)
     end
 
     # return the balance at the start of a given date, default to tomorrow to to get up to date balance

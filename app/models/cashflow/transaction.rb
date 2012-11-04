@@ -10,7 +10,7 @@ module Cashflow
     scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
     scope :for_date, lambda { |required_date| where('transactions.date  == ?', required_date) }
 
-    def ammount
+    def amount
       ledger_entries.sum(:credit)
     end
 
@@ -18,9 +18,9 @@ module Cashflow
       ledger_entries.sum(:credit) ==ledger_entries.sum(:debit)
     end
 
-    def move_money(from, to, ammount)
-      from.decrease(ammount, self.date, self)
-      to.increase(ammount, self.date, self)
+    def move_money(from, to, amount)
+      from.decrease(amount, self.date, self)
+      to.increase(amount, self.date, self)
     end
     private
 
