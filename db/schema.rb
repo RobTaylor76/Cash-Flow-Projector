@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121024202533) do
+ActiveRecord::Schema.define(:version => 20121106214634) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
@@ -50,6 +50,12 @@ ActiveRecord::Schema.define(:version => 20121024202533) do
     t.integer  "day_of_month"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false
+  end
+
+  create_table "transaction_frequencies", :force => true do |t|
+    t.string   "name"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   create_table "transactions", :force => true do |t|

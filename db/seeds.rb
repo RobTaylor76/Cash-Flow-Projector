@@ -5,3 +5,7 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+Cashflow::TransactionFrequency.create!(:name => 'Daily')
+Cashflow::TransactionFrequency.create!(:name => 'Weekly')
+Cashflow::TransactionFrequency.create!(:name => 'Monthly')
