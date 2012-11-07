@@ -23,6 +23,7 @@ module Cashflow
     private
 
     def next_recurrence(current_date)
+      recurrence_date = current_date.next_year if frequency == Cashflow::TransactionFrequency.annualy
       recurrence_date = current_date.next_month if frequency == Cashflow::TransactionFrequency.monthly
       recurrence_date = current_date + 1.week if frequency == Cashflow::TransactionFrequency.weekly
       recurrence_date = current_date.next_day if frequency == Cashflow::TransactionFrequency.daily

@@ -9,3 +9,4 @@
 Cashflow::TransactionFrequency.create!(:name => 'Daily')
 Cashflow::TransactionFrequency.create!(:name => 'Weekly')
 Cashflow::TransactionFrequency.create!(:name => 'Monthly')
+Cashflow::TransactionFrequency.create!(:name => 'Annualy')

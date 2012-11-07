@@ -27,18 +27,20 @@ describe Cashflow::RecurringTransaction do
       @recurring.to_ledger_account = @to_ledger_account
     end
 
-    it 'should create a transaction for each month' do
-      expect { @recurring.create_recurrences}.to change { Cashflow::Transaction.count }.by(12)
-    end
+    context :supporting_records do
+      it 'should create a transaction for each month' do
+        expect { @recurring.create_recurrences}.to change { Cashflow::Transaction.count }.by(12)
+      end
 
-    it 'should create a 2 legder entries for each month' do
-      expect { @recurring.create_recurrences}.to change { Cashflow::LedgerEntry.count }.by(24)
+      it 'should create a 2 legder entries for each month' do
+        expect { @recurring.create_recurrences}.to change { Cashflow::LedgerEntry.count }.by(24)
+      end
     end
-
     context :transaction_dates do
       context :monthly_frequency do
         before :each do
           @recurring.frequency = Cashflow::TransactionFrequency.monthly
+          @recurring.end_date = @start_date + 11.months
           @recurring.create_recurrences
         end
         it 'should create first transaction for the start date' do
@@ -51,12 +53,11 @@ describe Cashflow::RecurringTransaction do
           Cashflow::Transaction.last.date.should == @start_date + 11.months
         end
 
-
       end
       context :weekly_frequency do
         before :each do
           @recurring.frequency = Cashflow::TransactionFrequency.weekly
-          @recurring.end_date = @start_date + 52.weeks
+          @recurring.end_date = @start_date + 51.weeks
           @recurring.create_recurrences
         end
         it 'should create first transaction for the start date' do
@@ -69,15 +70,15 @@ describe Cashflow::RecurringTransaction do
           Cashflow::Transaction.for_date(@start_date + 2.weeks).count.should == 1
         end
         it 'should create last transactions for the correct date' do
-          Cashflow::Transaction.last.date.should == @start_date + 52.weeks
+          Cashflow::Transaction.last.date.should == @start_date + 51.weeks
         end
 
-
       end
+
       context :daily_frequency do
         before :each do
           @recurring.frequency = Cashflow::TransactionFrequency.daily
-          @recurring.end_date = @start_date + 31.days
+          @recurring.end_date = @start_date + 30.days
           @recurring.create_recurrences
         end
         it 'should create first transaction for the start date' do
@@ -90,9 +91,31 @@ describe Cashflow::RecurringTransaction do
           Cashflow::Transaction.for_date(@start_date + 2.days).count.should == 1
         end
         it 'should create last transactions for the correct date' do
-          Cashflow::Transaction.last.date.should == @start_date + 31.days
+          Cashflow::Transaction.last.date.should == @start_date + 30.days
         end
 
+      end
+
+      context :annualy_frequency do
+        before :each do
+          @recurring.frequency = Cashflow::TransactionFrequency.annualy
+          @start_date = Date.parse('2012/12/31')
+          @recurring.start_date = @start_date
+          @recurring.end_date = @start_date + 4.years
+          @recurring.create_recurrences
+        end
+        it 'should create first transaction for the start date' do
+          Cashflow::Transaction.for_date(@start_date).count.should == 1
+        end
+        it 'should create repeating transactions for 1 years time' do
+          Cashflow::Transaction.for_date(@start_date + 1.year).count.should == 1
+        end
+        it 'should create repeating transactions for 2 years time' do
+          Cashflow::Transaction.for_date(@start_date + 2.years).count.should == 1
+        end
+        it 'should create last transactions for the correct date' do
+          Cashflow::Transaction.last.date.should == @start_date + 4.years
+        end
 
       end
     end
