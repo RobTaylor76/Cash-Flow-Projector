@@ -6,6 +6,7 @@ class CreateRecurringTransactions < ActiveRecord::Migration
       t.references :user, :nil => false
       t.references :from_ledger_account
       t.references :to_ledger_account
+      t.references :frequency
       t.decimal :amount, :precision => 14, :scale => 2, :default => nil
       t.decimal :debit_percentage, :precision => 14, :scale => 2, :default => nil
       t.decimal :credit_percentage, :precision => 14, :scale => 2, :default => nil
