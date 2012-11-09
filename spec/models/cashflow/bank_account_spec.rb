@@ -20,6 +20,16 @@ describe Cashflow::BankAccount do
         @user.bank_accounts.create!( :name => 'test' )
       end.to change {Cashflow::LedgerAccount.count}.by(2)
     end
+    it 'bank account name should be as specified' do
+      @bank_account.name.should == 'test'
+    end
+
+    it 'main legder name should be same as bank account' do
+      @bank_account.main_ledger_account.name.should == @bank_account.name
+    end
+    it 'bank chanrges legder name should be as bank account name + (Interest & Charges)"' do
+      @bank_account.charges_ledger_account.name.should == "#{@bank_account.name} (Interest & Charges)"
+    end
   end
 
   describe :klass do

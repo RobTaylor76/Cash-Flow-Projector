@@ -34,7 +34,7 @@ module Cashflow
 
     def create_ledger_accounts
       self.main_ledger_account ||= user.ledger_accounts.build(:name => self.name)
-      self.charges_ledger_account ||= user.ledger_accounts.build(:name => self.name && '(Interest & Charges)')
+      self.charges_ledger_account ||= user.ledger_accounts.build(:name => "#{self.name} (Interest & Charges)")
     end
   end
 end
