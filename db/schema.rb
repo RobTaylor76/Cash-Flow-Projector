@@ -15,10 +15,11 @@ ActiveRecord::Schema.define(:version => 20121106214634) do
 
   create_table "bank_accounts", :force => true do |t|
     t.string   "name"
-    t.integer  "ledger_account_id"
+    t.integer  "main_ledger_account_id"
+    t.integer  "charges_ledger_account_id"
     t.integer  "user_id"
-    t.datetime "created_at",        :null => false
-    t.datetime "updated_at",        :null => false
+    t.datetime "created_at",                :null => false
+    t.datetime "updated_at",                :null => false
   end
 
   create_table "ledger_accounts", :force => true do |t|
