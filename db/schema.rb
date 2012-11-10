@@ -47,8 +47,7 @@ ActiveRecord::Schema.define(:version => 20121106214634) do
     t.integer  "to_ledger_account_id"
     t.integer  "frequency_id"
     t.decimal  "amount",                 :precision => 14, :scale => 2
-    t.decimal  "debit_percentage",       :precision => 14, :scale => 2
-    t.decimal  "credit_percentage",      :precision => 14, :scale => 2
+    t.decimal  "percentage",             :precision => 14, :scale => 2
     t.integer  "day_of_month"
     t.datetime "created_at",                                            :null => false
     t.datetime "updated_at",                                            :null => false

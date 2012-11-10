@@ -143,6 +143,25 @@ describe Cashflow::RecurringTransaction do
       end
     end
 
+    context :interest_payments do
+      before :each do
+        @to_ledger_account.debit(100, Date.parse('2012/12/30'))
+        @recurring.frequency = Cashflow::TransactionFrequency.annualy
+        @start_date = Date.parse('2012/12/31')
+        @recurring.start_date = @start_date
+        @recurring.end_date = @start_date + 4.years
+        @recurring.amount = nil
+        @recurring.percentage = 10
+        @recurring.create_recurrences
+      end
+
+      it 'should increase the to account by a %age of the to account on the given date' do
+        @to_ledger_account.balance(Date.parse('2013/01/01')).should == 110
+      end
+      it 'should increase the to account by a %age of the to account on the given date' do
+        @to_ledger_account.balance(Date.parse('2014/01/01')).should == 121
+      end
+    end
   end
 end
 

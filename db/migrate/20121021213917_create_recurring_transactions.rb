@@ -8,8 +8,7 @@ class CreateRecurringTransactions < ActiveRecord::Migration
       t.references :to_ledger_account
       t.references :frequency
       t.decimal :amount, :precision => 14, :scale => 2, :default => nil
-      t.decimal :debit_percentage, :precision => 14, :scale => 2, :default => nil
-      t.decimal :credit_percentage, :precision => 14, :scale => 2, :default => nil
+      t.decimal :percentage, :precision => 14, :scale => 2, :default => nil
       t.integer :day_of_month
       t.timestamps
     end

@@ -32,7 +32,8 @@ module Cashflow
 
     def create_transaction(recurrence_date)
       tran = Cashflow::Transaction.create!(:date => recurrence_date)
-      tran.move_money(from_ledger_account, to_ledger_account, amount)
+      tran_amount = amount || (to_ledger_account.balance(recurrence_date) * (percentage/100))
+      tran.move_money(from_ledger_account, to_ledger_account, tran_amount)
     end
   end
 end
