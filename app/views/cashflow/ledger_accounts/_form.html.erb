@@ -1,0 +1,28 @@
+<%= form_for(@ledger_account,:as => :ledger_account, :url => (@ledger_account.new_record? ? ledger_accounts_url :  ledger_account_url(@ledger_account))) do |f| %>
+  <% if @ledger_account.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@ledger_account.errors.count, "error") %> prohibited this ledger_account from being saved:</h2>
+
+      <ul>
+      <% @ledger_account.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+    <div class='field'>
+      <%= form.label :balance %>
+      <%= form.text_field :balance ,:disabled => true %>
+    </div>
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+<% end %>

@@ -9,9 +9,9 @@
 
 <% @ledger_accounts.each do |ledger_account| %>
   <tr>
-    <td><%= link_to 'Show', ledger_account %></td>
+    <td><%= ledger_account.name %><td>
+    <td><%= link_to 'Show', ledger_account_path(ledger_account) %></td>
     <td><%= link_to 'Edit', edit_ledger_account_path(ledger_account) %></td>
-    <td><%= link_to 'Destroy', ledger_account, confirm: 'Are you sure?', method: :delete %></td>
   </tr>
 <% end %>
 </table>

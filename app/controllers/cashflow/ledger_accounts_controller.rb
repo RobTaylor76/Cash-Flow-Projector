@@ -45,7 +45,7 @@ module Cashflow
 
       respond_to do |format|
         if @ledger_account.save
-          format.html { redirect_to @ledger_account, notice: 'Ledger account was successfully created.' }
+          format.html { redirect_to ledger_account_path(@ledger_account), notice: 'Ledger account was successfully created.' }
           format.json { render json: @ledger_account, status: :created, location: @ledger_account }
         else
           format.html { render action: "new" }
@@ -61,7 +61,7 @@ module Cashflow
 
       respond_to do |format|
         if @ledger_account.update_attributes(params[:ledger_account])
-          format.html { redirect_to @ledger_account, notice: 'Ledger account was successfully updated.' }
+          format.html { redirect_to ledger_account_path(@ledger_account), notice: 'Ledger account was successfully updated.' }
           format.json { head :no_content }
         else
           format.html { render action: "edit" }

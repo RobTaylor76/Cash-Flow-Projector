@@ -4,17 +4,53 @@
       <h2><%= pluralize(@bank_account.errors.count, "error") %> prohibited this bank_account from being saved:</h2>
 
       <ul>
-      <% @bank_account.errors.full_messages.each do |msg| %>
-        <li><%= msg %></li>
-      <% end %>
+        <% @bank_account.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
-<div class='field'>
-  <%= f.label :name %>
-  <%= f.text_field :name %>
-</div>
-<div class="actions">
-    <%= f.submit %>
-  </div>
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :name %>
+      <%= form.text_field :name %>
+    </div>
+    <div class='field'>
+      <%= form.label :balance %>
+      <%= form.text_field :balance ,:disabled => true %>
+    </div>
+  <% end %>
+  <%= f.fields_for @bank_account.main_ledger_account do |ff| %>
+    <% ff.with_options(:disabled => true) do |readonly| %>
+      <div><p> Main Ledger Account</p>
+        <div class='field'>
+          <%= ff.label :name %>
+          <%= readonly.text_field :name %>
+        </div>
+        <div class='field'>
+          <%= ff.label :balance %>
+          <%= readonly.text_field :balance %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  <%= f.fields_for @bank_account.charges_ledger_account do |ff| %>
+    <% ff.with_options(:disabled => true) do |readonly| %>
+      <div><p> Charges Ledger Account</p>
+        <div class='field'>
+          <%= ff.label :name %>
+          <%= readonly.text_field :name %>
+        </div>
+        <div class='field'>
+          <%= ff.label :balance %>
+          <%= readonly.text_field :balance %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
 <% end %>
