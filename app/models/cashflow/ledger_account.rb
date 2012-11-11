@@ -37,9 +37,10 @@ module Cashflow
       balance = balance(start_date)
       balances = Array.new
       ((start_date)..(end_date)).each do |date|
-        balance += activity(date-1) unless date == start_date
-        balances << {:date => date, :balance => balance }
-      end 
+        delta = activity(date)
+        balances << {:date => date, :balance => balance, :activity => delta }
+        balance += delta
+      end
       balances
     end
   end

@@ -124,6 +124,7 @@ describe Cashflow::LedgerAccount do
 
       balances.inject(Date.today) do |date,balance|
         balance[:date].should == date
+        balance[:activity].should ==  @ledger_account.activity(date)
         balance[:balance].should ==  @ledger_account.balance(date)
         date+=1
       end
