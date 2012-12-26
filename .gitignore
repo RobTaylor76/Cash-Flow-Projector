@@ -15,3 +15,6 @@
 /tmp
 # Ignore all swap files.
 *.swp
+
+#Ignore coverage files
+/coverage

@@ -25,6 +25,7 @@ end
 gem 'jquery-rails'
 
 group :test do
+  gem 'simplecov', :require => false
   gem "shoulda-matchers"
 end
 
