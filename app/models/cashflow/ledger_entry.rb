@@ -6,7 +6,7 @@ module Cashflow
     after_initialize :init
 
     scope :before_date, lambda { |cutoff|  where('ledger_entries.date < ?', cutoff) }
-    scope :for_date, lambda { |required_date| where('ledger_entries.date  == ?', required_date) }
+    scope :for_date, lambda { |required_date| where('ledger_entries.date  = ?', required_date) }
 
     def init
       self.date ||= Date.today
