@@ -8,7 +8,7 @@ module Cashflow
     after_initialize :init
 
     scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
-    scope :for_date, lambda { |required_date| where('transactions.date  == ?', required_date) }
+    scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
 
     def amount
       ledger_entries.sum(:credit)
