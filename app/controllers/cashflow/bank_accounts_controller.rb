@@ -1,36 +1,26 @@
 module Cashflow
   class BankAccountsController < ApplicationController
+
+    respond_to :html, :json
     # GET /bank_accounts
     # GET /bank_accounts.json
     def index
       @bank_accounts = current_user.bank_accounts.all
-
-      respond_to do |format|
-        format.html # index.html.erb
-        format.json { render json: @bank_accounts }
-      end
+      respond_with @bank_accounts
     end
 
     # GET /bank_accounts/1
     # GET /bank_accounts/1.json
     def show
       @bank_account = current_user.bank_accounts.find(params[:id])
-
-      respond_to do |format|
-        format.html # show.html.erb
-        format.json { render json: @bank_account }
-      end
+      respond_with @bank_account
     end
 
     # GET /bank_accounts/new
     # GET /bank_accounts/new.json
     def new
       @bank_account = current_user.bank_accounts.build
-
-      respond_to do |format|
-        format.html # new.html.erb
-        format.json { render json: @bank_account }
-      end
+      respond_with @bank_account
     end
 
     # GET /bank_accounts/1/edit
@@ -41,7 +31,7 @@ module Cashflow
     # POST /bank_accounts
     # POST /bank_accounts.json
     def create
-      @bank_account = current_user.bank_accounts.create(params[:bank_account])
+      @bank_account = current_user.bank_accounts.build(params[:bank_account])
 
       respond_to do |format|
         if @bank_account.save
@@ -75,11 +65,7 @@ module Cashflow
     def destroy
       @bank_account = current_user.bank_accounts.find(params[:id])
       @bank_account.destroy
-
-      respond_to do |format|
-        format.html { redirect_to bank_accounts_url }
-        format.json { head :no_content }
-      end
+      respond_with @bank_account
     end
   end
 end
