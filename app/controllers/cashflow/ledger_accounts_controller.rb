@@ -30,33 +30,19 @@ module Cashflow
     # POST /ledger_accounts
     # POST /ledger_accounts.json
     def create
-      @bank_account = current_user.ledger_accounts.build(params[:bank_account])
-
-      respond_to do |format|
-        if @ledger_account.save
-          format.html { redirect_to ledger_account_path(@ledger_account), notice: 'Ledger account was successfully created.' }
-          format.json { render json: @ledger_account, status: :created, location: @ledger_account }
-        else
-          format.html { render action: "new" }
-          format.json { render json: @ledger_account.errors, status: :unprocessable_entity }
-        end
-      end
+      @ledger_account = current_user.ledger_accounts.build(params[:bank_account])
+      flash[:notice] =  'Ledger Account was successfully created.' if @ledger_account.save
+      respond_with @ledger_account
     end
 
     # PUT /ledger_accounts/1
     # PUT /ledger_accounts/1.json
     def update
       @ledger_account = current_user.find(params[:id])
-
-      respond_to do |format|
-        if @ledger_account.update_attributes(params[:ledger_account])
-          format.html { redirect_to ledger_account_path(@ledger_account), notice: 'Ledger account was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @ledger_account.errors, status: :unprocessable_entity }
-        end
+      if @ledger_account.update_attributes(params[:ledger_account])
+        flash[:notice] =  'Ledger account was successfully updated.'
       end
+      respond_with @ledger_account
     end
 
     # DELETE /ledger_accounts/1
@@ -65,7 +51,6 @@ module Cashflow
       @ledger_account = current_user.find(params[:id])
       @ledger_account.destroy
       respond_with @ledger_account
-
     end
   end
 end

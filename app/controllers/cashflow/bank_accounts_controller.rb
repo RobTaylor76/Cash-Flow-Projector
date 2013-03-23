@@ -32,32 +32,17 @@ module Cashflow
     # POST /bank_accounts.json
     def create
       @bank_account = current_user.bank_accounts.build(params[:bank_account])
-
-      respond_to do |format|
-        if @bank_account.save
-          format.html { redirect_to bank_account_path(@bank_account), notice: 'Bank account was successfully created.' }
-          format.json { render json: @bank_account, status: :created, location: bank_account_path(@bank_account) }
-        else
-          format.html { render action: "new" }
-          format.json { render json: @bank_account.errors, status: :unprocessable_entity }
-        end
-      end
+      flash[:notice] =  'Bank account was successfully created.' if @bank_account.save
     end
 
     # PUT /bank_accounts/1
     # PUT /bank_accounts/1.json
     def update
       @bank_account = current_user.bank_accounts.find(params[:id])
-
-      respond_to do |format|
-        if @bank_account.update_attributes(params[:bank_account])
-          format.html { redirect_to bank_account_path(@bank_account), notice: 'Bank account was successfully updated.' }
-          format.json { head :no_content }
-        else
-          format.html { render action: "edit" }
-          format.json { render json: @bank_account.errors, status: :unprocessable_entity }
-        end
+      if @bank_account.update_attributes(params[:bank_account])
+        flash[:notice] =  'Bank account was successfully updated.'
       end
+      respond_with @bank_account
     end
 
     # DELETE /bank_accounts/1
