@@ -2,10 +2,8 @@ Cashflowprojector::Application.routes.draw do
 
   devise_for :users
 
-  scope :module => 'cashflow' do
-    resources :bank_accounts
-    resources :ledger_accounts
-  end
+  resources :bank_accounts
+  resources :ledger_accounts
 
   root :to => 'cashflow/bank_accounts#index'
 

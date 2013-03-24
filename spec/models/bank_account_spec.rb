@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cashflow::BankAccount do
+describe BankAccount do
   before :each do
     @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
     @bank_account = @user.bank_accounts.create!( :name => 'test' )
@@ -18,7 +18,7 @@ describe Cashflow::BankAccount do
     it 'should create 2 ledger accounts' do
       expect do
         @user.bank_accounts.create!( :name => 'test' )
-      end.to change {Cashflow::LedgerAccount.count}.by(2)
+      end.to change {LedgerAccount.count}.by(2)
     end
     it 'bank account name should be as specified' do
       @bank_account.name.should == 'test'

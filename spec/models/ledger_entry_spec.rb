@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cashflow::LedgerEntry do
+describe LedgerEntry do
   it { subject.should belong_to(:ledger_account) }
 
   describe :new_record do

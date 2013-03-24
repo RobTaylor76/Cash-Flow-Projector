@@ -7,8 +7,8 @@ class User < ActiveRecord::Base
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
   # attr_accessible :title, :body
-  has_many :ledger_accounts, :class_name => Cashflow::LedgerAccount
-  has_many :bank_accounts, :class_name => Cashflow::BankAccount
-  has_many :transactions, :class_name => Cashflow::Transaction
-  has_many :recurring_transactions, :class_name => Cashflow::RecurringTransaction
+  has_many :ledger_accounts, :class_name => LedgerAccount
+  has_many :bank_accounts, :class_name => BankAccount
+  has_many :transactions, :class_name => Transaction
+  has_many :recurring_transactions, :class_name => RecurringTransaction
 end

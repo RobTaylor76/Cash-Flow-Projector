@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cashflow::LedgerAccount do
+describe LedgerAccount do
 
 
   describe :relationships do
@@ -29,7 +29,7 @@ describe Cashflow::LedgerAccount do
     it "will create a single transaction" do
       expect do
         @ledger_account.debit(100 , Date.tomorrow)
-      end.to change { Cashflow::LedgerEntry.count }.by(1)
+      end.to change { LedgerEntry.count }.by(1)
     end
 
     it "will total up all debits" do
@@ -48,7 +48,7 @@ describe Cashflow::LedgerAccount do
     it "will create a single transaction" do
       expect do
         @ledger_account.credit(100 , Date.tomorrow)
-      end.to change { Cashflow::LedgerEntry.count }.by(1)
+      end.to change { LedgerEntry.count }.by(1)
     end
 
     it "will total up all creditls" do

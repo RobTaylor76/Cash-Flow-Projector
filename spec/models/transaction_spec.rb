@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cashflow::Transaction do
+describe Transaction do
   it { subject.should have_many(:ledger_entries) }
   it { subject.should belong_to(:user) }
 

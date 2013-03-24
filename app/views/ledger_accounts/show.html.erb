@@ -1,7 +1,7 @@
 <p id="notice"><%= notice %></p>
 
 <%= render 'form', :locals => {:form_readonly => true } %>
-<%= render 'cashflow/shared/activity', :locals => {:activity => @ledger_account.daily_balances(Date.today-5, Date.today+5) } %>
+<%= render 'shared/activity', :locals => {:activity => @ledger_account.daily_balances(Date.today-5, Date.today+5) } %>
 
 <%= link_to 'Edit', edit_ledger_account_path(@ledger_account) %> |
 <%= link_to 'Back', ledger_accounts_path %>

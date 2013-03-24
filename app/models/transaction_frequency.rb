@@ -1,4 +1,4 @@
-class Cashflow::TransactionFrequency < ActiveRecord::Base
+class TransactionFrequency < ActiveRecord::Base
    attr_accessible :name
 
    def self.cache_lookup_data
