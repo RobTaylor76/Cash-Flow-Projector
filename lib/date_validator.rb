@@ -17,7 +17,7 @@ module DateValidator
             record.errors.add(attr, I18n.t('activerecord.errors.messages.invalid_date'))
           end
         else
-          if date.year > 9999
+          if date.year > 2299 || date.year < 1976
             record.errors.add(attr, I18n.t('activerecord.errors.messages.invalid_date'))
           end
         end

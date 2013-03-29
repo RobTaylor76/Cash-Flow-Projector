@@ -45,12 +45,18 @@ it {should validate_date :date }
     end
 
     context 'when date is invalid' do
-      before :each do
-        subject.date = '01/01/2012222222222222222222222'
-      end
-
       it 'has errors' do
-
+        subject.date = Date.new(1975,1,1)
+        subject.valid?.should_not be_true
+        subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
+      end
+      it 'has errors' do
+        subject.date = Date.new(2300,1,1)
+        subject.valid?.should_not be_true
+        subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
+      end
+      it 'has errors' do
+        subject.date = '01/01/201222222'
         subject.valid?.should_not be_true
         subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
       end

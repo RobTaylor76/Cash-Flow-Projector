@@ -1,5 +1,9 @@
 class Transaction < ActiveRecord::Base
+  extend DateValidator
+
   attr_accessible :date, :reference
+
+  validates_date :date
 
   belongs_to :user
   has_many :ledger_entries, :dependent => :destroy
