@@ -2,7 +2,7 @@ class Transaction < ActiveRecord::Base
   attr_accessible :date, :reference
 
   belongs_to :user
-  has_many :ledger_entries
+  has_many :ledger_entries, :dependent => :destroy
 
   after_initialize :init
 

@@ -1,6 +1,6 @@
 class RecurringTransaction < ActiveRecord::Base
   # attr_accessible :title, :body
-  has_many :transactions, :class_name => Transaction
+  has_many :transactions, :class_name => Transaction, :dependent => :destroy
   belongs_to :from_ledger_account, :class_name => LedgerAccount
   belongs_to :to_ledger_account, :class_name => LedgerAccount
   belongs_to :frequency, :class_name => TransactionFrequency

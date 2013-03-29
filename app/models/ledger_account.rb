@@ -1,5 +1,5 @@
 class LedgerAccount < ActiveRecord::Base
-  has_many :ledger_entries, :class_name => LedgerEntry
+  has_many :ledger_entries, :class_name => LedgerEntry, :dependent => :destroy
   belongs_to :user
 
   attr_accessible :name

@@ -30,11 +30,12 @@ ActiveRecord::Schema.define(:version => 20121106214634) do
   end
 
   create_table "ledger_entries", :force => true do |t|
-    t.integer  "ledger_account_id"
+    t.integer  "ledger_account_id",                                                 :null => false
+    t.integer  "user_id",                                                           :null => false
     t.integer  "transaction_id"
     t.decimal  "debit",             :precision => 14, :scale => 2, :default => 0.0
     t.decimal  "credit",            :precision => 14, :scale => 2, :default => 0.0
-    t.date     "date"
+    t.date     "date",                                                              :null => false
     t.datetime "created_at",                                                        :null => false
     t.datetime "updated_at",                                                        :null => false
   end
