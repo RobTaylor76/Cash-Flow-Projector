@@ -13,13 +13,13 @@ class Transaction < ActiveRecord::Base
   scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
   scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
 
-  def amount
-    ledger_entries.sum(:credit)
-  end
+#  def amount
+#    ledger_entries.sum(:credit)
+#  end
 
-  def balanced?
-    ledger_entries.sum(:credit) ==ledger_entries.sum(:debit)
-  end
+#  def balanced?
+#    ledger_entries.sum(:credit) == ledger_entries.sum(:debit)
+#  end
 
   def move_money(from, to, amount)
     from.decrease(amount, self.date, self)
