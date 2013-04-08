@@ -33,6 +33,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'guard-rails'
   gem 'pry'
+  gem 'jasmine'
 end
 
 # To use ActiveModel has_secure_password
