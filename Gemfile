@@ -34,6 +34,7 @@ group :development, :test do
   gem 'guard-rails'
   gem 'pry'
   gem 'teabag'
+  gem 'poltergeist'
 end
 
 # To use ActiveModel has_secure_password

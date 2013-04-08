@@ -196,6 +196,7 @@ DEPENDENCIES
   guard-rails
   jquery-rails
   pg
+  poltergeist
   pry
   rails (= 3.2.5)
   rspec-rails
