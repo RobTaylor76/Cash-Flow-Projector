@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.3'
+gem 'rails', '3.2.5'
 gem 'therubyracer', :require => 'v8'
 gem 'execjs'
 gem 'devise' , '~> 1.4.3'
@@ -33,6 +33,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'guard-rails'
   gem 'pry'
+  gem 'teabag'
 end
 
 # To use ActiveModel has_secure_password
