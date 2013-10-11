@@ -4,7 +4,7 @@ Cashflowprojector::Application.routes.draw do
   resources :bank_accounts
   resources :ledger_accounts
 
-  root :to => 'cashflow/bank_accounts#index'
+  root :to => 'bank_accounts#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

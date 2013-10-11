@@ -29,7 +29,7 @@ class LedgerAccountsController < ApplicationController
   # POST /ledger_accounts
   # POST /ledger_accounts.json
   def create
-    @ledger_account = current_user.ledger_accounts.build(params[:bank_account])
+    @ledger_account = current_user.ledger_accounts.build(strong_params)
     flash[:notice] =  'Ledger Account was successfully created.' if @ledger_account.save
     respond_with @ledger_account
   end
@@ -38,7 +38,7 @@ class LedgerAccountsController < ApplicationController
   # PUT /ledger_accounts/1.json
   def update
     @ledger_account = current_user.ledger_accounts.find(params[:id])
-    if @ledger_account.update_attributes(params[:ledger_account])
+    if @ledger_account.update_attributes(strong_params)
       flash[:notice] =  'Ledger account was successfully updated.'
     end
     respond_with @ledger_account
@@ -50,5 +50,11 @@ class LedgerAccountsController < ApplicationController
     @ledger_account = current_user.ledger_accounts.find(params[:id])
     @ledger_account.destroy
     respond_with @ledger_account
+  end
+
+  private
+
+  def strong_params
+    params[:ledger_account].permit(:name)
   end
 end
