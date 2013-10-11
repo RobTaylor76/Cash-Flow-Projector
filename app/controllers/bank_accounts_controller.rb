@@ -30,7 +30,7 @@ class BankAccountsController < ApplicationController
   # POST /bank_accounts
   # POST /bank_accounts.json
   def create
-    @bank_account = current_user.bank_accounts.build(params[:bank_account])
+    @bank_account = current_user.bank_accounts.build(strong_params)
     flash[:notice] =  'Bank account was successfully created.' if @bank_account.save
     respond_with @bank_account
   end
@@ -39,7 +39,7 @@ class BankAccountsController < ApplicationController
   # PUT /bank_accounts/1.json
   def update
     @bank_account = current_user.bank_accounts.find(params[:id])
-    if @bank_account.update_attributes(params[:bank_account])
+    if @bank_account.update_attributes(strong_params)
       flash[:notice] =  'Bank account was successfully updated.'
     end
     respond_with @bank_account
@@ -51,5 +51,11 @@ class BankAccountsController < ApplicationController
     @bank_account = current_user.bank_accounts.find(params[:id])
     @bank_account.destroy
     respond_with @bank_account
+  end
+
+  private
+
+  def strong_params
+    params[:bank_account].permit(:name)
   end
 end
