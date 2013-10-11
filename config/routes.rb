@@ -1,7 +1,6 @@
 Cashflowprojector::Application.routes.draw do
 
   devise_for :users
-
   resources :bank_accounts
   resources :ledger_accounts
 

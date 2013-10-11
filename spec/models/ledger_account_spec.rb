@@ -88,7 +88,7 @@ describe LedgerAccount do
       @ledger_account.debit 100.02, Date.today
       @ledger_account.debit 234.00, Date.tomorrow
 
-      ledger_entries = @ledger_account.ledger_entries.find_all_by_date(Date.today)
+      ledger_entries = @ledger_account.ledger_entries.where(:date => Date.today)
       ledger_entries.size.should == 2  
       ledger_entries.each { |tran| tran.date.should == Date.today }
 
