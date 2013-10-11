@@ -11,8 +11,8 @@ class RecurringTransaction < ActiveRecord::Base
   validates_date :start_date
   validates_date :end_date
 
-  attr_accessible :start_date, :end_date, :from_ledger_account_id,  :to_ledger_account_id,
-    :amount, :debit_percentage,:credit_percentage
+  #attr_accessible :start_date, :end_date, :from_ledger_account_id,  :to_ledger_account_id,
+  #   :amount, :debit_percentage,:credit_percentage
   def create_recurrences
     create_transaction(start_date)
     recurrence_date = next_recurrence(start_date)

@@ -1,5 +1,5 @@
 class TransactionFrequency < ActiveRecord::Base
-   attr_accessible :name
+#   attr_accessible :name
 
    def self.cache_lookup_data
      if self.table_exists?

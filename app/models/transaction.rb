@@ -1,7 +1,7 @@
 class Transaction < ActiveRecord::Base
   extend DateValidator
 
-  attr_accessible :date, :reference
+#  attr_accessible :date, :reference
 
   validates_date :date
 

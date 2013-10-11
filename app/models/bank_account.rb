@@ -1,6 +1,6 @@
 class BankAccount < ActiveRecord::Base
 
-  attr_accessible :name
+  #attr_accessible :name
   after_initialize :create_ledger_accounts
 
   belongs_to :user
