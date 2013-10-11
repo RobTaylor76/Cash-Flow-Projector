@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.3'
+gem 'rails', '~> 4.0.0'
 gem 'therubyracer', :require => 'v8'
 gem 'execjs'
 gem 'devise' , '~> 1.4.3'
@@ -10,17 +10,10 @@ gem 'devise' , '~> 1.4.3'
 gem 'pg'
 
 
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
+gem 'sass-rails',   '~> 4.0.0'
+gem 'coffee-rails', '~> 4.0.0'
 
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer', :platform => :ruby
-
-  gem 'uglifier', '>= 1.0.3'
-end
+gem 'uglifier', '>= 1.3.0'
 
 gem 'jquery-rails'
 
@@ -30,10 +23,12 @@ group :test do
 end
 
 group :development, :test do
-  gem 'rspec-rails'
+  gem 'rspec-rails', '>= 2.13.2'
   gem 'guard-rails'
   gem 'pry'
 end
+
+gem 'rails4_upgrade'
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
