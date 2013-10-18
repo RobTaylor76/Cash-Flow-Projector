@@ -6,6 +6,7 @@ class Transaction < ActiveRecord::Base
   validates_date :date
 
   belongs_to :user
+  belongs_to :recurring_transaction
   has_many :ledger_entries, :dependent => :destroy
 
   after_initialize :init

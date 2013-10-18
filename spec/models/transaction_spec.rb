@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Transaction do
   it { subject.should have_many(:ledger_entries) }
   it { subject.should belong_to(:user) }
+  it { subject.should belong_to(:recurring_transaction) }
 
   describe :new_record do
     its(:reference) { should == '' }

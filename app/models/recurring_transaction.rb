@@ -37,7 +37,7 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def create_transaction(recurrence_date)
-    tran = Transaction.create!(:date => recurrence_date)
+    tran = Transaction.create!(:date => recurrence_date, :recurring_transaction => self)
     tran_amount = calculate_transaction_amount(recurrence_date)
     tran.move_money(from, to, tran_amount)
   end
