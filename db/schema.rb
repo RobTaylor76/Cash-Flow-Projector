@@ -13,9 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20121106214634) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
-
   create_table "bank_accounts", force: true do |t|
     t.string   "name"
     t.integer  "main_ledger_account_id"
@@ -52,8 +49,8 @@ ActiveRecord::Schema.define(version: 20121106214634) do
     t.integer  "percentage_of_id"
     t.integer  "transaction_id"
     t.integer  "frequency_id"
-    t.decimal  "amount",           precision: 14, scale: 2
-    t.decimal  "percentage",       precision: 14, scale: 2
+    t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
+    t.decimal  "percentage",       precision: 14, scale: 2, default: 0.0
     t.integer  "day_of_month"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -67,11 +64,12 @@ ActiveRecord::Schema.define(version: 20121106214634) do
 
   create_table "transactions", force: true do |t|
     t.integer  "user_id"
-    t.string   "reference",                default: ""
+    t.string   "reference",   default: ""
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "recurring_transaction_id"
+    t.integer  "source_id"
+    t.string   "source_type"
   end
 
   create_table "users", force: true do |t|

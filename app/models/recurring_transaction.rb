@@ -1,7 +1,7 @@
 class RecurringTransaction < ActiveRecord::Base
   extend DateValidator
 
-  has_many :transactions, :class_name => Transaction, :dependent => :destroy
+  has_many :transactions, :class_name => Transaction, :dependent => :destroy, :as => :source
   belongs_to :from, :class_name => LedgerAccount
   belongs_to :to, :class_name => LedgerAccount
   belongs_to :percentage_of, :class_name => LedgerAccount
@@ -13,14 +13,17 @@ class RecurringTransaction < ActiveRecord::Base
   validate :validate_amount_or_percentage
 
   def create_recurrences
-    create_transaction(start_date)
-    recurrence_date = next_recurrence(start_date)
+    ActiveRecord::Base.transaction do
+      create_transaction(start_date)
+      recurrence_date = next_recurrence(start_date)
 
-    while (recurrence_date <= end_date)
-      create_transaction(recurrence_date)
-      recurrence_date = next_recurrence(recurrence_date)
+      while (recurrence_date <= end_date)
+        create_transaction(recurrence_date)
+        recurrence_date = next_recurrence(recurrence_date)
+      end
+
+      save!
     end
-
   end
 
   private
@@ -34,7 +37,7 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def create_transaction(recurrence_date)
-    tran = Transaction.create!(:date => recurrence_date, :recurring_transaction => self)
+    tran = Transaction.create(:date => recurrence_date, :source => self)
     tran_amount = calculate_transaction_amount(recurrence_date)
     tran.move_money(from, to, tran_amount)
   end

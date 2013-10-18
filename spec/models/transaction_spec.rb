@@ -5,7 +5,7 @@ describe Transaction do
 
   it { subject.should have_many(:ledger_entries) }
   it { subject.should belong_to(:user) }
-  it { subject.should belong_to(:recurring_transaction) }
+  it { subject.should belong_to(:source) }
 
   describe :new_record do
     its(:reference) { should == '' }

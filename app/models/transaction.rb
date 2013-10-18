@@ -5,7 +5,7 @@ class Transaction < ActiveRecord::Base
   validate :validate_balanced
 
   belongs_to :user
-  belongs_to :recurring_transaction
+  belongs_to :source, :polymorphic => true
   has_many :ledger_entries, :dependent => :destroy
 
   after_initialize :init
