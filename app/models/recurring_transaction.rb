@@ -1,7 +1,6 @@
 class RecurringTransaction < ActiveRecord::Base
   extend DateValidator
 
-  # attr_accessible :title, :body
   has_many :transactions, :class_name => Transaction, :dependent => :destroy
   belongs_to :from, :class_name => LedgerAccount
   belongs_to :to, :class_name => LedgerAccount
@@ -13,8 +12,6 @@ class RecurringTransaction < ActiveRecord::Base
   validates_date :end_date
   validate :validate_amount_or_percentage
 
-  #attr_accessible :start_date, :end_date, :from_ledger_account_id,  :to_ledger_account_id,
-  #   :amount, :debit_percentage,:credit_percentage
   def create_recurrences
     create_transaction(start_date)
     recurrence_date = next_recurrence(start_date)

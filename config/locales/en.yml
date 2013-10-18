@@ -5,5 +5,7 @@ en:
   hello: "Hello world"
 
   errors:
+    transaction:
+      unbalanced_transaction: 'Sum of Credits must equal Debits'
     recurring_transaction:
       cannot_have_amount_and_percentage: 'You need to specify either Amount or Percentage'

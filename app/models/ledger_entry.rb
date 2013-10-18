@@ -1,7 +1,6 @@
 class LedgerEntry < ActiveRecord::Base
   extend DateValidator
 
-  #attr_accessible :credit, :debit, :date, :ledger_account_id, :transaction
   belongs_to :ledger_account
   belongs_to :transaction
   belongs_to :user

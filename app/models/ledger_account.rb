@@ -2,8 +2,6 @@ class LedgerAccount < ActiveRecord::Base
   has_many :ledger_entries, :class_name => LedgerEntry, :dependent => :destroy
   belongs_to :user
 
-  #attr_accessible :name
-
   def debit(amount, date, transaction = nil)
     ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)
   end

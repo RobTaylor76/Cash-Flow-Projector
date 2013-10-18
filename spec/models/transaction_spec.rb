@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Transaction do
+  fail_fast_translations
+
   it { subject.should have_many(:ledger_entries) }
   it { subject.should belong_to(:user) }
   it { subject.should belong_to(:recurring_transaction) }
@@ -15,6 +17,17 @@ describe Transaction do
     @from.debit 100.00, Date.yesterday
     @to = @user.ledger_accounts.create!( :name => 'to' )
     @tr = @user.transactions.create
+  end
+
+  context :validations do
+    it 'should have either a non zero amount or percentage but not both' do
+      @tr.ledger_entries.build(:date => Date.today, :debit => 0, :credit => 30)
+      @tr.valid?
+      @tr.errors[:base].should include  I18n.t('errors.transaction.unbalanced_transaction')
+      @tr.ledger_entries.build(:date => Date.today, :debit => 30, :credit => 0)
+      @tr.valid?
+      @tr.errors[:base].should_not include  I18n.t('errors.transaction.unbalanced_transaction')
+    end
   end
 
   describe :ledger_entries do

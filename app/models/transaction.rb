@@ -1,9 +1,8 @@
 class Transaction < ActiveRecord::Base
   extend DateValidator
 
-#  attr_accessible :date, :reference
-
   validates_date :date
+  validate :validate_balanced
 
   belongs_to :user
   belongs_to :recurring_transaction
@@ -18,15 +17,21 @@ class Transaction < ActiveRecord::Base
 #    ledger_entries.sum(:credit)
 #  end
 
-#  def balanced?
-#    ledger_entries.sum(:credit) == ledger_entries.sum(:debit)
-#  end
+  def balanced?
+    sum_credits = ledger_entries.map(&:credit).reduce(:+)
+    sum_debits = ledger_entries.map(&:debit).reduce(:+)
+    sum_credits  == sum_debits
+  end
 
   def move_money(from, to, amount)
     from.decrease(amount, self.date, self)
     to.increase(amount, self.date, self)
   end
   private
+
+  def validate_balanced
+    errors.add(:base, I18n.t('errors.transaction.unbalanced_transaction')) unless balanced?
+  end
 
   def init
     self.date ||= Date.today
