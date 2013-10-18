@@ -37,3 +37,27 @@ RSpec.configure do |config|
 
   config.include ValidateDate
 end
+
+def fail_fast_translations
+  around :each do |ex|
+    old_handler = I18n.exception_handler
+    begin
+      I18n.exception_handler = FailFastTranslationExceptionHandler.new
+      ex.run
+    ensure
+      I18n.exception_handler = old_handler
+    end
+  end
+end
+
+# the origional will fail for many reasons other than what you are interested in ... en.menu.Quick Entries.title for example.
+# by passing in a block, it will only throw exceptions for trasnalations you are testing
+def fail_fast_translations_for_block(&block)
+  old_handler = I18n.exception_handler
+  begin
+    I18n.exception_handler = FailFastTranslationExceptionHandler.new
+    yield
+  ensure
+    I18n.exception_handler = old_handler
+  end
+end

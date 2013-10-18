@@ -47,11 +47,13 @@ ActiveRecord::Schema.define(version: 20121106214634) do
     t.date     "start_date"
     t.date     "end_date"
     t.integer  "user_id"
-    t.integer  "from_ledger_account_id"
-    t.integer  "to_ledger_account_id"
+    t.integer  "from_id"
+    t.integer  "to_id"
+    t.integer  "percentage_of_id"
+    t.integer  "transaction_id"
     t.integer  "frequency_id"
-    t.decimal  "amount",                 precision: 14, scale: 2
-    t.decimal  "percentage",             precision: 14, scale: 2
+    t.decimal  "amount",           precision: 14, scale: 2
+    t.decimal  "percentage",       precision: 14, scale: 2
     t.integer  "day_of_month"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -3,13 +3,15 @@ class RecurringTransaction < ActiveRecord::Base
 
   # attr_accessible :title, :body
   has_many :transactions, :class_name => Transaction, :dependent => :destroy
-  belongs_to :from_ledger_account, :class_name => LedgerAccount
-  belongs_to :to_ledger_account, :class_name => LedgerAccount
+  belongs_to :from, :class_name => LedgerAccount
+  belongs_to :to, :class_name => LedgerAccount
+  belongs_to :percentage_of, :class_name => LedgerAccount
   belongs_to :frequency, :class_name => TransactionFrequency
   belongs_to :user
 
   validates_date :start_date
   validates_date :end_date
+  validate :validate_amount_or_percentage
 
   #attr_accessible :start_date, :end_date, :from_ledger_account_id,  :to_ledger_account_id,
   #   :amount, :debit_percentage,:credit_percentage
@@ -36,7 +38,20 @@ class RecurringTransaction < ActiveRecord::Base
 
   def create_transaction(recurrence_date)
     tran = Transaction.create!(:date => recurrence_date)
-    tran_amount = amount || (to_ledger_account.balance(recurrence_date) * (percentage/100))
-    tran.move_money(from_ledger_account, to_ledger_account, tran_amount)
+    tran_amount = calculate_transaction_amount(recurrence_date)
+    tran.move_money(from, to, tran_amount)
+  end
+
+  def calculate_transaction_amount(date)
+    if amount != 0.00
+      amount
+    else
+      ((percentage_of.balance(date).abs) * (percentage/100))
+    end
+  end
+
+  def validate_amount_or_percentage
+    errors.add(:base, I18n.t('errors.recurring_transaction.cannot_have_amount_and_percentage')) if (amount != 0.00) && (percentage != 0.00)
+
   end
 end
