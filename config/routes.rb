@@ -2,7 +2,9 @@ Cashflowprojector::Application.routes.draw do
 
   devise_for :users
   resources :bank_accounts
-  resources :ledger_accounts
+  resources :ledger_accounts do
+    get :series
+  end
   resources :recurring_transactions
 
   root :to => 'bank_accounts#index'

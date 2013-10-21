@@ -1,0 +1,45 @@
+<%= render 'shared/date_range_filter' %>
+<div id="chartcontainer">This is just a replacement in case Javascript is not
+  available or used for SEO purposes</div>
+
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+      var options = {
+        xAxis: { type: 'datetime', dateTimeLabelFormats: { date: '%e %b' }, lineColor: '#999', labels: { enabled: true} },
+        yAxis: { lineWidth: 0,
+          labels: {
+          enabled: true, align: 'left',
+          }
+        },
+        chart: {
+          renderTo: 'chartcontainer',
+          type: 'spline'
+        },
+        series: [{}]
+     };
+
+     $.getJSON('<%=ledger_account_series_path(@ledger_account, :format => :json)%>', function(json_data) {
+         options.series = json_data.series;
+          var chart = new Highcharts.Chart(options);
+  });
+});
+</script>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Opening Balance</th>
+    <th>Activity</th>
+  </tr>
+
+  <% locals[:activity].each do |activity| %>
+    <tr>
+      <td><%= activity[:date] %><td>
+      <td><%= activity[:balance] %><td>
+      <td><%= activity[:activity] %><td>
+    </tr>
+  <% end %>
+
+</table>

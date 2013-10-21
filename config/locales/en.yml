@@ -2,7 +2,20 @@
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
 
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      slashes: "%d/%m/%Y"
+en:
+  helpers:
+    label:
+      recurring_transaction:
+        from: 'Source Ledger Account'
+        to: 'Destination Ledger Account'
+        percentage_of: 'Ledger Account to calculate %age of'
+      date_range_filter:
+        start_date: 'From'
+        end_date: 'To'
+        submit: 'Apply Filter'
 
   errors:
     transaction:

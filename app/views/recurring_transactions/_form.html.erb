@@ -18,11 +18,11 @@
     </div>
     <div class='field'>
       <%= form.label :start_date %>
-      <%= form.date_select :start_date, order: [ :day, :month, :year], start_year: 2000, end_year: 2050 %>
+      <%= form.date_field :start_date%>
     </div>
     <div class='field'>
       <%= form.label :end_date %>
-      <%= form.date_select :end_date, order: [ :day, :month, :year], start_year: 2000, end_year: 2050 %>
+      <%= form.date_field :end_date %>
     </div>
     <div class='field'>
       <%= form.label :amount %>
@@ -56,16 +56,3 @@
   <% end %>
 
 <%end%>
-
-
-<%#
-#   create_table "recurring_transactions", force: true do |t|
-#     t.integer  "percentage_of_id"
-#     t.integer  "frequency_id"
-#     t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
-#     t.decimal  "percentage",       precision: 14, scale: 2, default: 0.0
-#     t.integer  "day_of_month"
-#     t.datetime "created_at"
-#     t.datetime "updated_at"
-#   end
-#   %>

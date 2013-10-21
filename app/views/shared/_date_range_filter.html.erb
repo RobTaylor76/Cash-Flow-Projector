@@ -1,0 +1,11 @@
+<%= form_for(@date_range_filter, :url => @date_range_filter.filter_submit_path, :method => :get) do |f| %>
+  <div class='field'>
+    <%= f.label :start_date %>
+    <%= f.date_field :start_date %>
+    <%= f.label :end_date %>
+    <%= f.date_field :end_date %>
+  </div>
+    <div class="actions">
+      <%= f.submit I18n.t('helpers.label.date_range_filter.submit') %>
+    </div>
+<% end %>
