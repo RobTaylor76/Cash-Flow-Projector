@@ -1,18 +1,31 @@
 class RecurringTransaction < ActiveRecord::Base
   extend DateValidator
 
-  has_many :transactions, :class_name => Transaction, :dependent => :destroy, :as => :source
+  belongs_to :user
   belongs_to :from, :class_name => LedgerAccount
   belongs_to :to, :class_name => LedgerAccount
   belongs_to :percentage_of, :class_name => LedgerAccount
   belongs_to :frequency, :class_name => TransactionFrequency
-  belongs_to :user
+  has_many :transactions, :class_name => Transaction, :dependent => :destroy, :as => :source
 
   validates_date :start_date
   validates_date :end_date
   validate :validate_amount_or_percentage
 
+  validates :amount, :percentage , :numericality => true
+  validates :to_id,  :from_id, :frequency_id, :presence => true
+
+  def edit_recurrences
+    return false unless valid?
+    ActiveRecord::Base.transaction do
+      transactions.destroy_all
+      create_recurrences
+      save!
+    end
+  end
+
   def create_recurrences
+    return false unless valid?
     ActiveRecord::Base.transaction do
       create_transaction(start_date)
       recurrence_date = next_recurrence(start_date)
@@ -21,7 +34,6 @@ class RecurringTransaction < ActiveRecord::Base
         create_transaction(recurrence_date)
         recurrence_date = next_recurrence(recurrence_date)
       end
-
       save!
     end
   end
@@ -37,21 +49,22 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def create_transaction(recurrence_date)
-    tran = Transaction.create(:date => recurrence_date, :source => self)
     tran_amount = calculate_transaction_amount(recurrence_date)
+    return if tran_amount == 0.00
+    tran = Transaction.create(:date => recurrence_date, :source => self)
     tran.move_money(from, to, tran_amount)
   end
 
   def calculate_transaction_amount(date)
-    if amount != 0.00
-      amount
-    else
+    if percentage != 0.00
       ((percentage_of.balance(date).abs) * (percentage/100))
+    else
+      amount
     end
   end
 
   def validate_amount_or_percentage
     errors.add(:base, I18n.t('errors.recurring_transaction.cannot_have_amount_and_percentage')) if (amount != 0.00) && (percentage != 0.00)
-
+    errors.add(:base, I18n.t('errors.recurring_transaction.need_to_specify_which_account_to_take_percentage_of')) if (percentage != 0.00) && (percentage_of.nil?)
   end
 end

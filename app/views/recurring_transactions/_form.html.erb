@@ -1,0 +1,71 @@
+<%= form_for(@recurring_transaction) do |f| %>
+  <% if @recurring_transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@recurring_transaction.errors.count, "error") %> prohibited this bank_account from being saved:</h2>
+
+      <ul>
+        <% @recurring_transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :reference %>
+      <%= form.text_field :reference %>
+    </div>
+    <div class='field'>
+      <%= form.label :start_date %>
+      <%= form.date_select :start_date, order: [ :day, :month, :year], start_year: 2000, end_year: 2050 %>
+    </div>
+    <div class='field'>
+      <%= form.label :end_date %>
+      <%= form.date_select :end_date, order: [ :day, :month, :year], start_year: 2000, end_year: 2050 %>
+    </div>
+    <div class='field'>
+      <%= form.label :amount %>
+      <%= form.text_field :amount %>
+      <%= form.label :percentage %>
+      <%= form.text_field :percentage %>
+    </div>
+
+    <div class='field'>
+      <%= form.label :frequency %>
+      <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }%>
+    </div>
+    <div class='field'>
+      <%= form.label :from %>
+      <%= form.select :from_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+    </div>
+    <div class='field'>
+      <%= form.label :to %>
+      <%= form.select :to_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+    </div>
+    <div class='field'>
+      <%= form.label :percentage_of%>
+      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+    </div>
+
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+<%end%>
+
+
+<%#
+#   create_table "recurring_transactions", force: true do |t|
+#     t.integer  "percentage_of_id"
+#     t.integer  "frequency_id"
+#     t.decimal  "amount",           precision: 14, scale: 2, default: 0.0
+#     t.decimal  "percentage",       precision: 14, scale: 2, default: 0.0
+#     t.integer  "day_of_month"
+#     t.datetime "created_at"
+#     t.datetime "updated_at"
+#   end
+#   %>

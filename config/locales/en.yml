@@ -9,3 +9,4 @@ en:
       unbalanced_transaction: 'Sum of Credits must equal Debits'
     recurring_transaction:
       cannot_have_amount_and_percentage: 'You need to specify either Amount or Percentage'
+      need_to_specify_which_account_to_take_percentage_of: 'You need to specify an account to calculate percentage of'
