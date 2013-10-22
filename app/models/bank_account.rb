@@ -6,6 +6,8 @@ class BankAccount < ActiveRecord::Base
   belongs_to :main_ledger_account, :class_name => LedgerAccount
   belongs_to :charges_ledger_account, :class_name => LedgerAccount
 
+  before_save :update_ledger_account_names, :if => :name_changed?
+
   def deposit(ammount, date)
     main_ledger_account.debit(ammount, date)
   end
@@ -30,8 +32,25 @@ class BankAccount < ActiveRecord::Base
 
   private
 
+  def update_ledger_account_names
+    ActiveRecord::Base.transaction do
+      main_ledger_account.name = main_ledger_name
+      main_ledger_account.save
+      charges_ledger_account.name = charges_ledger_name
+      charges_ledger_account.save
+    end
+  end
+
+  def main_ledger_name
+    self.name
+  end
+
+  def charges_ledger_name
+    "#{self.name} (Interest & Charges)"
+  end
+
   def create_ledger_accounts
-    self.main_ledger_account ||= user.ledger_accounts.build(:name => self.name)
-    self.charges_ledger_account ||= user.ledger_accounts.build(:name => "#{self.name} (Interest & Charges)")
+    self.main_ledger_account ||= user.ledger_accounts.build(:name => main_ledger_name)
+    self.charges_ledger_account ||= user.ledger_accounts.build(:name => charges_ledger_name )
   end
 end

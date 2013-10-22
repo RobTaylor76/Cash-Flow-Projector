@@ -2,6 +2,8 @@
 
 <%= render 'form', :locals => {:form_readonly => true } %>
 
+<%= render 'shared/date_range_filter' %>
+<%= render 'shared/balance_graph', :locals => {:balance_graph_url => ledger_account_series_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json)) } %>
 <%= render 'shared/activity', :locals => {:activity => @activity } %>
 
 <%= link_to 'Edit', edit_ledger_account_path(@ledger_account) %> |

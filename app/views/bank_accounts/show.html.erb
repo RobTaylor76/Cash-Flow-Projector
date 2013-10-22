@@ -2,6 +2,8 @@
 <p id="notice"><%= notice %></p>
 <%= render 'form', :locals => {:form_readonly => true } %>
 
+<%= render 'shared/date_range_filter' %>
+<%= render 'shared/balance_graph', :locals => {:balance_graph_url => bank_account_series_path(@bank_account, @date_range_filter.to_json.merge(:format => :json)) } %>
 
 <%= link_to 'Edit', edit_bank_account_path(@bank_account) %> |
 <%= link_to 'Back', bank_accounts_path %>

@@ -73,7 +73,7 @@ class LedgerAccountsController < ApplicationController
   end
 
   def load_activity
-    set_up_activity_filter
+    set_up_date_range_filter
     @activity = @ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
   end
 
@@ -81,7 +81,7 @@ class LedgerAccountsController < ApplicationController
     params[:ledger_account].permit(:name)
   end
 
-  def set_up_activity_filter
+  def set_up_date_range_filter
     params[:date_range_filter] ||= {}
 
     if params[:date_range_filter][:start_date].present?

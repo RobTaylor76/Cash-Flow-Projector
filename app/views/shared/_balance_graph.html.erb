@@ -1,0 +1,26 @@
+<div id="chartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
+<% graph_url = locals[:balance_graph_url]%>
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+      var options = {
+        xAxis: { type: 'datetime', dateTimeLabelFormats: { date: '%e %b' }, lineColor: '#999', labels: { enabled: true} },
+        yAxis: { lineWidth: 0,
+          labels: {
+          enabled: true, align: 'left',
+          }
+        },
+        chart: {
+          renderTo: 'chartcontainer',
+          type: 'spline'
+        },
+        series: [{}]
+     };
+
+     $.getJSON('<%=graph_url%>', function(json_data) {
+         options.series = json_data.series;
+          var chart = new Highcharts.Chart(options);
+  });
+});
+</script>
