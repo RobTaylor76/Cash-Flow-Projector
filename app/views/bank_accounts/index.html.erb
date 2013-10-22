@@ -21,3 +21,5 @@
 <br />
 
 <%= link_to 'New Bank account', new_bank_account_path %>
+<%= render 'shared/date_range_filter' %>
+<%= render 'shared/balance_graph', :locals => {:balance_graph_url => bank_accounts_graph_bank_accounts_path(@date_range_filter.to_json.merge(:format => :json)) } %>

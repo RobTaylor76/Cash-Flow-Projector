@@ -3,7 +3,11 @@ Cashflowprojector::Application.routes.draw do
   devise_for :users
 
   resources :bank_accounts do
-    get :series
+    get :bank_account_graph
+
+    collection do
+      get :bank_accounts_graph
+    end
   end
 
   resources :ledger_accounts do

@@ -1,12 +1,13 @@
 class BankAccountsController < ApplicationController
 
   respond_to :html, :json
-  before_action :load_bank_account, :only => [:edit, :show, :delete, :update, :series]
+  before_action :load_bank_account, :only => [:edit, :show, :delete, :update, :bank_account_graph]
 
   # GET /bank_accounts
   # GET /bank_accounts.json
   def index
     @bank_accounts = current_user.bank_accounts.all
+    set_up_date_range_filter bank_accounts_path
     respond_with @bank_accounts
   end
 
@@ -52,7 +53,21 @@ class BankAccountsController < ApplicationController
     respond_with @bank_account
   end
 
-  def series
+  def bank_accounts_graph
+    @bank_accounts = current_user.bank_accounts.all
+    set_up_date_range_filter bank_accounts_path
+
+    series = []
+    @bank_accounts.each do |bank_account|
+      activity =  bank_account.main_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
+      bucket_size ||= GraphHelper.calculate_optimal_bucket_size(activity)
+      series << GraphHelper.generate_graph_series(bank_account.name, activity, :balance, bucket_size)
+    end
+    json = {:series => series}
+    respond_with json
+  end
+
+  def bank_account_graph
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@main_activity)
     json = {:series => [GraphHelper.generate_graph_series(@bank_account.main_ledger_account.name, @main_activity, :balance, bucket_size),
@@ -63,7 +78,7 @@ class BankAccountsController < ApplicationController
   private
   def load_bank_account
     @bank_account = current_user.bank_accounts.find(bank_account_id)
-    set_up_date_range_filter
+    set_up_date_range_filter bank_account_path(@bank_account)
   end
 
   def bank_account_id
@@ -74,7 +89,7 @@ class BankAccountsController < ApplicationController
     params[:bank_account].permit(:name)
   end
 
-  def set_up_date_range_filter
+  def set_up_date_range_filter(filter_path)
     params[:date_range_filter] ||= {}
 
     if params[:date_range_filter][:start_date].present?
@@ -90,7 +105,7 @@ class BankAccountsController < ApplicationController
     end
 
     @date_range_filter = DateRangeFilter.new(params[:date_range_filter])
-    @date_range_filter.filter_submit_path = bank_account_path(@bank_account)
+    @date_range_filter.filter_submit_path = filter_path
   end
 
   def load_activity
