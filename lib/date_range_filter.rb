@@ -15,4 +15,8 @@ class DateRangeFilter
   def persisted?
     false
   end
+
+  def to_json
+    {:date_range_filter => {:start_date => self.start_date, :end_date => self.end_date } }
+  end
 end

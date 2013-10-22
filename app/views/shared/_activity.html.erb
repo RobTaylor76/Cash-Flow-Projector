@@ -1,7 +1,6 @@
 <%= render 'shared/date_range_filter' %>
-<div id="chartcontainer">This is just a replacement in case Javascript is not
-  available or used for SEO purposes</div>
-
+<div id="chartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
+<% graph_url = ledger_account_series_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json)) %>
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -20,7 +19,7 @@
         series: [{}]
      };
 
-     $.getJSON('<%=ledger_account_series_path(@ledger_account, :format => :json)%>', function(json_data) {
+     $.getJSON('<%=graph_url%>', function(json_data) {
          options.series = json_data.series;
           var chart = new Highcharts.Chart(options);
   });

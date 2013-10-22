@@ -2,7 +2,7 @@ class LedgerAccountsController < ApplicationController
   respond_to :html, :json
 
 
-  before_action :load_ledger_account, :only => [:edit, :show, :delete, :update]
+  before_action :load_ledger_account, :only => [:edit, :show, :delete, :update, :series]
 
   # GET /ledger_accounts
   # GET /ledger_accounts.json
@@ -33,7 +33,7 @@ class LedgerAccountsController < ApplicationController
   # POST /ledger_accounts
   # POST /ledger_accounts.json
   def create
-    @ledger_account = current_user.ledger_accounts.build(params[:id])
+    @ledger_account = current_user.ledger_accounts.build(ledger_account_id)
     flash[:notice] =  'Ledger Account was successfully created.' if @ledger_account.save
     respond_with @ledger_account
   end
@@ -56,13 +56,20 @@ class LedgerAccountsController < ApplicationController
   end
 
   def series
-    json = {"series"=>[{"name"=>"Net Sales","data"=>[[1378425600000,0.0],[1378684800000,0.0],[1378944000000,0.0],[1379203200000,0.0],[1379462400000,0.0],[1379721600000,0.0],[1379980800000,0.0],[1380240000000,0.0],[1380499200000,0.0],[1380758400000,0.0],[1381017600000,0.0],[1381276800000,0.0],[1381536000000,0.0],[1381795200000,0.0],[1382054400000,0.0],[1382313600000,0.0]]}]}
+    load_activity
+    bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
+    json = {:series => [GraphHelper.generate_graph_series(@ledger_account.name, @activity, :balance, bucket_size)]}
     respond_with json
   end
 
   private
+
   def load_ledger_account
-    @ledger_account = current_user.ledger_accounts.find(params[:id])
+    @ledger_account = current_user.ledger_accounts.find(ledger_account_id)
+  end
+
+  def ledger_account_id
+    params[:id] || params[:ledger_account_id]
   end
 
   def load_activity
