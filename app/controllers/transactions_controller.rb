@@ -7,8 +7,9 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    @transactions = current_user.transactions.all
     set_up_date_range_filter transactions_path
+    @transactions = apply_date_range_filter current_user.transactions.order(:date => :asc)
+
     respond_with @transactions
   end
 

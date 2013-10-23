@@ -11,12 +11,13 @@ class Transaction < ActiveRecord::Base
   after_initialize :init
   after_save :propogate_date_to_ledger_entries, :if => :date_changed?
 
+  scope :date_range_filter, lambda{|from, to|  where('transactions.date >= ? AND transactions.date <= ?', from,to)}
   scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
   scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
 
-#  def amount
-#    ledger_entries.sum(:credit)
-#  end
+  def amount
+    ledger_entries.sum(:credit)
+  end
 
   def balanced?
     sum_credits = ledger_entries.map(&:credit).reduce(:+)

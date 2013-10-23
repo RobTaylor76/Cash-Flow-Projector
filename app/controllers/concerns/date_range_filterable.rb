@@ -1,6 +1,10 @@
 module DateRangeFilterable
   extend ActiveSupport::Concern
 
+  def apply_date_range_filter(scope)
+    scope.date_range_filter(@date_range_filter.start_date,@date_range_filter.end_date)
+  end
+
   def set_up_date_range_filter(filter_path)
     params[:date_range_filter] ||= {}
 

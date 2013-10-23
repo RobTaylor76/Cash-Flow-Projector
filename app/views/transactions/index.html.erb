@@ -1,4 +1,5 @@
 <h1>Listing Transactions</h1>
+<%= render 'shared/date_range_filter' %>
 
 <table>
   <tr>
@@ -11,6 +12,7 @@
   <tr>
     <td><%= I18n.l(transaction.date)%><td>
     <td><%= transaction.reference %><td>
+    <td><%= transaction.amount %><td>
     <td><%= link_to 'Show', transaction_path(transaction) %></td>
     <td><%= link_to 'Edit', edit_transaction_path(transaction) %></td>
   </tr>
