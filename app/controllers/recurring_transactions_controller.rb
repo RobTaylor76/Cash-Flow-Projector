@@ -1,5 +1,7 @@
 class RecurringTransactionsController < ApplicationController
   respond_to :html, :json
+  before_action :load_transaction, :only => [:edit, :show, :delete, :update]
+
   # GET /recurring_transactions
   # GET /recurring_transactions.json
   def index
@@ -10,7 +12,6 @@ class RecurringTransactionsController < ApplicationController
   # GET /recurring_transactions/1
   # GET /recurring_transactions/1.json
   def show
-    @recurring_transaction = current_user.recurring_transactions.find(params[:id])
     respond_with @recurring_transaction
   end
 
@@ -24,7 +25,6 @@ class RecurringTransactionsController < ApplicationController
   # GET /recurring_transactions/new
   # GET /recurring_transactions/new.json
   def edit
-    @recurring_transaction = current_user.recurring_transactions.find(params[:id])
     respond_with @recurring_transaction
   end
 
@@ -39,8 +39,6 @@ class RecurringTransactionsController < ApplicationController
   # PUT /recurring_transactions/1
   # PUT /recurring_transactions/1.json
   def update
-    @recurring_transaction = current_user.recurring_transactions.find(params[:id])
-
     @recurring_transaction.assign_attributes(strong_params)
 
     if @recurring_transaction.edit_recurrences
@@ -52,16 +50,22 @@ class RecurringTransactionsController < ApplicationController
   # DELETE /recurring_transactions/1
   # DELETE /recurring_transactions/1.json
   def destroy
-    @recurring_transaction = current_user.recurring_transactions.find(params[:id])
     @recurring_transaction.destroy
     respond_with @recurring_transaction
   end
 
   private
 
+  def load_transaction
+    @recurring_transaction = current_user.recurring_transactions.find(transaction_id)
+  end
+
+  def transaction_id
+    params[:id]
+  end
+
   def strong_params
     params[:recurring_transaction].permit([:reference, :start_date, :end_date, :amount, :percentage, :percentage_of_id, :from_id, :to_id, :frequency_id ])
   end
-
 end
 

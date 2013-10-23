@@ -1,7 +1,7 @@
 <%= form_for(@recurring_transaction) do |f| %>
   <% if @recurring_transaction.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(@recurring_transaction.errors.count, "error") %> prohibited this bank_account from being saved:</h2>
+      <h2><%= pluralize(@recurring_transaction.errors.count, "error") %> prohibited this recurring transaction from being saved:</h2>
 
       <ul>
         <% @recurring_transaction.errors.full_messages.each do |msg| %>

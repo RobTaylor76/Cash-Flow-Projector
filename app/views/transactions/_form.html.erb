@@ -1,0 +1,31 @@
+<%= form_for(@transaction) do |f| %>
+  <% if @transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
+
+      <ul>
+        <% @transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :reference %>
+      <%= form.text_field :reference %>
+    </div>
+    <div class='field'>
+      <%= form.label :date %>
+      <%= form.date_field :date%>
+    </div>
+
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+<%end%>

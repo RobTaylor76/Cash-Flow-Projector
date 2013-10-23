@@ -9,6 +9,7 @@ class Transaction < ActiveRecord::Base
   has_many :ledger_entries, :dependent => :destroy
 
   after_initialize :init
+  after_save :propogate_date_to_ledger_entries, :if => :date_changed?
 
   scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
   scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
@@ -36,5 +37,11 @@ class Transaction < ActiveRecord::Base
   def init
     self.date ||= Date.today
     self.reference ||= ''
+  end
+
+  def propogate_date_to_ledger_entries
+    ActiveRecord::Base.transaction do
+      ledger_entries.update_all(:date => self.date)
+    end
   end
 end

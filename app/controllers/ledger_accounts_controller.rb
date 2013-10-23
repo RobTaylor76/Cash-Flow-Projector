@@ -1,7 +1,7 @@
 class LedgerAccountsController < ApplicationController
+  include DateRangeFilterable
+
   respond_to :html, :json
-
-
   before_action :load_ledger_account, :only => [:edit, :show, :delete, :update, :series]
 
   # GET /ledger_accounts
@@ -58,7 +58,8 @@ class LedgerAccountsController < ApplicationController
   def series
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
-    json = {:series => [GraphHelper.generate_graph_series(@ledger_account.name, @activity, :balance, bucket_size)]}
+    json = {:series => [GraphHelper.generate_graph_series(@ledger_account.name, @activity, :balance, bucket_size),
+                        GraphHelper.generate_graph_series(@ledger_account.name + ' Activity', @activity, :activity, bucket_size)]}
     respond_with json
   end
 
@@ -73,30 +74,11 @@ class LedgerAccountsController < ApplicationController
   end
 
   def load_activity
-    set_up_date_range_filter
+    set_up_date_range_filter ledger_account_path(@ledger_account)
     @activity = @ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
   end
 
   def strong_params
     params[:ledger_account].permit(:name)
-  end
-
-  def set_up_date_range_filter
-    params[:date_range_filter] ||= {}
-
-    if params[:date_range_filter][:start_date].present?
-      params[:date_range_filter][:start_date] = Date.parse(params[:date_range_filter][:start_date])
-    else
-      params[:date_range_filter][:start_date] = Date.today-30
-    end
-
-    if params[:date_range_filter][:end_date].present?
-      params[:date_range_filter][:end_date] = Date.parse(params[:date_range_filter][:end_date])
-    else
-      params[:date_range_filter][:end_date] = Date.today
-    end
-
-    @date_range_filter = DateRangeFilter.new(params[:date_range_filter])
-    @date_range_filter.filter_submit_path = ledger_account_path(@ledger_account)
   end
 end

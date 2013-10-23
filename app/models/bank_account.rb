@@ -6,7 +6,7 @@ class BankAccount < ActiveRecord::Base
   belongs_to :main_ledger_account, :class_name => LedgerAccount
   belongs_to :charges_ledger_account, :class_name => LedgerAccount
 
-  before_save :update_ledger_account_names, :if => :name_changed?
+  after_save :update_ledger_account_names, :if => :name_changed?
 
   def deposit(ammount, date)
     main_ledger_account.debit(ammount, date)

@@ -8,13 +8,27 @@ class GraphHelper
 
       increment = calculate_increment(bucket_size)
 
+      cashflow_total = 0
       next_date = start_date
-      while next_date < end_date
-        daily_balance = daily_balances.find{|b| b[:date] == next_date}
-        break if daily_balance.nil?
-        series_data << [format_date(daily_balance[:date]),daily_balance[field_to_graph].to_f]
-        next_date = next_date + increment
+      daily_balances.each do |daily_balance|
+        cashflow_total = cashflow_total + daily_balance[:activity]
+        if daily_balance[:date] == next_date
+          graph_point = if field_to_graph == :balance
+                          daily_balance[field_to_graph]
+                        else
+                          cashflow_total
+                        end
+          series_data << [format_date(daily_balance[:date]),graph_point.to_f]
+          cashflow_total = 0
+          next_date = next_date + increment
+        end
       end
+      # while next_date < end_date
+      #   daily_balance = daily_balances.find{|b| b[:date] == next_date}
+      #   break if daily_balance.nil?
+      #   series_data << [format_date(daily_balance[:date]),daily_balance[field_to_graph].to_f]
+      #   next_date = next_date + increment
+      # end
       {:name => series_name, :data => series_data}
     end
 
@@ -46,7 +60,7 @@ class GraphHelper
     end
 
     def format_date(date)
-      date.to_datetime.to_i * 1000 
+     date.to_datetime.to_i * 1000 
     end
 
     def format_number(value)

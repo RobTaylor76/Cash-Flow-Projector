@@ -6,18 +6,20 @@ Scopes
 
 Stage 1 -
 * Single Entry book keeping - one bank account, credits and debits recorded against that account. It is a assumed it is a debit account (i.e normal balance would be in debit)
-* We need to know what the balance is on each date (daily balances). To do this we need to store the debits and credits as transactions against the account.
-* future tranactions are added into tranaction log...
-* daily balance of a account is a sum of all debits - sum of all credits before the required date.
 * All entries are manual - future projected incomes/expenses are added manually for a given date i.e. manually re-occured
-* Need some visualisation of daily balances - Javascript library?
+* We need to know what the balance is on each date (daily balances). To do this we need to store the debits and credits as transactions against the account. -Done
+* future tranactions are added into tranaction log... - Done
+* daily balance of a account is a sum of all debits - sum of all credits before the required date. - Done
+* Need some visualisation of daily balances -  Done - using High Charts
 
 Stage 2 -
-* Add the ability for recurring incommings and outgoings - these will project into future and create the required trasactions automatically.
-* Add the ability to have interest based incommings and outgoings. use to model interest on a loan. 
+* Add the ability for recurring incommings and outgoings - these will project into future and create the required trasactions automatically. - Done
+* Add the ability to have interest based incommings and outgoings. use to model interest on a loan.  -Done
 
 Stage 3 -
-* Add the ability for double entry book keeping. so a loan payment from the bank account pays of the loan account. Will need to model both credit and debit account types and be able to encapsulate the transfer of money from one account to the other. Interest will need be double entered into a Loan Interest account. Income and expense ledger accounts will be needed as well. 
+* Add the ability for double entry book keeping. so a loan payment from the bank account pays of the loan account. Interest will need be double entered into a Loan Interest account. - Done
+*  Income and expense ledger accounts will be needed as well. -Done (Can create new ledger accounts)
+* Will need to model both credit and debit account types and be able to encapsulate the transfer of money from one account to the other. --Done (not distinguishing between credit /debit accounts at this time)
 
 Stage 4 - 
 * Add  probability to each income and outgoing. Allow what if scenario planning.

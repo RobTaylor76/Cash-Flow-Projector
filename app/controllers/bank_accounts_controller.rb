@@ -1,4 +1,5 @@
 class BankAccountsController < ApplicationController
+  include DateRangeFilterable
 
   respond_to :html, :json
   before_action :load_bank_account, :only => [:edit, :show, :delete, :update, :bank_account_graph]
@@ -21,7 +22,6 @@ class BankAccountsController < ApplicationController
   # GET /bank_accounts/new.json
   def new
     @bank_account = current_user.bank_accounts.build
-    set_up_date_range_filter
     respond_with @bank_account
   end
 
@@ -89,24 +89,6 @@ class BankAccountsController < ApplicationController
     params[:bank_account].permit(:name)
   end
 
-  def set_up_date_range_filter(filter_path)
-    params[:date_range_filter] ||= {}
-
-    if params[:date_range_filter][:start_date].present?
-      params[:date_range_filter][:start_date] = Date.parse(params[:date_range_filter][:start_date])
-    else
-      params[:date_range_filter][:start_date] = Date.today-30
-    end
-
-    if params[:date_range_filter][:end_date].present?
-      params[:date_range_filter][:end_date] = Date.parse(params[:date_range_filter][:end_date])
-    else
-      params[:date_range_filter][:end_date] = Date.today
-    end
-
-    @date_range_filter = DateRangeFilter.new(params[:date_range_filter])
-    @date_range_filter.filter_submit_path = filter_path
-  end
 
   def load_activity
     @main_activity = @bank_account.main_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
