@@ -8,17 +8,16 @@ module DateRangeFilterable
   def set_up_date_range_filter(filter_path)
     date_range_params =  params[:date_range_filter] ||= {}
 
-
     if date_range_params[:start_date].present?
       date_range_params[:start_date] = Date.parse(date_range_params[:start_date])
     else
-      date_range_params[:start_date] = Date.today - 15.days
+      date_range_params[:start_date] = Date.today.beginning_of_month
     end
 
     if date_range_params[:end_date].present?
       date_range_params[:end_date] = Date.parse(date_range_params[:end_date])
     else
-      date_range_params[:end_date] = Date.today + 15.days
+      date_range_params[:end_date] = Date.today.end_of_month
     end
 
     if date_range_params[:balance_date].present?

@@ -15,7 +15,12 @@ Cashflowprojector::Application.routes.draw do
   end
 
   resources :transactions
-  resources :recurring_transactions
+
+  resources :recurring_transactions do
+    collection do
+      get :recur_transaction
+    end
+  end
 
   root :to => 'bank_accounts#index'
 

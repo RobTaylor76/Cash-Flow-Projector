@@ -2,6 +2,13 @@ class RecurringTransactionsController < ApplicationController
   respond_to :html, :json
   before_action :load_transaction, :only => [:edit, :show, :destroy, :update]
 
+
+  def recur_transaction
+    @transaction = current_user.transactions.find(params[:transaction_id])
+    @recurring_transaction = TransactionHelper.create_recurrable_transaction(@transaction)
+    render :new
+  end
+
   # GET /recurring_transactions
   # GET /recurring_transactions.json
   def index

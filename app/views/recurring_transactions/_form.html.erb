@@ -45,7 +45,7 @@
     </div>
     <div class='field'>
       <%= form.label :percentage_of%>
-      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {include_blank: 'N/A'},{:disabled => locals[:form_readonly]}%>
     </div>
 
   <% end %>

@@ -3,4 +3,4 @@
 <%= link_to 'Back', transactions_path %>
 
 <%= render 'form', :locals => {:form_readonly => false} %>
-
+<%= link_to 'Recur Transaction', recur_transaction_recurring_transactions_path(:transaction_id => @transaction.id) %>

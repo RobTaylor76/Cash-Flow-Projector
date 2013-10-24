@@ -15,6 +15,8 @@ class RecurringTransaction < ActiveRecord::Base
   validates :amount, :percentage , :numericality => true
   validates :to_id,  :from_id, :frequency_id, :presence => true
 
+  after_initialize :set_defaults
+
   def edit_recurrences
     return false unless valid?
     ActiveRecord::Base.transaction do
@@ -66,5 +68,11 @@ class RecurringTransaction < ActiveRecord::Base
   def validate_amount_or_percentage
     errors.add(:base, I18n.t('errors.recurring_transaction.cannot_have_amount_and_percentage')) if (amount != 0.00) && (percentage != 0.00)
     errors.add(:base, I18n.t('errors.recurring_transaction.need_to_specify_which_account_to_take_percentage_of')) if (percentage != 0.00) && (percentage_of.nil?)
+  end
+
+  def set_defaults
+    self.frequency ||= TransactionFrequency.monthly
+    self.start_date ||= Date.today
+    self.end_date ||= self.start_date + 1.year
   end
 end

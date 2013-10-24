@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_transaction, :only => [:edit, :show, :destroy, :update, :transaction_graph]
+  before_action :load_transaction, :only => [:edit, :show, :destroy, :update]
 
   # GET /transactions
   # GET /transactions.json
