@@ -15,6 +15,8 @@ class BankAccountsController < ApplicationController
   # GET /bank_accounts/1
   # GET /bank_accounts/1.json
   def show
+    load_activity
+    load_ledger_entries
     respond_with @bank_account
   end
 
@@ -71,7 +73,9 @@ class BankAccountsController < ApplicationController
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@main_activity)
     json = {:series => [GraphHelper.generate_graph_series(@bank_account.main_ledger_account.name, @main_activity, :balance, bucket_size),
-                        GraphHelper.generate_graph_series(@bank_account.charges_ledger_account.name, @charges_activity, :balance, bucket_size)]}
+                        GraphHelper.generate_graph_series(@bank_account.main_ledger_account.name + 'Activity' , @main_activity, :activity, bucket_size),
+                        GraphHelper.generate_graph_series(@bank_account.charges_ledger_account.name, @charges_activity, :balance, bucket_size),
+                        GraphHelper.generate_graph_series(@bank_account.charges_ledger_account.name + 'Activity', @charges_activity, :activity, bucket_size)]}
     respond_with json
   end
 
@@ -89,6 +93,9 @@ class BankAccountsController < ApplicationController
     params[:bank_account].permit(:name)
   end
 
+  def load_ledger_entries
+    @ledger_entries = apply_date_range_filter @bank_account.main_ledger_account.ledger_entries.includes(:transaction).order(:date => :asc)
+  end
 
   def load_activity
     @main_activity = @bank_account.main_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)

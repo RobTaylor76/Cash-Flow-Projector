@@ -1,8 +1,10 @@
 <h1>Bank Accounts</h1>
+<%= link_to 'New Bank account', new_bank_account_path %>
 
 <table>
   <tr>
-    <th></th>
+    <th>Account</th>
+    <th>Balance</th>
     <th></th>
     <th></th>
     <th></th>
@@ -10,7 +12,8 @@
 
 <% @bank_accounts.each do |bank_account| %>
   <tr>
-    <td><%= bank_account.name %><td>
+    <td><%= bank_account.name %></td>
+    <td><%= bank_account.balance(@date_range_filter.balance_date)%> </td>
     <td><%= link_to 'Show', bank_account_path(bank_account) %></td>
     <td><%= link_to 'Edit', edit_bank_account_path(bank_account) %></td>
     <td><%= link_to 'Destroy', bank_account_path(bank_account), confirm: 'Are you sure?', method: :delete %></td>
@@ -20,6 +23,5 @@
 
 <br />
 
-<%= link_to 'New Bank account', new_bank_account_path %>
-<%= render 'shared/date_range_filter' %>
+<%= render 'shared/date_range_filter', :locals => {:show_balance_date => true } %>
 <%= render 'shared/balance_graph', :locals => {:balance_graph_url => bank_accounts_graph_bank_accounts_path(@date_range_filter.to_json.merge(:format => :json)) } %>

@@ -63,9 +63,5 @@ class GraphHelper
      date.to_datetime.to_i * 1000 
     end
 
-    def format_number(value)
-      '%.2f' % value
-    end
-
   end
 end

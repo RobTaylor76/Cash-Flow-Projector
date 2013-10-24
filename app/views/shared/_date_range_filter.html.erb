@@ -1,11 +1,19 @@
 <%= form_for(@date_range_filter, :url => @date_range_filter.filter_submit_path, :method => :get) do |f| %>
+
+  <% if locals.present? && locals[:show_balance_date] %>
+    <div class='field'>
+      <%= f.label :balance_date %>
+      <%= f.date_field :balance_date %>
+    </div>
+  <% end %>
   <div class='field'>
     <%= f.label :start_date %>
     <%= f.date_field :start_date %>
     <%= f.label :end_date %>
     <%= f.date_field :end_date %>
   </div>
-    <div class="actions">
-      <%= f.submit I18n.t('helpers.label.date_range_filter.submit') %>
-    </div>
+
+  <div class="actions">
+    <%= f.submit I18n.t('helpers.label.date_range_filter.submit') %>
+  </div>
 <% end %>

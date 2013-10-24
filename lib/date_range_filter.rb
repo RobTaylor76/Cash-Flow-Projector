@@ -3,7 +3,7 @@ class DateRangeFilter
   include ActiveModel::Conversion
   extend DateValidator
 
-  attr_accessor :start_date, :end_date, :filter_submit_path
+  attr_accessor :start_date, :end_date, :balance_date, :filter_submit_path
   validates_date :start_date, :end_date
 
   def initialize(attributes = {})
@@ -17,6 +17,6 @@ class DateRangeFilter
   end
 
   def to_json
-    {:date_range_filter => {:start_date => self.start_date, :end_date => self.end_date } }
+    {:date_range_filter => {:start_date => self.start_date, :end_date => self.end_date, :balance_date => self.balance_date } }
   end
 end

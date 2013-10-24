@@ -8,6 +8,7 @@ class LedgerEntry < ActiveRecord::Base
 
   validates_date :date
 
+  scope :date_range_filter, lambda{|from, to|  where('ledger_entries.date >= ? AND ledger_entries.date <= ?', from,to)}
   scope :before_date, lambda { |cutoff|  where('ledger_entries.date < ?', cutoff) }
   scope :for_date, lambda { |required_date| where('ledger_entries.date  = ?', required_date) }
 

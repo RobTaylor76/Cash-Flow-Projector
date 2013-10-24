@@ -15,10 +15,14 @@
       <%= form.label :name %>
       <%= form.text_field :name %>
     </div>
-    <div class='field'>
-      <%= form.label :balance %>
-      <%= form.text_field :balance ,:disabled => true %>
-    </div>
+    <% if locals[:form_readonly] %>
+      <% balance_on_date = @ledger_account.balance(@date_range_filter.balance_date)%>
+
+      <div class='field'>
+        <%= form.label :balance %>
+        <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
+      </div>
+    <% end %>
   <% end %>
   <% unless locals[:form_readonly] %>
     <div class="actions">

@@ -1,0 +1,18 @@
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Reference</th>
+    <th>In</th>
+    <th>Out</th>
+  </tr>
+
+  <% @ledger_entries.each do |entry| %>
+    <tr>
+      <td><%= I18n.l(entry.date) %></td>
+      <td><%= entry.transaction.reference %></td>
+      <td><%= format_number(entry.debit) %></td>
+      <td><%= format_number(entry.credit) %></td>
+    </tr>
+  <% end %>
+
+</table>

@@ -10,7 +10,7 @@ class Transaction < ActiveRecord::Base
   accepts_nested_attributes_for :ledger_entries
 
   after_initialize :init
-  after_save :propogate_date_to_ledger_entries, :if => :date_changed?
+  after_save :propogate_date_to_ledger_entries
 
   scope :date_range_filter, lambda{|from, to|  where('transactions.date >= ? AND transactions.date <= ?', from,to)}
   scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }

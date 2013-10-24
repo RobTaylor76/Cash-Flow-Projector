@@ -15,6 +15,7 @@ class LedgerAccountsController < ApplicationController
   # GET /ledger_accounts/1.json
   def show
     load_activity
+    load_ledger_entries
     respond_with @ledger_account
   end
 
@@ -27,13 +28,12 @@ class LedgerAccountsController < ApplicationController
 
   # GET /ledger_accounts/1/edit
   def edit
-    load_activity
   end
 
   # POST /ledger_accounts
   # POST /ledger_accounts.json
   def create
-    @ledger_account = current_user.ledger_accounts.build(ledger_account_id)
+    @ledger_account = current_user.ledger_accounts.build(strong_params)
     flash[:notice] =  'Ledger Account was successfully created.' if @ledger_account.save
     respond_with @ledger_account
   end
@@ -71,6 +71,10 @@ class LedgerAccountsController < ApplicationController
 
   def ledger_account_id
     params[:id] || params[:ledger_account_id]
+  end
+
+  def load_ledger_entries
+    @ledger_entries = apply_date_range_filter @ledger_account.ledger_entries.includes(:transaction).order(:date => :asc)
   end
 
   def load_activity

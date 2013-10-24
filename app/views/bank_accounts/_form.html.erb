@@ -10,38 +10,39 @@
       </ul>
     </div>
   <% end %>
-  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
-    <div class='field'>
-      <%= form.label :name %>
-      <%= form.text_field :name %>
-      <%= form.label :balance %>
-      <%= form.text_field :balance ,:disabled => true %>
-    </div>
-  <% end %>
+
+  <% if locals[:form_readonly] %>
   <%= f.fields_for @bank_account.main_ledger_account do |ff| %>
+    <% balance_on_date = ff.object.balance(@date_range_filter.balance_date)%>
     <% ff.with_options(:disabled => true) do |readonly| %>
-      <div><p> Main Ledger Account</p>
+      <div>
         <div class='field'>
-          <%= ff.label :name %>
           <%= readonly.text_field :name %>
           <%= ff.label :balance %>
-          <%= readonly.text_field :balance %>
+          <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
         </div>
       </div>
     <% end %>
   <% end %>
   <%= f.fields_for @bank_account.charges_ledger_account do |ff| %>
+    <% balance_on_date = ff.object.balance(@date_range_filter.balance_date)%>
     <% ff.with_options(:disabled => true) do |readonly| %>
-      <div><p> Charges Ledger Account</p>
+      <div>
         <div class='field'>
-          <%= ff.label :name %>
           <%= readonly.text_field :name %>
           <%= ff.label :balance %>
-          <%= readonly.text_field :balance %>
+          <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
         </div>
       </div>
     <% end %>
   <% end %>
+<% else %>
+    <div class='field'>
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+<%end %>
+
   <% unless locals[:form_readonly] %>
     <div class="actions">
       <%= f.submit %>
