@@ -12,7 +12,7 @@ class RecurringTransactionsController < ApplicationController
   # GET /recurring_transactions
   # GET /recurring_transactions.json
   def index
-    @recurring_transactions = current_user.recurring_transactions.all
+    @recurring_transactions = current_user.recurring_transactions.order(:start_date => :asc, :end_date => :asc)
     respond_with @recurring_transactions
   end
 
