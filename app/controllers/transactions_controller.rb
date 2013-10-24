@@ -2,7 +2,7 @@ class TransactionsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_transaction, :only => [:edit, :show, :delete, :update, :transaction_graph]
+  before_action :load_transaction, :only => [:edit, :show, :destroy, :update, :transaction_graph]
 
   # GET /transactions
   # GET /transactions.json
@@ -23,6 +23,7 @@ class TransactionsController < ApplicationController
   # GET /transactions/new.json
   def new
     @transaction = current_user.transactions.build
+    2.times { @transaction.ledger_entries.build } # shortcut to enable us to add ledger entries on form
     respond_with @transaction
   end
 
@@ -65,6 +66,6 @@ class TransactionsController < ApplicationController
   end
 
   def strong_params
-    params[:transaction].permit([:date, :reference])
+    params[:transaction].permit([:date, :reference, :ledger_entries_attributes => [:id, :debit, :credit, :ledger_account_id]])
   end
 end

@@ -21,6 +21,20 @@
       <%= form.date_field :date%>
     </div>
 
+    <%= form.fields_for :ledger_entries do |ff_form| %>
+
+      <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
+        <div class='field'>
+          <%= entry.label :ledger_account %>
+          <%= entry.select :ledger_account_id , current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+          <%= entry.label :debit %>
+          <%= entry.text_field :debit %>
+          <%= entry.label :credit %>
+          <%= entry.text_field :credit %>
+        </div>
+      <% end %>
+    <% end %>
+
   <% end %>
   <% unless locals[:form_readonly] %>
     <div class="actions">

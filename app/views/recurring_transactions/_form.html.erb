@@ -33,19 +33,19 @@
 
     <div class='field'>
       <%= form.label :frequency %>
-      <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }%>
+      <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :from %>
-      <%= form.select :from_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+      <%= form.select :from_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :to %>
-      <%= form.select :to_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+      <%= form.select :to_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :percentage_of%>
-      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }%>
+      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
 
   <% end %>

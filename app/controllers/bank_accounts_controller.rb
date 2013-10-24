@@ -2,7 +2,7 @@ class BankAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_bank_account, :only => [:edit, :show, :delete, :update, :bank_account_graph]
+  before_action :load_bank_account, :only => [:edit, :show, :destroy, :update, :bank_account_graph]
 
   # GET /bank_accounts
   # GET /bank_accounts.json

@@ -1,6 +1,6 @@
 class RecurringTransactionsController < ApplicationController
   respond_to :html, :json
-  before_action :load_transaction, :only => [:edit, :show, :delete, :update]
+  before_action :load_transaction, :only => [:edit, :show, :destroy, :update]
 
   # GET /recurring_transactions
   # GET /recurring_transactions.json

@@ -2,7 +2,7 @@ class LedgerAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_ledger_account, :only => [:edit, :show, :delete, :update, :series]
+  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :series]
 
   # GET /ledger_accounts
   # GET /ledger_accounts.json

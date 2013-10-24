@@ -7,6 +7,7 @@ class Transaction < ActiveRecord::Base
   belongs_to :user
   belongs_to :source, :polymorphic => true
   has_many :ledger_entries, :dependent => :destroy
+  accepts_nested_attributes_for :ledger_entries
 
   after_initialize :init
   after_save :propogate_date_to_ledger_entries, :if => :date_changed?
