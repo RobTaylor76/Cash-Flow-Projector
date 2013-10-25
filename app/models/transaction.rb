@@ -43,7 +43,7 @@ class Transaction < ActiveRecord::Base
 
   def propogate_date_to_ledger_entries
     ActiveRecord::Base.transaction do
-      ledger_entries.update_all(:date => self.date)
+      ledger_entries.update_all({:date => self.date},{:transaction_id => self.id})
     end
   end
 end
