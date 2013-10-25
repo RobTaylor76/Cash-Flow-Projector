@@ -12,7 +12,7 @@ class GraphHelper
       next_date = start_date
       daily_balances.each do |daily_balance|
         cashflow_total = cashflow_total + daily_balance[:activity]
-        if daily_balance[:date] == next_date
+        if (daily_balance[:date] == next_date) || (daily_balance[:date] == end_date)
           graph_point = if field_to_graph == :balance
                           daily_balance[field_to_graph]
                         else

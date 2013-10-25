@@ -20,7 +20,8 @@ describe GraphHelper do
     json = GraphHelper.generate_graph_series(series_name , daily_balances, :balance, :week)
 
     expected_series_data =  generate_expected_data(daily_balances, start_date, end_date, :week)
-    expected_series_data.size.should  == 53 #?
+    expected_series_data.first[0].should == format_date(start_date)
+    expected_series_data.last[0].should == format_date(end_date)
     expected_json = {:name => series_name, :data => expected_series_data}
 
     json.should == expected_json
@@ -38,16 +39,17 @@ describe GraphHelper do
                   1.day
                 end
     bucket = {}
-    bucket_balances = []
+    series_data = []
 
     next_date = start_date
-    while next_date < end_date
-      daily_balance = daily_balances.find{|b| b[:date] == next_date}
-      break if daily_balance.nil?
-      bucket_balances << [format_date(next_date), daily_balance[:balance].to_f]
-      next_date = next_date + increment
+    daily_balances.each do |daily_balance|
+      if (daily_balance[:date] == next_date) || (daily_balance[:date] == end_date)
+        series_data << [format_date(daily_balance[:date]),daily_balance[:balance].to_f]
+        cashflow_total = 0
+        next_date = next_date + increment
+      end
     end
-    bucket_balances
+    series_data
   end
 
   def format_date(date)
