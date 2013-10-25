@@ -16,6 +16,8 @@ class LedgerEntry < ActiveRecord::Base
     self.date ||= Date.today
     self.credit ||= 0
     self.debit ||= 0
-    self.user ||= ledger_account.user if ledger_account
+    if ledger_account_id.present?
+      self.user_id ||= ledger_account.user_id
+    end
   end
 end

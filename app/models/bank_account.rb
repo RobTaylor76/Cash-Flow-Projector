@@ -50,7 +50,11 @@ class BankAccount < ActiveRecord::Base
   end
 
   def create_ledger_accounts
-    self.main_ledger_account ||= user.ledger_accounts.build(:name => main_ledger_name)
-    self.charges_ledger_account ||= user.ledger_accounts.build(:name => charges_ledger_name )
+    unless self.main_ledger_account_id.present?
+      self.main_ledger_account = user.ledger_accounts.build(:name => main_ledger_name)
+    end
+    unless self.charges_ledger_account_id.present?
+      self.charges_ledger_account = user.ledger_accounts.build(:name => charges_ledger_name )
+    end
   end
 end

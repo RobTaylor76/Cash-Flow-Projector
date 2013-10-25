@@ -28,6 +28,10 @@ group :development, :test do
   gem 'pry'
 end
 
+group :development do
+  gem 'bullet'
+end
+
 gem 'rails4_upgrade'
 
 

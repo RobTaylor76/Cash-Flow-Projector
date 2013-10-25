@@ -7,7 +7,7 @@ class BankAccountsController < ApplicationController
   # GET /bank_accounts
   # GET /bank_accounts.json
   def index
-    @bank_accounts = current_user.bank_accounts.all
+    @bank_accounts = current_user.bank_accounts.includes(:main_ledger_account)
     set_up_date_range_filter bank_accounts_path
     respond_with @bank_accounts
   end
@@ -56,7 +56,7 @@ class BankAccountsController < ApplicationController
   end
 
   def bank_accounts_graph
-    @bank_accounts = current_user.bank_accounts.all
+    @bank_accounts = current_user.bank_accounts.includes(:main_ledger_account)
     set_up_date_range_filter bank_accounts_path
 
     series = []
@@ -81,7 +81,7 @@ class BankAccountsController < ApplicationController
 
   private
   def load_bank_account
-    @bank_account = current_user.bank_accounts.find(bank_account_id)
+    @bank_account = current_user.bank_accounts.includes(:main_ledger_account,:charges_ledger_account).find(bank_account_id)
     set_up_date_range_filter bank_account_path(@bank_account)
   end
 

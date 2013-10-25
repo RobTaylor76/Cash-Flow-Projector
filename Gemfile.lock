@@ -45,6 +45,8 @@ GEM
     atomic (1.1.14)
     bcrypt-ruby (3.1.2)
     builder (3.1.4)
+    bullet (4.6.0)
+      uniform_notifier
     coderay (1.0.7)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
@@ -168,6 +170,7 @@ GEM
     uglifier (2.2.1)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    uniform_notifier (1.2.0)
     warden (1.2.3)
       rack (>= 1.0)
 
@@ -181,6 +184,7 @@ DEPENDENCIES
   actionview-encoded_mail_to (~> 1.0.4)
   activerecord-session_store (~> 0.0.1)
   activeresource (~> 4.0.0.beta1)
+  bullet
   coffee-rails (~> 4.0.0)
   devise (~> 3.0.0)
   execjs
