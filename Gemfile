@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'rails', '~> 4.0.0'
-gem 'therubyracer', :require => 'v8'
+#gem 'therubyracer', :require => 'v8'
 gem 'execjs'
 gem 'devise' , '~> 3.0.0'
 # Bundle edge Rails instead:
