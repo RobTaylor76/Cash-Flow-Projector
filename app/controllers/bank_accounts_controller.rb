@@ -57,9 +57,11 @@ class BankAccountsController < ApplicationController
 
   # POST - import bank statement
   def import_statement
-    file_name = DataImporter.upload_file(params[:file_upload])
-    DataImporter.remove_file(file_name)
-    render :text => "File has been uploaded successfully"
+    if params[:file_upload] && params[:file_upload][:file]
+      csv_text = params[:file_upload][:file].read
+      BankAccountImport.process_statement(@bank_account,csv_text)
+      render :text => "File has been uploaded successfully"
+    end
   end
 
   def bank_accounts_graph
