@@ -71,7 +71,7 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def set_defaults
-    self.frequency ||= TransactionFrequency.monthly
+    self.frequency_id = TransactionFrequency.monthly.id unless self.frequency_id.present?
     self.start_date ||= Date.today
     self.end_date ||= self.start_date + 1.year
   end

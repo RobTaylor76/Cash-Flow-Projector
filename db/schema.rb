@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131030123049) do
+ActiveRecord::Schema.define(version: 20131030183548) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,6 +42,9 @@ ActiveRecord::Schema.define(version: 20131030123049) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "ledger_entries", ["ledger_account_id", "date"], name: "lgr_entries_ledger_account_date_idx", using: :btree
+  add_index "ledger_entries", ["ledger_account_id"], name: "lgr_entries_ledger_account_fk", using: :btree
 
   create_table "recurring_transactions", force: true do |t|
     t.date     "start_date"
@@ -76,6 +79,9 @@ ActiveRecord::Schema.define(version: 20131030123049) do
     t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
     t.string   "import_sig"
   end
+
+  add_index "transactions", ["user_id", "date"], name: "transactions_user_date_idx", using: :btree
+  add_index "transactions", ["user_id"], name: "transactions_user_id_fk", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false

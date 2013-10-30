@@ -19,7 +19,7 @@
     <td><%= transaction.amount %></td>
     <td><%= link_to 'Show', transaction_path(transaction) %></td>
     <td><%= link_to 'Edit', edit_transaction_path(transaction) %></td>
-    <td><%= link_to 'Delete', transaction_path(transaction), confirm: 'Are you sure?', method: :delete %></td>
+    <td><%= link_to 'Delete', transaction_path(transaction), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
   </tr>
 <% end %>
 </table>

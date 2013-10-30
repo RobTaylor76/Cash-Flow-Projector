@@ -16,7 +16,7 @@
     <td><%= bank_account.balance(@date_range_filter.balance_date)%> </td>
     <td><%= link_to 'Show', bank_account_path(bank_account) %></td>
     <td><%= link_to 'Edit', edit_bank_account_path(bank_account) %></td>
-    <td><%= link_to 'Destroy', bank_account_path(bank_account), confirm: 'Are you sure?', method: :delete %></td>
+    <td><%= link_to 'Destroy', bank_account_path(bank_account), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
   </tr>
 <% end %>
 </table>
