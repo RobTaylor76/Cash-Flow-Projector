@@ -11,14 +11,11 @@ class Transaction < ActiveRecord::Base
 
   after_initialize :init
   after_save :propogate_date_to_ledger_entries
+  before_save :update_amount
 
   scope :date_range_filter, lambda{|from, to|  where('transactions.date >= ? AND transactions.date <= ?', from,to)}
   scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
   scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
-
-  def amount
-    ledger_entries.sum(:credit)
-  end
 
   def balanced?
     sum_credits = ledger_entries.map(&:credit).reduce(:+)
@@ -27,10 +24,19 @@ class Transaction < ActiveRecord::Base
   end
 
   def move_money(from, to, amount)
-    from.decrease(amount, self.date, self)
-    to.increase(amount, self.date, self)
+    ActiveRecord::Base.transaction do
+      from.decrease(amount, self.date, self)
+      to.increase(amount, self.date, self)
+      self.amount = amount
+      save!
+    end
   end
+
   private
+
+  def update_amount
+    self.amount = ledger_entries.map(&:credit).reduce(:+) if ledger_entries.present?
+  end
 
   def validate_balanced
     errors.add(:base, I18n.t('errors.transaction.unbalanced_transaction')) unless balanced?
@@ -43,7 +49,7 @@ class Transaction < ActiveRecord::Base
 
   def propogate_date_to_ledger_entries
     ActiveRecord::Base.transaction do
-      ledger_entries.update_all({:date => self.date},{:transaction_id => self.id})
+      ledger_entries.where(:transaction_id => self.id).update_all(:date => self.date)
     end
   end
 end

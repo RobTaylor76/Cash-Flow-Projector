@@ -9,14 +9,14 @@ describe Transaction do
 
   describe :new_record do
     its(:reference) { should == '' }
-    its(:date)  { should == Date.today}
+    its(:date)  { should == Date.today }
   end
   before :each do
     @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
     @from = @user.ledger_accounts.create!( :name => 'from' )
     @from.debit 100.00, Date.yesterday
     @to = @user.ledger_accounts.create!( :name => 'to' )
-    @tr = @user.transactions.create
+    @tr = @user.transactions.create(:date => Date.yesterday)
   end
 
   context :validations do
@@ -30,8 +30,14 @@ describe Transaction do
     end
   end
 
-  describe :ledger_entries do
+  describe :amount do
+    it 'should == total of credits or debits - set on before_save ' do
+      @tr.move_money(@from,@to, 30.00)
+      @tr.amount.should ==  30.00
+    end
+  end
 
+  describe :ledger_entries do
   #    @cr.debit 200.03, Date.today, @tr
     it 'should move money from  the from_account to the to_account' do
       @from.balance.should == 100
@@ -39,10 +45,31 @@ describe Transaction do
       @tr.move_money(@from,@to, 30.00)
       @from.balance.should == 70
       @to.balance.should == 30
+      @tr.ledger_entries.each do |entry|
+        entry.date.should == Date.yesterday
+      end
     end
     it 'should have 2 ledger entries' do
       @tr.move_money(@from,@to, 30.00)
       @tr.ledger_entries.count.should == 2
+    end
+
+    it 'it should set the dates correctly on create' do
+
+      tr = @user.transactions.build
+      new_date = Date.today + 7.days
+      tr.date = new_date
+
+      tr.ledger_entries.build(:ledger_account_id => @from.id, :credit => 33.11)
+      tr.ledger_entries.build(:ledger_account_id => @from.id, :debit => 33.11)
+
+      tr.save!
+      tr.reload
+
+      tr.amount.should == 33.11
+      tr.ledger_entries.each do |entry|
+        entry.date.should == new_date
+      end
     end
   end
 
