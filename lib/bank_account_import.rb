@@ -15,20 +15,41 @@ class BankAccountImport
     private
     def process_transaction(user, row_data, bank_ledger, import_ledger,md5)
       amount = row_data[:amount].to_d
-      date = Date.parse(row_data[:date])
+
       to,from = if amount > 0
                   [bank_ledger,import_ledger]
                 else
                   [import_ledger,bank_ledger]
                 end
-      create_transaction(user,date,row_data[:reference],to,from,amount.abs)
+
+      amount = amount.abs
+      tran_details = {:amount => amount,
+                      :to => to, :from => from,
+                      :date => Date.parse(row_data[:date]), 
+                      :reference => row_data[:reference],
+                      :md5 => md5}
+
+
+      unless transaction_exits(user, tran_details)
+        create_transaction(user, tran_details)
+      end
 
     end
 
-    def create_transaction(user,date,reference,to,from,amount)
-      tran = user.transactions.build(:reference => reference, :date => date)
-      tran.ledger_entries.build(:ledger_account => to, :debit => amount)
-      tran.ledger_entries.build(:ledger_account => from, :credit => amount)
+    def transaction_exits(user, transaction_details)
+      return true if  user.transactions.where(:import_sig => transaction_details[:md5]).present?
+
+      user.transactions.where(:date => transaction_details[:date], :amount => transaction_details[:amount]).each do |tran|
+        require 'pry'; binding.pry
+      end
+
+      false
+    end
+
+    def create_transaction(user,transaction_details)
+      tran = user.transactions.build(:reference => transaction_details[:reference], :date => transaction_details[:date], :import_sig =>transaction_details[:md5])
+      tran.ledger_entries.build(:ledger_account => transaction_details[:to], :debit => transaction_details[:amount])
+      tran.ledger_entries.build(:ledger_account => transaction_details[:from], :credit => transaction_details[:amount])
       tran.save!
     end
 
