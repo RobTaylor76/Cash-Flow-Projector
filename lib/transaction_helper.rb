@@ -7,7 +7,7 @@ class TransactionHelper
       recurrence.frequency = TransactionFrequency.monthly
       recurrence.amount = transaction.amount
       recurrence.reference = transaction.reference
-      transaction.ledger_entries.each do |entry|
+      transaction.ledger_entries.includes(:ledger_account).each do |entry|
         if entry.credit != 0.00
           recurrence.from = entry.ledger_account
         else
