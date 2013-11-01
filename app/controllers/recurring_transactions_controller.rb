@@ -72,7 +72,7 @@ class RecurringTransactionsController < ApplicationController
   end
 
   def strong_params
-    params[:recurring_transaction].permit([:reference, :start_date, :end_date, :amount, :percentage, :percentage_of_id, :from_id, :to_id, :frequency_id ])
+    params[:recurring_transaction].permit([:reference, :start_date, :end_date, :amount, :percentage, :percentage_of_id, :from_id, :to_id, :frequency_id, :working_days_only ])
   end
 end
 

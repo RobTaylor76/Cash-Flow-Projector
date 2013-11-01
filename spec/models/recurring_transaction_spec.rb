@@ -16,7 +16,7 @@ describe RecurringTransaction do
       @from_ledger_account = @user.ledger_accounts.create!( :name => 'from' )
       @to_ledger_account = @user.ledger_accounts.create!( :name => 'to' )
 
-      @start_date = Date.parse('2012/01/03')
+      @start_date = Date.parse('2012/01/01')
       @end_date = @start_date + 11.months
 
       @recurring = @user.recurring_transactions.build
@@ -62,6 +62,7 @@ describe RecurringTransaction do
           @start_date = Date.parse('2013/05/01')
           @recurring.start_date = @start_date
           @recurring.end_date = @start_date + 3.months
+          @recurring.working_days_only = true
           @recurring.create_recurrences
           @recurring.transactions[0].date.should == @start_date
           @recurring.transactions[1].date.should == Date.parse('2013/06/03') #1st is sunday
@@ -139,7 +140,7 @@ describe RecurringTransaction do
         #it 'should create repeating transactions for 2 years time' do
           @user.transactions.for_date(@start_date + 2.years).count.should == 1
         #it 'should create last transactions for the correct date' do
-          @user.transactions.last.date.should == @start_date + 4.years + 2.days #sat -> monday shift
+          @user.transactions.last.date.should == @start_date + 4.years
         end
 
       end

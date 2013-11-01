@@ -51,7 +51,7 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def create_transaction(recurrence_date)
-    if (frequency == TransactionFrequency.annualy) || (frequency == TransactionFrequency.monthly)
+    if working_days_only
       recurrence_date = recurrence_date + 2.days if recurrence_date.wday == 6 # saturday
       recurrence_date = recurrence_date + 1.days if recurrence_date.wday == 0 # sunday
     end
