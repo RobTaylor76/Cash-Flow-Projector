@@ -24,10 +24,11 @@ class BankAccountImport
 
       amount = amount.abs
       tran_details = {:amount => amount,
-                      :debit => debit, :credit => credit,
+                      :debit => debit.id, :credit => credit.id,
+                      :bank => bank_ledger.id, :import => import_ledger.id,
                       :date => Date.parse(row_data[:date]),
                       :reference => row_data[:reference],
-                      :type => type, :md5 => md5}
+                      :type => type, :md5 => "#{md5}-#{bank_ledger.id}"}
 
 
       unless transaction_exits?(user, tran_details)
@@ -39,9 +40,16 @@ class BankAccountImport
     def transaction_exits?(user, transaction_details)
       return true if already_imported?(user,transaction_details)
 
-      matching_trans = matching_transactions(user, transaction_details)
+      matching_entries = matching_transaction_entries(user, transaction_details)
 
-      return true if matching_trans.present?
+      if matching_entries.present?
+        first_match = matching_entries.find {|entry| entry.ledger_account_id != transaction_details[:bank]}
+        if first_match.present?
+          first_match.ledger_account_id = transaction_details[:bank]
+          first_match.save
+        end
+        return true
+      end
 
       false
     end
@@ -50,22 +58,21 @@ class BankAccountImport
       user.transactions.where(:import_sig => transaction_details[:md5]).present?
     end
 
-    def matching_transactions(user, transaction_details)
-      matching_trans = []
+    def matching_transaction_entries(user, transaction_details)
+      matching_entries = []
       possible_matching_transactions(user, transaction_details).each do |tran|
-        if transaction_matches?(tran, transaction_details)
-          matching_trans << tran
-        end
+        matching_entries.concat find_matching_entries(tran, transaction_details)
       end
-      matching_trans
+      matching_entries
     end
 
-    def transaction_matches?(transaction,transaction_details)
+    def find_matching_entries(transaction,transaction_details)
       tran_type = transaction_details[:type]
-      transaction.ledger_entries.find do |entry| 
+      transaction.ledger_entries.find_all do |entry|
         ((entry.send(tran_type) == transaction_details[:amount])  &&
-         (entry.ledger_account == transaction_details[tran_type]))
-      end.present?
+         ((entry.ledger_account_id == transaction_details[:bank]) || # matches the bank account
+          (entry.ledger_account_id == transaction_details[:import])))    # matches the import ledger
+      end
     end
 
     def possible_matching_transactions(user, transaction_details)
@@ -74,8 +81,8 @@ class BankAccountImport
 
     def create_transaction(user,transaction_details)
       tran = user.transactions.build(:reference => transaction_details[:reference], :date => transaction_details[:date], :import_sig =>transaction_details[:md5])
-      tran.ledger_entries.build(:ledger_account => transaction_details[:debit], :debit => transaction_details[:amount])
-      tran.ledger_entries.build(:ledger_account => transaction_details[:credit], :credit => transaction_details[:amount])
+      tran.ledger_entries.build(:ledger_account_id => transaction_details[:debit], :debit => transaction_details[:amount])
+      tran.ledger_entries.build(:ledger_account_id => transaction_details[:credit], :credit => transaction_details[:amount])
       tran.save!
     end
 
