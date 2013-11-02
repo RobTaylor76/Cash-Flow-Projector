@@ -55,18 +55,57 @@ describe RecurringTransaction do
         expect { @recurring.create_recurrences}.to change { LedgerEntry.count }.by(24)
       end
     end
+
+    context :duplications, :focus => true do
+      before :each do
+        @start_date = Date.parse('2013/05/01')
+        @recurring.start_date = @start_date
+        @recurring.end_date = @start_date + 2.months
+        @recurring.reference = 'XXXXXXXX'
+        @recurring.amount = 30.00
+      end
+      it 'should not duplicate if tran exists for same date and amount for same ledger accounts' do
+        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'wibble')
+        tran.move_money(@from_ledger_account,@to_ledger_account, 30.00)
+
+        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+
+        @recurring.transactions[0].date.should == Date.parse('2013/05/01')
+        @recurring.transactions[1].date.should == Date.parse('2013/07/01')
+      end
+
+      it 'should not duplicate if approximation and same date,reference  and ledger accounts matches' do
+        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'XXXXXXXX')
+        tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
+
+        tran = @user.transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
+        tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
+
+        @recurring.approximation = true
+
+        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+
+        @recurring.transactions[0].date.should == Date.parse('2013/05/01')
+        @recurring.transactions[1].date.should == Date.parse('2013/07/01')
+
+      end
+    end
     context :transaction_dates do
 
       context :avoid_weekends do
-        it 'should not be recurred on the weekend, future transactions still occur on same date', :focus => true do
+        it 'should not be recurred on the weekend, future transactions still occur on same date' do
           @start_date = Date.parse('2013/05/01')
           @recurring.start_date = @start_date
           @recurring.end_date = @start_date + 3.months
           @recurring.working_days_only = true
+          @recurring.approximation = true
           @recurring.create_recurrences
           @recurring.transactions[0].date.should == @start_date
+          @recurring.transactions[0].approximation.should be_true
           @recurring.transactions[1].date.should == Date.parse('2013/06/03') #1st is sunday
+          @recurring.transactions[1].approximation.should be_true
           @recurring.transactions[2].date.should == Date.parse('2013/07/01')
+          @recurring.transactions[2].approximation.should be_true
         end
 
       end

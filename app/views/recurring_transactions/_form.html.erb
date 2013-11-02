@@ -35,6 +35,10 @@
       <%= form.check_box :working_days_only%>
     </div>
     <div class='field'>
+      <%= form.label :approximation %>
+      <%= form.check_box :approximation %>
+    </div>
+    <div class='field'>
       <%= form.label :frequency %>
       <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>

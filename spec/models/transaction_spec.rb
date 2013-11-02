@@ -20,7 +20,7 @@ describe Transaction do
   end
 
   context :validations do
-    it 'should have either a non zero amount or percentage but not both' do
+    it 'credits should == debits' do
       @tr.ledger_entries.build(:date => Date.today, :debit => 0, :credit => 30)
       @tr.valid?
       @tr.errors[:base].should include  I18n.t('errors.transaction.unbalanced_transaction')

@@ -20,6 +20,10 @@
       <%= form.label :date %>
       <%= form.date_field :date%>
     </div>
+    <div class='field'>
+      <%= form.label :approximation %>
+      <%= form.check_box :approximation %>
+    </div>
 
     <%= form.fields_for :ledger_entries do |ff_form| %>
 

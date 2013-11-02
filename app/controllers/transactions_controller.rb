@@ -66,6 +66,12 @@ class TransactionsController < ApplicationController
   end
 
   def strong_params
-    params[:transaction].permit([:date, :reference, :ledger_entries_attributes => [:id, :debit, :credit, :ledger_account_id]])
+    params[:transaction].permit([:date,
+                                :reference,
+                                :approximation,
+    :ledger_entries_attributes => [:id,
+                                  :debit,
+                                  :credit,
+                                  :ledger_account_id]])
   end
 end

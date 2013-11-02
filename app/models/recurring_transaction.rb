@@ -42,6 +42,26 @@ class RecurringTransaction < ActiveRecord::Base
 
   private
 
+  def duplication?(date,amount)
+    transactions = possible_duplicates(date,amount)
+    return false unless transactions.present?
+    ledger_ids = [to.id, from.id].sort
+    transactions.each do |tran|
+      return true if tran.ledger_entries.map(&:ledger_account_id).sort == ledger_ids
+    end
+    false
+  end
+
+  def possible_duplicates(date, amount)
+    scope = user.transactions.includes(:ledger_entries).for_date(date)
+
+    if approximation
+      scope.where(:reference => reference)
+    else
+      scope.where(:amount => amount)
+    end
+  end
+
   def next_recurrence(current_date)
     recurrence_date = current_date.next_year if frequency == TransactionFrequency.annualy
     recurrence_date = current_date.next_month if frequency == TransactionFrequency.monthly
@@ -58,7 +78,12 @@ class RecurringTransaction < ActiveRecord::Base
 
     tran_amount = calculate_transaction_amount(recurrence_date)
     return if tran_amount == 0.00
-    tran = user.transactions.create(:date => recurrence_date, :source => self, :reference => reference)
+    return if duplication?(recurrence_date,tran_amount)
+
+    tran = user.transactions.create(:date => recurrence_date,
+                                    :source => self,
+                                    :approximation => approximation,
+                                    :reference => reference)
     tran.move_money(from, to, tran_amount)
   end
 

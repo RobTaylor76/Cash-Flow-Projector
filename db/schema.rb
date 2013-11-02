@@ -11,10 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131101171356) do
-
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+ActiveRecord::Schema.define(version: 20131102202903) do
 
   create_table "bank_accounts", force: true do |t|
     t.string   "name"
@@ -61,6 +58,7 @@ ActiveRecord::Schema.define(version: 20131101171356) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "working_days_only",                          default: false
+    t.boolean  "approximation",                              default: false
   end
 
   create_table "transaction_frequencies", force: true do |t|
@@ -71,14 +69,15 @@ ActiveRecord::Schema.define(version: 20131101171356) do
 
   create_table "transactions", force: true do |t|
     t.integer  "user_id"
-    t.string   "reference",                            default: ""
+    t.string   "reference",                              default: ""
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "source_id"
     t.string   "source_type"
-    t.decimal  "amount",      precision: 14, scale: 2, default: 0.0
+    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
     t.string   "import_sig"
+    t.boolean  "approximation",                          default: false
   end
 
   add_index "transactions", ["user_id", "date"], name: "transactions_user_date_idx", using: :btree
