@@ -12,7 +12,7 @@ describe RecurringTransaction do
   context 'recur a money transfer' do
 
     before :each do
-      @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+      @user = User.find_by_email('test_user@cashflowprojector.com')
       @from_ledger_account = @user.ledger_accounts.create!( :name => 'from' )
       @to_ledger_account = @user.ledger_accounts.create!( :name => 'to' )
 

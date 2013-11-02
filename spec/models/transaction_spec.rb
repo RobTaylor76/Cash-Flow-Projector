@@ -12,7 +12,7 @@ describe Transaction do
     its(:date)  { should == Date.today }
   end
   before :each do
-    @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @user = User.find_by_email('test_user@cashflowprojector.com')
     @from = @user.ledger_accounts.create!( :name => 'from' )
     @from.debit 100.00, Date.yesterday
     @to = @user.ledger_accounts.create!( :name => 'to' )

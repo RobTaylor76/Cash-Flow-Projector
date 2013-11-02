@@ -10,8 +10,8 @@ describe LedgerAccount do
 
 
   before :each do
-    user = User.create!(:email => 'r@rob.com', :password => '##12##34')
-    @ledger_account = user.ledger_accounts.create!( :name => 'test' )
+    @user = User.find_by_email('test_user@cashflowprojector.com')
+    @ledger_account = @user.ledger_accounts.create!( :name => 'test' )
   end
 
   subject { @ledger_account }
