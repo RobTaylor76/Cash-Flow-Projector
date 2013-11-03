@@ -12,6 +12,9 @@
       <td><%= entry.transaction.reference %></td>
       <td><%= format_number(entry.debit) %></td>
       <td><%= format_number(entry.credit) %></td>
+      <td><%= link_to 'Show', transaction_path(:id => entry.transaction_id) %></td>
+      <td><%= link_to 'Edit', edit_transaction_path(:id => entry.transaction_id) %></td>
+      <td><%= link_to 'Delete', transaction_path(:id => entry.transaction_id), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
     </tr>
   <% end %>
 
