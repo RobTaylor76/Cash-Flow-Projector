@@ -30,28 +30,49 @@ class BankAccountImport
                       :reference => row_data[:reference],
                       :type => type, :md5 => "#{md5}-#{bank_ledger.id}"}
 
-
       unless transaction_exits?(user, tran_details)
         create_transaction(user, tran_details)
       end
-
     end
 
     def transaction_exits?(user, transaction_details)
       return true if already_imported?(user,transaction_details)
+      return true if updated_existing_exact_match?(user,transaction_details)
+      return true if updated_existing_approximate_match?(user,transaction_details)
+      false
+    end
 
+    def updated_existing_approximate_match?(user,transaction_details)
+      #find approximate matches
+      approx_matches = approximate_transaction_matches(user, transaction_details)
+      if approx_matches.present?
+        tran = approx_matches.first
+        tran.ledger_entries.each do |entry|
+          if entry.credit != 0.00
+            entry.credit = transaction_details[:amount]
+          else
+            entry.debit = transaction_details[:amount]
+          end
+        end
+        return tran.save
+      end
+      false
+    end
+
+    def updated_existing_exact_match?(user,transaction_details)
       matching_entries = matching_transaction_entries(user, transaction_details)
 
       if matching_entries.present?
-        first_match = matching_entries.find {|entry| entry.ledger_account_id != transaction_details[:bank]}
+        first_match = matching_entries.find {|entry| entry.ledger_account_id == transaction_details[:import]}
         if first_match.present?
+          # matching transaction imported into another bank account. assign the data import it 
           first_match.ledger_account_id = transaction_details[:bank]
           first_match.save
         end
-        return true
+        true
+      else
+        false
       end
-
-      false
     end
 
     def already_imported?(user,transaction_details)
@@ -66,6 +87,19 @@ class BankAccountImport
       matching_entries
     end
 
+    def approximate_transaction_matches(user, transaction_details)
+      matching_trans = []
+      tran_type = transaction_details[:type]
+      possible_matching_transactions(user, transaction_details, true).each do |tran|
+        matches = tran.ledger_entries.find do  |entry|
+          ((entry.ledger_account_id == transaction_details[:bank]) && # matches the bank account
+           (entry.send(tran_type) != 0.00)) # and its the debit/credit transaction were interested in
+        end.present?
+        matching_trans << tran if matches
+      end
+      matching_trans
+    end
+
     def find_matching_entries(transaction,transaction_details)
       tran_type = transaction_details[:type]
       transaction.ledger_entries.find_all do |entry|
@@ -75,12 +109,19 @@ class BankAccountImport
       end
     end
 
-    def possible_matching_transactions(user, transaction_details)
-      user.transactions.where(:date => transaction_details[:date], :amount => transaction_details[:amount])
+    def possible_matching_transactions(user, transaction_details, find_approximations = false)
+      scope = user.transactions.includes(:ledger_entries).for_date(transaction_details[:date])
+      if find_approximations
+        scope.where(:reference => transaction_details[:reference], :approximation => true)
+      else
+        scope.where(:amount => transaction_details[:amount])
+      end
     end
 
     def create_transaction(user,transaction_details)
-      tran = user.transactions.build(:reference => transaction_details[:reference], :date => transaction_details[:date], :import_sig =>transaction_details[:md5])
+      tran = user.transactions.build(:reference => transaction_details[:reference],
+                                     :date => transaction_details[:date],
+                                     :import_sig =>transaction_details[:md5])
       tran.ledger_entries.build(:ledger_account_id => transaction_details[:debit], :debit => transaction_details[:amount])
       tran.ledger_entries.build(:ledger_account_id => transaction_details[:credit], :credit => transaction_details[:amount])
       tran.save!
@@ -89,6 +130,7 @@ class BankAccountImport
     def bank_ledger_account(bank_account)
       bank_account.main_ledger_account
     end
+
     def import_ledger_account(user,bank_account)
       user.ledger_accounts.find_or_create_by(:name => 'Bank Statement Import')
     end
