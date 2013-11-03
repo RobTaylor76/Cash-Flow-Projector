@@ -3,7 +3,7 @@ require 'spec_helper'
 
 describe BankAccountsController do
   before :each do
-    @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @user = User.find_by_email('test_user@cashflowprojector.com')
     sign_in @user
   end
   it 'should allow create' do

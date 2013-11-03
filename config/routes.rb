@@ -4,6 +4,7 @@ Cashflowprojector::Application.routes.draw do
 
   resources :bank_accounts do
     get :bank_account_graph
+    post :import_statement
 
     collection do
       get :bank_accounts_graph

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe BankAccount do
   before :each do
-    @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @user = User.find_by_email('test_user@cashflowprojector.com')
     @bank_account = @user.bank_accounts.create!( :name => 'test' )
   end
 

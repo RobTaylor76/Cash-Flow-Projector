@@ -2,7 +2,7 @@ class BankAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_bank_account, :only => [:edit, :show, :destroy, :update, :bank_account_graph]
+  before_action :load_bank_account, :only => [:import_statement, :edit, :show, :destroy, :update, :bank_account_graph]
 
   # GET /bank_accounts
   # GET /bank_accounts.json
@@ -53,6 +53,15 @@ class BankAccountsController < ApplicationController
   def destroy
     @bank_account.destroy
     respond_with @bank_account
+  end
+
+  # POST - import bank statement
+  def import_statement
+    if params[:file_upload] && params[:file_upload][:file]
+      csv_text = params[:file_upload][:file].read
+      BankAccountImport.process_statement(current_user, @bank_account,csv_text)
+      render :text => "File has been uploaded successfully"
+    end
   end
 
   def bank_accounts_graph
