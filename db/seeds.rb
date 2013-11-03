@@ -10,3 +10,6 @@ TransactionFrequency.create!(:name => 'Daily')
 TransactionFrequency.create!(:name => 'Weekly')
 TransactionFrequency.create!(:name => 'Monthly')
 TransactionFrequency.create!(:name => 'Annualy')
+
+#Create a sample user for tests to use
+User.create!(:email => 'test_user@cashflowprojector.com', :password => SecureRandom.hex(8))

@@ -30,22 +30,29 @@
       <%= form.label :percentage %>
       <%= form.text_field :percentage %>
     </div>
-
+    <div class='field'>
+      <%= form.label :working_days_only%>
+      <%= form.check_box :working_days_only%>
+    </div>
+    <div class='field'>
+      <%= form.label :approximation %>
+      <%= form.check_box :approximation %>
+    </div>
     <div class='field'>
       <%= form.label :frequency %>
       <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :from %>
-      <%= form.select :from_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+      <%= form.select :from_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :to %>
-      <%= form.select :to_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+      <%= form.select :to_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
       <%= form.label :percentage_of%>
-      <%= form.select :percentage_of_id, current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {include_blank: 'N/A'},{:disabled => locals[:form_readonly]}%>
+      <%= form.select :percentage_of_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {include_blank: 'N/A'},{:disabled => locals[:form_readonly]}%>
     </div>
 
   <% end %>

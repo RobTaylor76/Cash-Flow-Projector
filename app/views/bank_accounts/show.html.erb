@@ -9,3 +9,11 @@
 <%= render 'shared/balance_graph', :locals => {:balance_graph_url => bank_account_bank_account_graph_path(@bank_account, @date_range_filter.to_json.merge(:format => :json)) } %>
 <%= render 'shared/ledger_entries' %>
 
+<h1>File Upload</h1>
+
+
+<%= form_for(FileUpload.new, :url => bank_account_import_statement_path(@bank_account)) do |f| %>
+  <p><label for="upload_file">Select File</label> : 
+  <%= f.file_field(:file) %></p>
+  <%= f.submit %>
+<% end%>

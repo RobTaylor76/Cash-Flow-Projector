@@ -12,7 +12,7 @@ describe Transaction do
     its(:date)  { should == Date.today }
   end
   before :each do
-    @user = User.create!(:email => 'r@rob.com', :password => '##12##34')
+    @user = User.find_by_email('test_user@cashflowprojector.com')
     @from = @user.ledger_accounts.create!( :name => 'from' )
     @from.debit 100.00, Date.yesterday
     @to = @user.ledger_accounts.create!( :name => 'to' )
@@ -20,7 +20,7 @@ describe Transaction do
   end
 
   context :validations do
-    it 'should have either a non zero amount or percentage but not both' do
+    it 'credits should == debits' do
       @tr.ledger_entries.build(:date => Date.today, :debit => 0, :credit => 30)
       @tr.valid?
       @tr.errors[:base].should include  I18n.t('errors.transaction.unbalanced_transaction')
