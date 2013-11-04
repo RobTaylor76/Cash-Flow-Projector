@@ -54,6 +54,9 @@ class BankAccountImport
             entry.debit = transaction_details[:amount]
           end
         end
+        tran.approximation = false
+        tran.date = transaction_details[:date] #update the date as well as matching +/- 4 days
+        tran.source = nil # unlink from recurrence , hack for now!
         return tran.save
       end
       false
@@ -110,11 +113,13 @@ class BankAccountImport
     end
 
     def possible_matching_transactions(user, transaction_details, find_approximations = false)
-      scope = user.transactions.includes(:ledger_entries).for_date(transaction_details[:date])
+      scope = user.transactions.includes(:ledger_entries)
       if find_approximations
-        scope.where(:reference => transaction_details[:reference], :approximation => true)
+        min_date = transaction_details[:date] - 4.days
+        max_date = transaction_details[:date] + 4.days
+        scope.date_range_filter(min_date,max_date).where(:reference => transaction_details[:reference], :approximation => true)
       else
-        scope.where(:amount => transaction_details[:amount])
+        scope.for_date(transaction_details[:date]).where(:amount => transaction_details[:amount])
       end
     end
 

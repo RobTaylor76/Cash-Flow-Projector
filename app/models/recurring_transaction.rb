@@ -53,12 +53,11 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def possible_duplicates(date, amount)
-    scope = user.transactions.includes(:ledger_entries).for_date(date)
-
+    scope = user.transactions.includes(:ledger_entries)
     if approximation
-      scope.where(:reference => reference)
+      scope.date_range_filter((date - 4.days),(date + 4.days)).where(:reference => reference)
     else
-      scope.where(:amount => amount)
+      scope.for_date(date).where(:amount => amount)
     end
   end
 

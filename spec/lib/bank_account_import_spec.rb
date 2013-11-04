@@ -113,6 +113,38 @@ describe BankAccountImport do
     tran.amount.should == 2345.56
   end
 
+  it 'should match the existing approximation transaction +/- 4 days and update it' do
+    tran = create_transaction({:user => @user,
+      :date => Date.parse('7/1/2014'),
+      :reference => 'Approximation Import',
+      :debit => @bank_account.main_ledger_account,
+      :credit => @bank_account.charges_ledger_account,
+      :amount => 234.56,
+      :approximation => true})
+    tran.source = @user # logically makes no sense but showing that it is unset after import
+                        # used to unlink from recurrence so it isn't deleted when recurrence edited/deleted
+    tran.save
+
+    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 0
+    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 0
+    @user.transactions.for_date(Date.parse('7/1/2014')).count.should == 1
+
+    expect do
+      BankAccountImport.process_statement(@user, @bank_account,@csv_text)
+    end.to change{@user.transactions.count}.by(2)
+
+    tran.reload
+    tran.date.should == Date.parse('3/1/2014')
+    tran.amount.should == 2345.56
+    tran.approximation.should be_false
+    tran.source.should be_nil
+
+    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+
+  end
+
   def create_transaction(tran_spec)
     tran = tran_spec[:user].transactions.create(
                                 :reference => tran_spec[:reference],

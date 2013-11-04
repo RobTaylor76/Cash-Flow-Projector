@@ -74,8 +74,8 @@ describe RecurringTransaction do
         @recurring.transactions[1].date.should == Date.parse('2013/07/01')
       end
 
-      it 'should not duplicate if approximation and same date,reference  and ledger accounts matches' do
-        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'XXXXXXXX')
+      it 'should not duplicate if approximation and within +/- 4 days and reference  and ledger accounts match' do
+        tran = @user.transactions.create(:date => Date.parse('2013/6/4'), :reference => 'XXXXXXXX')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
 
         tran = @user.transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
@@ -89,6 +89,23 @@ describe RecurringTransaction do
         @recurring.transactions[1].date.should == Date.parse('2013/07/01')
 
       end
+
+      it 'should not duplicate if approximation and same date,reference  and ledger accounts matches' do
+        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'XXXXXXXX')
+        tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
+
+        tran = @user.transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
+        tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
+
+        @recurring.approximation = true
+
+        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+
+        trans = @recurring.transactions.order(:date => :asc)
+        trans[0].date.should == Date.parse('2013/05/01')
+        trans[1].date.should == Date.parse('2013/07/01')
+
+      end
     end
     context :transaction_dates do
 
@@ -100,12 +117,13 @@ describe RecurringTransaction do
           @recurring.working_days_only = true
           @recurring.approximation = true
           @recurring.create_recurrences
-          @recurring.transactions[0].date.should == @start_date
-          @recurring.transactions[0].approximation.should be_true
-          @recurring.transactions[1].date.should == Date.parse('2013/06/03') #1st is sunday
-          @recurring.transactions[1].approximation.should be_true
-          @recurring.transactions[2].date.should == Date.parse('2013/07/01')
-          @recurring.transactions[2].approximation.should be_true
+          trans = @recurring.transactions.order(:date => :asc)
+          trans[0].date.should == @start_date
+          trans[0].approximation.should be_true
+          trans[1].date.should == Date.parse('2013/06/03') #1st is sunday
+          trans[1].approximation.should be_true
+          trans[2].date.should == Date.parse('2013/07/01')
+          trans[2].approximation.should be_true
         end
 
       end
