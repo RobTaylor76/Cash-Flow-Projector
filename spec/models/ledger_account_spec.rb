@@ -26,17 +26,17 @@ describe LedgerAccount do
 
   describe :control_account do
     it 'should be psooible to find control account by name' do
-      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'bank_imports' )
-      @user.ledger_accounts.control_account('bank_imports').should == control_account
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
+      @user.ledger_accounts.control_account('special_purpose').should == control_account
     end
 
     it 'cannot delete them' do
-      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'bank_imports' )
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
       expect { control_account.destroy }.to change {@user.ledger_accounts.count}.by(0)
     end
 
     it 'cannot have its control name changed/cleared' do
-      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'bank_imports' )
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
       control_account.control_name = nil
       control_account.valid?
       control_account.errors[:base].should include 'cannot change control name'

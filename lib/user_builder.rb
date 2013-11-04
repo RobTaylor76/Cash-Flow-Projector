@@ -7,10 +7,10 @@ class UserBuilder
 
     private
     def add_control_accounts(user)
-      control_accounts.each do |control_account|
-        unless user.ledger_accounts.control_account(control_account[:control_name]).present?
-          user.ledger_accounts.create( :name => control_account[:name],
-                                       :control_name => control_account[:control_name])
+      control_accounts.each do |account|
+        unless user.ledger_accounts.control_account(account[:control_name]).present?
+          user.ledger_accounts.create( :name => account[:name],
+                                       :control_name => account[:control_name])
         end
       end
     end
@@ -29,7 +29,8 @@ class UserBuilder
     end
 
     def control_accounts
-      [{:name => 'Bank Statement Import', :control_name => 'bank_statement_import'},
+      [{:name => 'Statement Import', :control_name => 'statement_import'},
+      {:name => 'Balance Correction', :control_name => 'balance_correction'},
       {:name => 'Income', :control_name => 'income'},
       {:name => 'Expense', :control_name => 'expense'}]
     end

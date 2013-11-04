@@ -137,7 +137,7 @@ class BankAccountImport
     end
 
     def import_ledger_account(user,bank_account)
-      user.ledger_accounts.find_or_create_by(:name => 'Bank Statement Import')
+      user.ledger_accounts.control_account('statement_import')
     end
 
     def header_map

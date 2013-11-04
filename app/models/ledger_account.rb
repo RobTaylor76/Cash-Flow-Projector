@@ -5,8 +5,9 @@ class LedgerAccount < ActiveRecord::Base
   before_destroy :delete_account_validation
   validate :control_name_restrictions
 
-  scope :control_account, ->(name){where(:control_name => name).first}
-
+  def self.control_account(name)
+    where(:control_name => name).first
+  end
 
   def debit(amount, date, transaction = nil)
     ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)

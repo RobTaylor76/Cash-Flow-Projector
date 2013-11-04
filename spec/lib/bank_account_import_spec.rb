@@ -3,10 +3,9 @@ require 'spec_helper'
 describe BankAccountImport do
   before :each do
     @user = User.find_by_email('test_user@cashflowprojector.com')
-    @bank_account = @user.bank_accounts.create!( :name => 'test' )
+    @bank_account = @user.bank_accounts.first
     @csv_text = File.read('spec/data/test_bank_import.csv')
-    @data_import_la = @user.ledger_accounts.find_or_create_by(:name => 'Bank Statement Import')
-
+    @data_import_la = @user.ledger_accounts.control_account('statement_import')
   end
 
   it 'should install all three transactions' do
