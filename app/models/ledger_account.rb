@@ -2,6 +2,12 @@ class LedgerAccount < ActiveRecord::Base
   has_many :ledger_entries, :class_name => LedgerEntry, :dependent => :destroy
   belongs_to :user
 
+  before_destroy :delete_account_validation
+  validate :control_name_restrictions
+
+  scope :control_account, ->(name){where(:control_name => name).first}
+
+
   def debit(amount, date, transaction = nil)
     ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)
   end
@@ -48,7 +54,25 @@ class LedgerAccount < ActiveRecord::Base
     balances
   end
 
-  private 
+  private
+
+  def delete_account_validation
+    if control_name.present?
+      errors.add(:base, 'cannot delete a control account')
+      return false
+    end
+  end
+
+  def control_name_restrictions
+    if persisted? && control_name_changed?
+      errors.add(:base, 'cannot change control name')
+      return false
+    end
+  end
+
+  def is_control_account?
+    control_name.present?
+  end
 
   def daily_balances_sql(start_date, end_date)
     sql = "select date, sum(debit) - sum(credit) as activity "
