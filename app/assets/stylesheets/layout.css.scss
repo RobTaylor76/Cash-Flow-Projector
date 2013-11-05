@@ -1,0 +1,30 @@
+header#page_header {
+  nav#utility_nav {
+    float: right;
+    ul {
+      li {
+        display: inline;
+      }
+    }
+  }
+  nav#main_nav {
+    float: left;
+    ul {
+      li {
+        display: inline;
+      }
+    }
+  }
+}
+#new_date_range_filter {
+  .field {
+    float: left;
+  }
+}
+
+table {
+  clear: both;
+}
+.container {
+  clear: both;
+}

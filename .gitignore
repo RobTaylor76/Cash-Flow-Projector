@@ -20,3 +20,6 @@
 
 #Ignore coverage files
 /coverage
+
+#Ignore sass cache
+/.sass-cache/
