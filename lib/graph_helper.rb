@@ -18,17 +18,11 @@ class GraphHelper
                         else
                           cashflow_total
                         end
-          series_data << [format_date(daily_balance[:date]),graph_point.to_f]
+          series_data << [format_date(daily_balance[:date]),graph_point.to_f.round(2)]
           cashflow_total = 0
           next_date = next_date + increment
         end
       end
-      # while next_date < end_date
-      #   daily_balance = daily_balances.find{|b| b[:date] == next_date}
-      #   break if daily_balance.nil?
-      #   series_data << [format_date(daily_balance[:date]),daily_balance[field_to_graph].to_f]
-      #   next_date = next_date + increment
-      # end
       {:name => series_name, :data => series_data}
     end
 
