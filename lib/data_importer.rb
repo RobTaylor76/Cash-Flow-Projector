@@ -5,7 +5,7 @@ class DataImporter
   class << self
 
     def import_file(csv_text, headers_map, &block)
-      csv = CSV.parse(csv_text, :headers => true)
+      csv = CSV.parse(sanitise_csv(csv_text), :headers => true)
       header_map  = map_headers(csv.headers, headers_map)
       csv.each do |row|
         import_data = {}
@@ -34,6 +34,14 @@ class DataImporter
     end
 
     private
+    def sanitise_csv(csv_text)
+      unless csv_text.encoding == Encoding::UTF_8
+        csv_text.force_encoding(Encoding::ISO_8859_1)
+        csv_text.encode!(Encoding::UTF_8)
+      end
+      csv_text.squeeze(' ')
+    end
+
     def map_headers(file_headers, header_map)
 
       mapped_headers = {}
