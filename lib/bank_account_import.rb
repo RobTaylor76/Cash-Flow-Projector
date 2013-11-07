@@ -14,7 +14,10 @@ class BankAccountImport
 
     private
     def process_transaction(user, row_data, bank_ledger, import_ledger,md5)
+
       amount = row_data[:amount].to_d
+
+      import_ledger = custom_ledger_account(user, row_data[:ledger_account]) if row_data[:ledger_account].present?
 
       debit,credit,type = if amount > 0
                   [bank_ledger,import_ledger,:debit]
@@ -140,13 +143,19 @@ class BankAccountImport
       user.ledger_accounts.control_account('statement_import')
     end
 
+    def custom_ledger_account(user, name)
+      user.ledger_accounts.find_or_create_by(:name => name)
+    end
+
     def header_map
       { 'Date' => :date,
         'Transaction Date' => :date,
         'Memo' => :reference,
         'Description' => :reference,
         'Reference' => :reference,
-        'Amount' => :amount}
+        'Amount' => :amount,
+        'Ledger Account' => :ledger_account,
+        'Analysis Code' => :analysis_code}
     end
   end
 end

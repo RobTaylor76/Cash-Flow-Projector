@@ -6,6 +6,7 @@ describe BankAccountImport do
     @bank_account = @user.bank_accounts.first
     @csv_text = File.read('spec/data/test_bank_import.csv')
     @data_import_la = @user.ledger_accounts.control_account('statement_import')
+    @income_control_account  = @user.ledger_accounts.control_account('income')
   end
 
   it 'should install all three transactions' do
@@ -13,9 +14,17 @@ describe BankAccountImport do
       BankAccountImport.process_statement(@user, @bank_account,@csv_text)
     end.to change{@user.transactions.count}.by(3)
 
+    @bank_account.main_ledger_account.ledger_entries.count.should == 3
+    @data_import_la.ledger_entries.count.should == 2
+    @income_control_account.ledger_entries.count.should == 1
+
     @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
     @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
     @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+
+    @user.transactions.for_date(Date.parse('2/1/2014')).first.tap do |tran|
+      tran.ledger_entries.find {|le| le.ledger_account == @income_control_account }.should be_present
+    end
   end
 
   it 'should match a transaction for another bank account if Data Import la in use' do
