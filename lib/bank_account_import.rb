@@ -18,6 +18,7 @@ class BankAccountImport
       amount = row_data[:amount].to_d
 
       import_ledger = custom_ledger_account(user, row_data[:ledger_account]) if row_data[:ledger_account].present?
+      analysis_code = lookup_analysis_code(user, row_data[:analysis_code]) if row_data[:analysis_code].present?
 
       debit,credit,type = if amount > 0
                   [bank_ledger,import_ledger,:debit]
@@ -31,6 +32,7 @@ class BankAccountImport
                       :bank => bank_ledger.id, :import => import_ledger.id,
                       :date => Date.parse(row_data[:date]),
                       :reference => row_data[:reference],
+                      :analysis_code => analysis_code,
                       :type => type, :md5 => "#{md5}-#{bank_ledger.id}"}
 
       unless transaction_exits?(user, tran_details)
@@ -130,8 +132,12 @@ class BankAccountImport
       tran = user.transactions.build(:reference => transaction_details[:reference],
                                      :date => transaction_details[:date],
                                      :import_sig =>transaction_details[:md5])
-      tran.ledger_entries.build(:ledger_account_id => transaction_details[:debit], :debit => transaction_details[:amount])
-      tran.ledger_entries.build(:ledger_account_id => transaction_details[:credit], :credit => transaction_details[:amount])
+      tran.ledger_entries.build(:ledger_account_id => transaction_details[:debit],
+                                :debit => transaction_details[:amount],
+                                :analysis_code => transaction_details[:analysis_code])
+      tran.ledger_entries.build(:ledger_account_id => transaction_details[:credit],
+                                :analysis_code => transaction_details[:analysis_code],
+                                :credit => transaction_details[:amount])
       tran.save!
     end
 
@@ -141,6 +147,10 @@ class BankAccountImport
 
     def import_ledger_account(user,bank_account)
       user.ledger_accounts.control_account('statement_import')
+    end
+
+    def lookup_analysis_code(user, name)
+      user.analysis_codes.find_or_create_by(:name => name)
     end
 
     def custom_ledger_account(user, name)

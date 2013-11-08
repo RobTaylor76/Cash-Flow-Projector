@@ -11,10 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131104172550) do
+ActiveRecord::Schema.define(version: 20131108204849) do
 
-  # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
+  create_table "analysis_codes", force: true do |t|
+    t.integer  "user_id",    null: false
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "bank_accounts", force: true do |t|
     t.string   "name"
@@ -42,10 +46,12 @@ ActiveRecord::Schema.define(version: 20131104172550) do
     t.date     "date",                                                     null: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "analysis_code_id"
   end
 
   add_index "ledger_entries", ["ledger_account_id", "date"], name: "lgr_entries_ledger_account_date_idx", using: :btree
   add_index "ledger_entries", ["ledger_account_id"], name: "lgr_entries_ledger_account_fk", using: :btree
+  add_index "ledger_entries", ["user_id", "analysis_code_id"], name: "le_user_analysis_code_idx", using: :btree
 
   create_table "recurring_transactions", force: true do |t|
     t.date     "start_date"
@@ -63,6 +69,7 @@ ActiveRecord::Schema.define(version: 20131104172550) do
     t.datetime "updated_at"
     t.boolean  "working_days_only",                          default: false
     t.boolean  "approximation",                              default: false
+    t.integer  "analysis_code_id"
   end
 
   create_table "transaction_frequencies", force: true do |t|

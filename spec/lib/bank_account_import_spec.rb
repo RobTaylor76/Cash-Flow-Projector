@@ -7,12 +7,15 @@ describe BankAccountImport do
     @csv_text = File.read('spec/data/test_bank_import.csv')
     @data_import_la = @user.ledger_accounts.control_account('statement_import')
     @income_control_account  = @user.ledger_accounts.control_account('income')
+    @analysis_type= @user.analysis_codes.create(:name => 'existing analysis code')
   end
 
   it 'should install all three transactions' do
     expect do
-      BankAccountImport.process_statement(@user, @bank_account,@csv_text)
-    end.to change{@user.transactions.count}.by(3)
+      expect do
+        BankAccountImport.process_statement(@user, @bank_account,@csv_text)
+      end.to change{@user.transactions.count}.by(3)
+    end.to change{@user.analysis_codes.count}.by(1)
 
     @bank_account.main_ledger_account.ledger_entries.count.should == 3
     @data_import_la.ledger_entries.count.should == 2
@@ -24,6 +27,11 @@ describe BankAccountImport do
 
     @user.transactions.for_date(Date.parse('2/1/2014')).first.tap do |tran|
       tran.ledger_entries.find {|le| le.ledger_account == @income_control_account }.should be_present
+      tran.ledger_entries.find {|le| le.analysis_code.name == 'new analysis code'}.should be_present
+    end
+
+    @user.transactions.for_date(Date.parse('3/1/2014')).first.tap do |tran|
+      tran.ledger_entries.find {|le| le.analysis_code.name == 'existing analysis code'}.should be_present
     end
   end
 

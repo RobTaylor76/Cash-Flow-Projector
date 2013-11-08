@@ -1,6 +1,7 @@
 class LedgerAccount < ActiveRecord::Base
-  has_many :ledger_entries, :class_name => LedgerEntry, :dependent => :destroy
   belongs_to :user
+
+  has_many :ledger_entries, :dependent => :destroy
 
   before_destroy :delete_account_validation
   validate :control_name_restrictions
@@ -58,7 +59,7 @@ class LedgerAccount < ActiveRecord::Base
   private
 
   def delete_account_validation
-    if control_name.present?
+    if is_control_account?
       errors.add(:base, 'cannot delete a control account')
       return false
     end

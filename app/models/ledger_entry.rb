@@ -1,9 +1,12 @@
 class LedgerEntry < ActiveRecord::Base
   extend DateValidator
 
+  belongs_to :user
+
   belongs_to :ledger_account
   belongs_to :transaction
-  belongs_to :user
+  belongs_to :analysis_code
+
   after_initialize :init
 
   validates_date :date

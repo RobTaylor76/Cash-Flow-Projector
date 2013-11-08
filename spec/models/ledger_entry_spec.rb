@@ -1,12 +1,20 @@
 require 'spec_helper'
 
 describe LedgerEntry do
-  it { subject.should belong_to(:ledger_account) }
-  it { subject.should belong_to(:user) }
+  describe :class do
+    it 'should have relationships' do
+      subject.should belong_to(:ledger_account)
+      subject.should belong_to(:user)
+      subject.should belong_to(:analysis_code)
+    end
+  end
 
   describe :new_record do
-    its(:debit) { should == 0 }
-    its(:credit) { should == 0 }
-    its(:date)  { should == Date.today}
+    it 'should init correctly' do
+      subject.debit.should == 0
+      subject.credit.should == 0
+      subject.date.should == Date.today
+
+    end
   end
 end
