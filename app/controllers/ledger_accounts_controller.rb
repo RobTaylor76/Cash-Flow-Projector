@@ -74,7 +74,7 @@ class LedgerAccountsController < ApplicationController
   end
 
   def load_ledger_entries
-    @ledger_entries = apply_date_range_filter @ledger_account.ledger_entries.includes(:transaction).order(:date => :asc)
+    @ledger_entries = apply_date_range_filter @ledger_account.ledger_entries.order(:date => :asc)
   end
 
   def load_activity

@@ -35,6 +35,8 @@
           <%= entry.text_field :debit %>
           <%= entry.label :credit %>
           <%= entry.text_field :credit %>
+          <%= entry.label :analysis_code %>
+          <%= entry.select :analysis_code_id , current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
         </div>
       <% end %>
     <% end %>

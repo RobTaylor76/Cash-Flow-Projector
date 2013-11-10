@@ -4,14 +4,16 @@
     <th>Reference</th>
     <th>In</th>
     <th>Out</th>
+    <th>Analysis Code</th>
   </tr>
 
-  <% @ledger_entries.each do |entry| %>
+  <% LedgerEntryDecorator.build_collection(@ledger_entries).each do |entry| %>
     <tr>
-      <td><%= I18n.l(entry.date) %></td>
-      <td><%= entry.transaction.reference %></td>
-      <td><%= format_number(entry.debit) %></td>
-      <td><%= format_number(entry.credit) %></td>
+      <td><%= entry.date %></td>
+      <td><%= entry.reference %></td>
+      <td><%= entry.debit %></td>
+      <td><%= entry.credit %></td>
+      <td><%= entry.analysis_code %></td>
       <td><%= link_to 'Show', transaction_path(:id => entry.transaction_id) %></td>
       <td><%= link_to 'Edit', edit_transaction_path(:id => entry.transaction_id) %></td>
       <td><%= link_to 'Delete', transaction_path(:id => entry.transaction_id), :data => {confirm: 'Are you sure?'}, method: :delete %></td>

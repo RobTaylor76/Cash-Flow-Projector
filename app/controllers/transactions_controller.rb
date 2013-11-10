@@ -72,6 +72,7 @@ class TransactionsController < ApplicationController
     :ledger_entries_attributes => [:id,
                                   :debit,
                                   :credit,
-                                  :ledger_account_id]])
+                                  :ledger_account_id,
+                                  :analysis_code_id]])
   end
 end
