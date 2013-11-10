@@ -4,17 +4,17 @@ class BankAccountImport
     def process_statement(user,bank_account, csv_text)
       bank_ledger = bank_ledger_account(bank_account)
       import_ledger = import_ledger_account(user, bank_account)
+      analysis_code = user.default_analysis_code
 
       ActiveRecord::Base.transaction do
         DataImporter.import_file(csv_text, header_map) do |row_data, md5|
-          process_transaction(user, row_data, bank_ledger, import_ledger,md5)
+          process_transaction(user, row_data, bank_ledger, import_ledger, analysis_code, md5)
         end
       end
     end
 
     private
-    def process_transaction(user, row_data, bank_ledger, import_ledger,md5)
-
+    def process_transaction(user, row_data, bank_ledger, import_ledger, analysis_code, md5)
       amount = row_data[:amount].to_d
 
       import_ledger = custom_ledger_account(user, row_data[:ledger_account]) if row_data[:ledger_account].present?

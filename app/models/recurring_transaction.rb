@@ -13,9 +13,9 @@ class RecurringTransaction < ActiveRecord::Base
   validate :validate_amount_or_percentage
 
   validates :amount, :percentage , :numericality => true
-  validates :to_id,  :from_id, :frequency_id, :presence => true
+  validates :analysis_code_id, :to_id,  :from_id, :frequency_id, :presence => true
 
-  after_initialize :set_defaults
+  after_initialize :set_defaults, :if => :new_record?
 
   def edit_recurrences
     return false unless valid?
@@ -62,11 +62,16 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def next_recurrence(current_date)
-    recurrence_date = current_date.next_year if frequency == TransactionFrequency.annualy
-    recurrence_date = current_date.next_month if frequency == TransactionFrequency.monthly
-    recurrence_date = current_date + 1.week if frequency == TransactionFrequency.weekly
-    recurrence_date = current_date.next_day if frequency == TransactionFrequency.daily
-    recurrence_date
+    case frequency
+    when TransactionFrequency.annualy
+      current_date.next_year
+    when TransactionFrequency.monthly
+      current_date.next_month
+    when TransactionFrequency.weekly
+      current_date + 1.week
+    when TransactionFrequency.daily
+      current_date.next_day
+    end
   end
 
   def create_transaction(recurrence_date)
@@ -79,11 +84,19 @@ class RecurringTransaction < ActiveRecord::Base
     return if tran_amount == 0.00
     return if duplication?(recurrence_date,tran_amount)
 
-    tran = user.transactions.create(:date => recurrence_date,
+    tran = user.transactions.build(:date => recurrence_date,
                                     :source => self,
                                     :approximation => approximation,
                                     :reference => reference)
-    tran.move_money(from, to, tran_amount)
+
+    tran.ledger_entries.build(:ledger_account_id => from.id,
+                              :analysis_code_id => analysis_code_id,
+                              :credit => tran_amount)
+
+    tran.ledger_entries.build(:ledger_account_id => to.id,
+                              :analysis_code_id => analysis_code_id,
+                              :debit => tran_amount)
+    tran.save!
   end
 
   def calculate_transaction_amount(date)
@@ -103,5 +116,6 @@ class RecurringTransaction < ActiveRecord::Base
     self.frequency_id = TransactionFrequency.monthly.id unless self.frequency_id.present?
     self.start_date ||= Date.today
     self.end_date ||= self.start_date + 1.year
+    self.analysis_code_id ||= user.default_analysis_code.id if user_id.present?
   end
 end

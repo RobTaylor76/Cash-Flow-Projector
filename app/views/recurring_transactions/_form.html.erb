@@ -43,6 +43,10 @@
       <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>
     <div class='field'>
+      <%= form.label :analysis_code %>
+      <%= form.select :analysis_code_id , current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+    </div>
+    <div class='field'>
       <%= form.label :from %>
       <%= form.select :from_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
     </div>

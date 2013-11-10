@@ -9,7 +9,8 @@ class Transaction < ActiveRecord::Base
   has_many :ledger_entries, :dependent => :destroy
   accepts_nested_attributes_for :ledger_entries
 
-  after_initialize :init
+  after_initialize :set_defaults, :if => :new_record?
+
   after_save :propogate_date_to_ledger_entries
   before_save :update_amount
 
@@ -42,7 +43,7 @@ class Transaction < ActiveRecord::Base
     errors.add(:base, I18n.t('errors.transaction.unbalanced_transaction')) unless balanced?
   end
 
-  def init
+  def set_defaults
     self.date ||= Date.today
     self.reference ||= ''
   end

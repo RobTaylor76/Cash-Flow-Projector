@@ -56,6 +56,10 @@ class LedgerAccount < ActiveRecord::Base
     balances
   end
 
+  def is_control_account?
+    control_name.present?
+  end
+
   private
 
   def delete_account_validation
@@ -70,10 +74,6 @@ class LedgerAccount < ActiveRecord::Base
       errors.add(:base, 'cannot change control name')
       return false
     end
-  end
-
-  def is_control_account?
-    control_name.present?
   end
 
   def daily_balances_sql(start_date, end_date)

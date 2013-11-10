@@ -81,6 +81,7 @@ class RecurringTransactionsController < ApplicationController
                                           :from_id,
                                           :to_id,
                                           :frequency_id,
+                                          :analysis_code_id,
                                           :working_days_only,
                                           :approximation])
   end

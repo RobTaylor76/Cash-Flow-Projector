@@ -17,6 +17,10 @@ class User < ActiveRecord::Base
   has_many :recurring_transactions
   has_many :analysis_codes
 
+  def default_analysis_code
+    analysis_codes.find_or_create_by(:name => 'Misc')
+  end
+
   private
   def add_dependancies
     UserBuilder.add_dependancies(self)
