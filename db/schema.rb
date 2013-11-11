@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20131108204849) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "analysis_codes", force: true do |t|
     t.integer  "user_id",    null: false
     t.string   "name"
@@ -67,8 +70,8 @@ ActiveRecord::Schema.define(version: 20131108204849) do
     t.integer  "day_of_month"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "working_days_only",                          default: false
-    t.boolean  "approximation",                              default: false
+    t.boolean  "working_days_only",                          default: true
+    t.boolean  "approximation",                              default: true
     t.integer  "analysis_code_id"
   end
 
