@@ -32,11 +32,11 @@ class BankAccountImport
                       :bank => bank_ledger.id, :import => import_ledger.id,
                       :date => Date.parse(row_data[:date]),
                       :reference => row_data[:reference],
-                      :analysis_code => analysis_code,
+                      :analysis_code => analysis_code.id,
                       :type => type, :md5 => "#{md5}-#{bank_ledger.id}"}
 
       unless transaction_exits?(user, tran_details)
-        create_transaction(user, tran_details)
+        TransactionHelper.create_transaction(user, tran_details)
       end
     end
 
@@ -126,19 +126,6 @@ class BankAccountImport
       else
         scope.for_date(transaction_details[:date]).where(:amount => transaction_details[:amount])
       end
-    end
-
-    def create_transaction(user,transaction_details)
-      tran = user.transactions.build(:reference => transaction_details[:reference],
-                                     :date => transaction_details[:date],
-                                     :import_sig =>transaction_details[:md5])
-      tran.ledger_entries.build(:ledger_account_id => transaction_details[:debit],
-                                :debit => transaction_details[:amount],
-                                :analysis_code => transaction_details[:analysis_code])
-      tran.ledger_entries.build(:ledger_account_id => transaction_details[:credit],
-                                :analysis_code => transaction_details[:analysis_code],
-                                :credit => transaction_details[:amount])
-      tran.save!
     end
 
     def bank_ledger_account(bank_account)

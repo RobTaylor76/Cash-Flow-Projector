@@ -84,19 +84,18 @@ class RecurringTransaction < ActiveRecord::Base
     return if tran_amount == 0.00
     return if duplication?(recurrence_date,tran_amount)
 
-    tran = user.transactions.build(:date => recurrence_date,
-                                    :source => self,
-                                    :approximation => approximation,
-                                    :reference => reference)
 
-    tran.ledger_entries.build(:ledger_account_id => from.id,
-                              :analysis_code_id => analysis_code_id,
-                              :credit => tran_amount)
+    transaction_details = {:date => recurrence_date,
+                           :reference => reference,
+                           :source => self,
+                           :approximation => approximation,
+                           :amount => tran_amount,
+                           :debit => to.id,
+                           :credit => from.id,
+                           :analysis_code => analysis_code_id}
 
-    tran.ledger_entries.build(:ledger_account_id => to.id,
-                              :analysis_code_id => analysis_code_id,
-                              :debit => tran_amount)
-    tran.save!
+    tran = TransactionHelper.create_transaction(user, transaction_details)
+
   end
 
   def calculate_transaction_amount(date)
