@@ -6,6 +6,8 @@ class LedgerAccount < ActiveRecord::Base
   before_destroy :delete_account_validation
   validate :control_name_restrictions
 
+  default_scope -> {order(:name => :asc)}
+
   def self.control_account(name)
     where(:control_name => name).first
   end
