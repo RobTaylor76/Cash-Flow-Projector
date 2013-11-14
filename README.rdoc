@@ -2,25 +2,19 @@ Cash flow projector
 
 A project to allow a user to create cash flow projections for bank accounts
 
-Scopes
+Current Functionality
 
-Stage 1 -
-* Single Entry book keeping - one bank account, credits and debits recorded against that account. It is a assumed it is a debit account (i.e normal balance would be in debit)
-* All entries are manual - future projected incomes/expenses are added manually for a given date i.e. manually re-occured
-* We need to know what the balance is on each date (daily balances). To do this we need to store the debits and credits as transactions against the account. -Done
-* future tranactions are added into tranaction log... - Done
-* daily balance of a account is a sum of all debits - sum of all credits before the required date. - Done
-* Need some visualisation of daily balances -  Done - using High Charts
-
-Stage 2 -
-* Add the ability for recurring incommings and outgoings - these will project into future and create the required trasactions automatically. - Done
-* Add the ability to have interest based incommings and outgoings. use to model interest on a loan.  -Done
-
-Stage 3 -
-* Add the ability for double entry book keeping. so a loan payment from the bank account pays of the loan account. Interest will need be double entered into a Loan Interest account. - Done
-*  Income and expense ledger accounts will be needed as well. -Done (Can create new ledger accounts)
-* Will need to model both credit and debit account types and be able to encapsulate the transfer of money from one account to the other. --Done (not distinguishing between credit /debit accounts at this time)
-
-Stage 4 - 
-* Add  probability to each income and outgoing. Allow what if scenario planning.
-
+* Create Bank Accounts that have associated ledger accounts
+* Ability to import bank statements
+  * Rudimentary transaction matching
+    * +/- 4 days, amount matching
+  * support for analysis code and defining custom ledger accounts for the double entry
+  * a transaction loaded for one bank can be matched against a transaction for another bank account for the double entry
+* Ability to create double entry transactions for any ledger accounts (limited to 2 ledger accounts per trasnaction by UI at mo)
+* Ability to create recurring trasnactions, historic and future
+  * Ability to ensure transactions only occur on weekdays
+  * Ability to flag a transction as an approximation to enable Bank Statement import to fuzzy match on amount
+  * Ability to create transactions based on %age of balances. Used for modeling compound interest etc.
+* Balance Corrections/Opening Balances (WIP) Ability to alter a balance on a specifed date to match the actual one (if you have gaps in you data for example)
+* Ability to visualise balances for bank accounts/legder accounts using High Charts
+* To Come, Analysis Code breakdowns for activity.  i.e. how much did i spent on petrol this month, last three moths? Break down by month/year etc/
