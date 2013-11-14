@@ -23,9 +23,10 @@ ActiveRecord::Schema.define(version: 20131112204454) do
   create_table "balance_corrections", force: true do |t|
     t.integer  "user_id"
     t.integer  "ledger_account_id"
-    t.decimal  "required_balance",  precision: 14, scale: 2, default: 0.0
-    t.date     "balance_date"
+    t.decimal  "balance",           precision: 14, scale: 2, default: 0.0
+    t.date     "date"
     t.date     "correction_date"
+    t.string   "reference"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

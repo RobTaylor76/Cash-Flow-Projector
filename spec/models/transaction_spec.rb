@@ -74,16 +74,10 @@ describe Transaction do
   end
 
   describe :dates do
-    it 'should default transaction date and ledger entries to today' do
-      @tr.move_money(@from,@to, 30.00)
-      @tr.ledger_entries.each {|entry| entry.date.should == Date.today }
-    end
-
     it 'should use the supplied date for ledger entries and transaction' do
-      @tr = @user.transactions.create(:date => Date.today + 5.days)
-      @tr.move_money(@from,@to, 30.00)
-      @tr.ledger_entries.each {|entry| entry.date.should == (Date.today + 5.days) }
+      tr = @user.transactions.create(:date => Date.today + 5.days)
+      tr.move_money(@from,@to, 30.00)
+      tr.ledger_entries.each {|entry| entry.date.should == (Date.today + 5.days) }
     end
   end
-
 end

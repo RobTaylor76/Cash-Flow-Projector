@@ -13,7 +13,7 @@ class RecurringTransaction < ActiveRecord::Base
   validate :validate_amount_or_percentage
 
   validates :amount, :percentage , :numericality => true
-  validates :analysis_code_id, :to_id,  :from_id, :frequency_id, :presence => true
+  validates :reference, :analysis_code_id, :to_id,  :from_id, :frequency_id, :presence => true
 
   after_initialize :set_defaults, :if => :new_record?
 

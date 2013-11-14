@@ -2,6 +2,7 @@ class LedgerAccount < ActiveRecord::Base
   belongs_to :user
 
   has_many :ledger_entries, :dependent => :destroy
+  has_many :balance_corrections, :dependent => :destroy
 
   before_destroy :delete_account_validation
   validate :control_name_restrictions

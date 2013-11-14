@@ -1,5 +1,6 @@
 class Transaction < ActiveRecord::Base
   extend DateValidator
+  include DateRangeScopes
 
   validates_date :date
   validate :validate_balanced
@@ -13,10 +14,6 @@ class Transaction < ActiveRecord::Base
 
   after_save :propogate_date_to_ledger_entries
   before_save :update_amount
-
-  scope :date_range_filter, lambda{|from, to|  where('transactions.date >= ? AND transactions.date <= ?', from,to)}
-  scope :before_date, lambda { |cutoff|  where('transactions.date < ?', cutoff) }
-  scope :for_date, lambda { |required_date| where('transactions.date  = ?', required_date) }
 
   def balanced?
     sum_credits = ledger_entries.map(&:credit).reduce(:+)
@@ -51,6 +48,7 @@ class Transaction < ActiveRecord::Base
   def propogate_date_to_ledger_entries
     ActiveRecord::Base.transaction do
       ledger_entries.where(:transaction_id => self.id).update_all(:date => self.date)
+      ledger_entries.reload
     end
   end
 end

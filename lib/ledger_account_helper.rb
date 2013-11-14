@@ -1,11 +1,10 @@
 class LedgerAccountHelper
   class << self
-    def correct_balance(ledger_account, balance_date, required_balance, correction_date)
+    def correct_balance(ledger_account, balance_date, required_balance, correction_date, reference)
       user = ledger_account.user
       current_balance = ledger_account.balance(balance_date)
       correction_account = find_correction_account(user)
 
-      transaction_details = {:reference => 'Balance Correction'}
 
       debit, credit, amount = if required_balance > current_balance
                                 [ledger_account, correction_account, (required_balance - current_balance)]
@@ -14,6 +13,7 @@ class LedgerAccountHelper
                               end
 
       #transaction_details[:source] = nil
+      transaction_details = {:reference => reference}
       transaction_details[:date] = correction_date
       transaction_details[:debit] = debit.id
       transaction_details[:credit] = credit.id

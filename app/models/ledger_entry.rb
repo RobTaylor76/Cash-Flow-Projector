@@ -1,5 +1,6 @@
 class LedgerEntry < ActiveRecord::Base
   extend DateValidator
+  include DateRangeScopes
 
   belongs_to :user
 
@@ -12,9 +13,6 @@ class LedgerEntry < ActiveRecord::Base
   validates_date :date
   validates :analysis_code_id, :presence => true
 
-  scope :date_range_filter, lambda{|from, to|  where('ledger_entries.date >= ? AND ledger_entries.date <= ?', from,to)}
-  scope :before_date, lambda { |cutoff|  where('ledger_entries.date < ?', cutoff) }
-  scope :for_date, lambda { |required_date| where('ledger_entries.date  = ?', required_date) }
 
   private
   def set_defaults

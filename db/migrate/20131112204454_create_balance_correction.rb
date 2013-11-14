@@ -3,9 +3,10 @@ class CreateBalanceCorrection < ActiveRecord::Migration
     create_table :balance_corrections do |t|
       t.references :user, :nil => false
       t.references :ledger_account, :nil => false
-      t.decimal :required_balance, :precision => 14, :scale => 2, :default => 0.0
-      t.date :balance_date
+      t.decimal :balance, :precision => 14, :scale => 2, :default => 0.0
+      t.date :date
       t.date :correction_date
+      t.string :reference
       t.timestamps
     end
   end

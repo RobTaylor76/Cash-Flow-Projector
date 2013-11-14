@@ -1,0 +1,26 @@
+<h1>Listing Balance Corrections</h1>
+<%= link_to 'New Balance Correction', new_ledger_account_balance_correction_path %>
+<%= render 'shared/date_range_filter', :locals => {:show_balance_date => false} %>
+
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Reference</th>
+    <th>Balance</th>
+    <th></th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @balance_corrections.each do |correction| %>
+  <tr>
+    <td><%= I18n.l(correction.date)%></td>
+    <td><%= correction.reference %></td>
+    <td><%= format_number(correction.balance) %></td>
+    <td><%= link_to 'Show', ledger_account_balance_correction_path(@ledger_account, correction) %></td>
+    <td><%= link_to 'Edit', edit_ledger_account_balance_correction_path(@ledger_account, correction) %></td>
+    <td><%= link_to 'Delete', ledger_account_balance_correction_path(@ledger_account, correction), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
+  </tr>
+<% end %>
+</table>
+

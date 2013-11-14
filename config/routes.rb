@@ -13,6 +13,8 @@ Cashflowprojector::Application.routes.draw do
 
   resources :ledger_accounts do
     get :series
+
+    resources :balance_corrections
   end
 
   resources :transactions

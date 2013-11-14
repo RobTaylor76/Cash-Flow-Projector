@@ -11,7 +11,7 @@ describe LedgerAccountsController do
     expect do
       post :create, params
     end.to change { @user.ledger_accounts.count }.by(1)
-    @user.ledger_accounts.last.name.should == 'nombre'
+    @user.ledger_accounts.where(:name => 'nombre').should be_present
   end
 
   it 'should allow update' do

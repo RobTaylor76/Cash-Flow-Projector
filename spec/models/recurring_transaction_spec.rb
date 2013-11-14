@@ -28,6 +28,7 @@ describe RecurringTransaction do
       @recurring.to = @to_ledger_account
       @recurring.approximation = false
       @recurring.working_days_only = false
+      @recurring.reference = 'recurring transaction'
     end
 
     context :validations do
