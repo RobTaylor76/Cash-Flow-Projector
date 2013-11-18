@@ -4,7 +4,7 @@ class BalanceCorrection < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :ledger_account
-  has_one :transaction, :as => :source
+  has_one :transaction, :as => :source, :dependent => :destroy
 
   after_initialize :set_defaults, :if => :new_record?
   before_save :save_transaction
@@ -16,8 +16,10 @@ class BalanceCorrection < ActiveRecord::Base
 
   private
   def set_defaults
-    self.correction_date ||= Date.parse('1/1/2000')
+    self.date ||= Date.today
+    self.correction_date ||= Date.today
     self.user_id ||= self.ledger_account.user_id
+    self.reference ||= 'Balance Correction'
   end
 
   def save_transaction

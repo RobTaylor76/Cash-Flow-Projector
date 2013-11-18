@@ -1,5 +1,6 @@
-<h1>Listing Balance Corrections</h1>
-<%= link_to 'New Balance Correction', new_ledger_account_balance_correction_path %>
+<h1>Listing Balance Corrections for <%= @ledger_account.name %></h1>
+<%= link_to 'New Balance Correction', new_ledger_account_balance_correction_path %> |
+<%= link_to 'Back To Ledger Account', ledger_account_path(@ledger_account) %>
 <%= render 'shared/date_range_filter', :locals => {:show_balance_date => false} %>
 
 <table>

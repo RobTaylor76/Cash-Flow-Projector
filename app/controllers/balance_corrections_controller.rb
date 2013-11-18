@@ -19,13 +19,7 @@ class BalanceCorrectionsController < ApplicationController
   end
 
   def show
-    load_balance_correction
     respond_with @balance_correction
-  end
-
-  def new
-    @ledger_account = current_user.ledger_accounts.build
-    respond_with @ledger_account
   end
 
   def edit
@@ -34,21 +28,19 @@ class BalanceCorrectionsController < ApplicationController
   def create
     @balance_correction = @ledger_account.balance_corrections.build(strong_params)
     flash[:notice] =  'Correction was successfully created.' if @balance_correction.save
-    respond_with @balance_correction
+    respond_with [@ledger_account, @balance_correction]
   end
 
   def update
     if @balance_correction.update_attributes(strong_params)
       flash[:notice] =  'Correction was successfully updated.'
     end
-    respond_with @balance_correction
+    respond_with [@ledger_account, @balance_correction]
   end
 
-  # DELETE /ledger_accounts/1
-  # DELETE /ledger_accounts/1.json
   def destroy
     @balance_correction.destroy
-    respond_with @balance_correction
+    respond_with [@ledger_account,@balance_correction]
   end
 
   private
@@ -57,7 +49,7 @@ class BalanceCorrectionsController < ApplicationController
   end
 
   def load_balance_correction
-    @ledger_account.balance_corrections.find(balance_correction_id)
+    @balance_correction = @ledger_account.balance_corrections.find(balance_correction_id)
   end
 
   def load_ledger_account

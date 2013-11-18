@@ -1,0 +1,39 @@
+<h1>Balance Correction for <%= @ledger_account.name %></h1>
+<%= form_for([@ledger_account, @balance_correction]) do |f| %>
+  <% if @balance_correction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@balance_correction.errors.count, "error") %> prohibited this balance_correction from being saved:</h2>
+
+      <ul>
+        <% @balance_correction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :date %>
+      <%= form.date_field :date%>
+    </div>
+    <div class='field'>
+      <%= form.label :reference %>
+      <%= form.text_field :reference %>
+    </div>
+    <div class='field'>
+      <%= form.label :balance %>
+      <%= form.text_field :balance %>
+    </div>
+    <div class='field'>
+      <%= form.label :correction_date %>
+      <%= form.date_field :correction_date  %>
+    </div>
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+<%end%>
