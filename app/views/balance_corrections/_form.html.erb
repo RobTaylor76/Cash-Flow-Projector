@@ -25,6 +25,14 @@
       <%= form.label :balance %>
       <%= form.text_field :balance %>
     </div>
+    <% if locals[:form_readonly] %>
+
+      <div class='field'>
+        <%= form.label :correction %>
+        <%= form.text_field :correction %>
+      </div>
+
+    <%end%>
     <div class='field'>
       <%= form.label :correction_date %>
       <%= form.date_field :correction_date  %>

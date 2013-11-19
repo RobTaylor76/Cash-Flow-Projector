@@ -10,7 +10,7 @@ class BalanceCorrectionsController < ApplicationController
 
   def index
     set_up_date_range_filter ledger_account_balance_corrections_path(@ledger_account)
-    @balance_corrections = apply_date_range_filter @ledger_account.balance_corrections
+    @balance_corrections = apply_date_range_filter @ledger_account.balance_corrections.order(:date => :asc)
     respond_with @balance_corrections
   end
 
@@ -27,20 +27,34 @@ class BalanceCorrectionsController < ApplicationController
 
   def create
     @balance_correction = @ledger_account.balance_corrections.build(strong_params)
-    flash[:notice] =  'Correction was successfully created.' if @balance_correction.save
-    respond_with [@ledger_account, @balance_correction]
+
+    resource = if @balance_correction.save
+                 flash[:notice] =  'Correction was successfully created.'
+                 [@ledger_account, @balance_correction]
+               else
+                 @balance_correction
+               end
+    respond_with resource
   end
 
   def update
-    if @balance_correction.update_attributes(strong_params)
-      flash[:notice] =  'Correction was successfully updated.'
-    end
-    respond_with [@ledger_account, @balance_correction]
+    resource = if @balance_correction.update_attributes(strong_params)
+                 flash[:notice] =  'Correction was successfully updated.'
+                 [@ledger_account, @balance_correction]
+               else
+                 @balance_correction
+               end
+    respond_with resource
   end
 
   def destroy
-    @balance_correction.destroy
-    respond_with [@ledger_account,@balance_correction]
+    resource = if @balance_correction.destroy
+                 flash[:notice] =  'Correction was successfully deleted.'
+                 [@ledger_account, @balance_correction]
+               else
+                 @balance_correction
+               end
+    respond_with resource
   end
 
   private

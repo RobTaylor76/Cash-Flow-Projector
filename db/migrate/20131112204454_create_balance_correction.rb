@@ -4,6 +4,7 @@ class CreateBalanceCorrection < ActiveRecord::Migration
       t.references :user, :nil => false
       t.references :ledger_account, :nil => false
       t.decimal :balance, :precision => 14, :scale => 2, :default => 0.0
+      t.decimal :correction, :precision => 14, :scale => 2, :default => 0.0
       t.date :date
       t.date :correction_date
       t.string :reference

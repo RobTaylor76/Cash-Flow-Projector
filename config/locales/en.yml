@@ -17,6 +17,8 @@ en:
         submit: 'Apply Filter'
 
   errors:
+    balance_correction:
+      correction_before_balance: 'Correction needs to occur before balance date to affect the opening balance'
     transaction:
       unbalanced_transaction: 'Sum of Credits must equal Debits'
     recurring_transaction:

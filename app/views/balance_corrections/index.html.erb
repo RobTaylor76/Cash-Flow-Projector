@@ -8,6 +8,7 @@
     <th>Date</th>
     <th>Reference</th>
     <th>Balance</th>
+    <th>Correction</th>
     <th></th>
     <th></th>
     <th></th>
@@ -18,6 +19,7 @@
     <td><%= I18n.l(correction.date)%></td>
     <td><%= correction.reference %></td>
     <td><%= format_number(correction.balance) %></td>
+    <td><%= format_number(correction.correction) %></td>
     <td><%= link_to 'Show', ledger_account_balance_correction_path(@ledger_account, correction) %></td>
     <td><%= link_to 'Edit', edit_ledger_account_balance_correction_path(@ledger_account, correction) %></td>
     <td><%= link_to 'Delete', ledger_account_balance_correction_path(@ledger_account, correction), :data => {confirm: 'Are you sure?'}, method: :delete %></td>

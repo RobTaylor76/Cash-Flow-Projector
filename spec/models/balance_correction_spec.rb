@@ -34,8 +34,10 @@ describe BalanceCorrection do
             correction.correction_date = correction_date
             correction.save!
             @bank_account_la.balance(balance_date).should == required_balance
+            correction.correction.should == required_balance
           end.to change {@user.transactions.for_date(correction_date).count}.by(1)
         end.to change {BalanceCorrection.count}.by(1)
+        @bank_account_la.balance_corrections.destroy_all
       end
     end
   end

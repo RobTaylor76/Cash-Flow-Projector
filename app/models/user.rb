@@ -21,6 +21,9 @@ class User < ActiveRecord::Base
     analysis_codes.find_or_create_by(:name => 'Misc')
   end
 
+  def balance_correction_account
+    ledger_accounts.control_account('balance_correction')
+  end
   private
   def add_dependancies
     UserBuilder.add_dependancies(self)
