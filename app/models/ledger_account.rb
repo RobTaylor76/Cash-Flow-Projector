@@ -3,6 +3,7 @@ class LedgerAccount < ActiveRecord::Base
 
   has_many :ledger_entries, :dependent => :destroy
   has_many :balance_corrections, :dependent => :destroy
+  has_many :statement_imports , :dependent => :destroy
 
   before_destroy :delete_account_validation
   validate :control_name_restrictions

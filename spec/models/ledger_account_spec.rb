@@ -5,6 +5,8 @@ describe LedgerAccount do
 
   describe :relationships do
     it { should have_many :ledger_entries }
+    it { should have_many :balance_corrections }
+    it { should have_many :statement_imports }
     it { should belong_to :user}
   end
 

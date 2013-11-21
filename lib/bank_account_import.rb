@@ -2,23 +2,41 @@ class BankAccountImport
   class << self
 
     def process_statement(user,bank_account, csv_text)
-      bank_ledger = bank_ledger_account(bank_account)
-      import_ledger = import_ledger_account(user, bank_account)
-      analysis_code = user.default_analysis_code
-
       ActiveRecord::Base.transaction do
+        bank_ledger = bank_ledger_account(bank_account)
+        import_ledger = import_ledger_account(user, bank_account)
+        statement_import = bank_ledger.statement_imports.create(:date => Date.today)
+        analysis_code = user.default_analysis_code
+
+        import_details = {:user => user,
+          :bank_ledger => bank_ledger,
+          :default_ledger_account => import_ledger,
+          :default_analysis_code => analysis_code,
+          :statement_import => statement_import}
+
         DataImporter.import_file(csv_text, header_map) do |row_data, md5|
-          process_transaction(user, row_data, bank_ledger, import_ledger, analysis_code, md5)
+          process_transaction(row_data, md5, import_details )
         end
       end
     end
 
     private
-    def process_transaction(user, row_data, bank_ledger, import_ledger, analysis_code, md5)
+    def process_transaction(row_data, md5, import_details)
+      user = import_details[:user]
+      bank_ledger = import_details[:bank_ledger]
       amount = row_data[:amount].to_d
 
-      import_ledger = custom_ledger_account(user, row_data[:ledger_account]) if row_data[:ledger_account].present?
-      analysis_code = lookup_analysis_code(user, row_data[:analysis_code]) if row_data[:analysis_code].present?
+      import_ledger = if row_data[:ledger_account].present?
+                        custom_ledger_account(user, row_data[:ledger_account])
+                      else
+                        import_details[:default_ledger_account]
+                      end
+
+      analysis_code = if row_data[:analysis_code].present?
+                        lookup_analysis_code(user, row_data[:analysis_code])
+                      else
+                        import_details[:default_analysis_code]
+                      end
 
       debit,credit,type = if amount > 0
                   [bank_ledger,import_ledger,:debit]
@@ -33,7 +51,9 @@ class BankAccountImport
                       :date => Date.parse(row_data[:date]),
                       :reference => row_data[:reference],
                       :analysis_code => analysis_code.id,
-                      :type => type, :md5 => "#{md5}-#{bank_ledger.id}"}
+                      :type => type,
+                      :source => import_details[:statement_import],
+                      :md5 => "#{md5}-#{bank_ledger.id}"}
 
       unless transaction_exits?(user, tran_details)
         TransactionHelper.create_transaction(user, tran_details)
@@ -61,7 +81,7 @@ class BankAccountImport
         end
         tran.approximation = false
         tran.date = transaction_details[:date] #update the date as well as matching +/- 4 days
-        tran.source = nil # unlink from recurrence , hack for now!
+        tran.source = transaction_details[:source] #assign the tran to the statement import
         return tran.save
       end
       false

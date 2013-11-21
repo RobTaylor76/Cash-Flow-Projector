@@ -13,9 +13,11 @@ describe BankAccountImport do
   it 'should install all three transactions' do
     expect do
       expect do
-        BankAccountImport.process_statement(@user, @bank_account,@csv_text)
-      end.to change{@user.transactions.count}.by(3)
-    end.to change{@user.analysis_codes.count}.by(1)
+        expect do
+          BankAccountImport.process_statement(@user, @bank_account,@csv_text)
+        end.to change{@user.transactions.count}.by(3)
+      end.to change{@user.analysis_codes.count}.by(1)
+    end.to change{@bank_account.main_ledger_account.statement_imports.count}.by(1)
 
     @bank_account.main_ledger_account.ledger_entries.count.should == 3
     @data_import_la.ledger_entries.count.should == 2
@@ -153,7 +155,7 @@ describe BankAccountImport do
     tran.date.should == Date.parse('3/1/2014')
     tran.amount.should == 2345.56
     tran.approximation.should be_false
-    tran.source.should be_nil
+    tran.source.should == @bank_account.main_ledger_account.statement_imports.last
 
     @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
     @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1

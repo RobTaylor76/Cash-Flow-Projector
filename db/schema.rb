@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20131112204454) do
+ActiveRecord::Schema.define(version: 20131121114506) do
 
   create_table "analysis_codes", force: true do |t|
     t.integer  "user_id",    null: false
@@ -82,6 +82,16 @@ ActiveRecord::Schema.define(version: 20131112204454) do
     t.boolean  "working_days_only",                          default: true
     t.boolean  "approximation",                              default: true
     t.integer  "analysis_code_id"
+  end
+
+  create_table "statement_imports", force: true do |t|
+    t.integer  "ledger_account_id", null: false
+    t.integer  "user_id",           null: false
+    t.date     "date",              null: false
+    t.date     "from"
+    t.date     "to"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "transaction_frequencies", force: true do |t|

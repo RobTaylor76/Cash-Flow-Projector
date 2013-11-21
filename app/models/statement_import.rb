@@ -1,18 +1,16 @@
-class FileUpload
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
+class StatementImport < ActiveRecord::Base
 
-  attr_accessor :file_name
+  belongs_to :user
+  belongs_to :ledger_account
 
-  def initialize(attributes = {})
-    attributes.each do |name, value|
-      send("#{name}=", value)
-    end
+  has_many :transactions, :dependent => :destroy, :as => :source
+
+  after_initialize :set_defaults, :if => :new_record?
+
+  private
+
+  def set_defaults
+    self.user_id ||= ledger_account.user_id
   end
-
-  def persisted?
-    false
-  end
-
 end
 
