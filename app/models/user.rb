@@ -24,6 +24,11 @@ class User < ActiveRecord::Base
   def balance_correction_account
     ledger_accounts.control_account('balance_correction')
   end
+
+  def import_ledger_account
+    ledger_accounts.control_account('statement_import')
+  end
+
   private
   def add_dependancies
     UserBuilder.add_dependancies(self)

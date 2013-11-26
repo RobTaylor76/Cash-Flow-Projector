@@ -8,3 +8,4 @@
 <%= render 'shared/balance_graph', :locals => {:balance_graph_url => ledger_account_series_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json)) } %>
 <%= render 'shared/ledger_entries' %>
 
+<%= render 'shared/statement_import', :locals => {:statement_import_path => ledger_account_import_statement_path(@ledger_account)} %>

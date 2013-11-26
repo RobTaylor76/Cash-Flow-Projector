@@ -2,7 +2,7 @@ class LedgerAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :series]
+  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :series, :import_statement]
 
   # GET /ledger_accounts
   # GET /ledger_accounts.json
@@ -63,6 +63,15 @@ class LedgerAccountsController < ApplicationController
     respond_with json
   end
 
+  # POST - import bank statement
+  def import_statement
+    if params[:file_upload] && params[:file_upload][:file]
+      csv_text = params[:file_upload][:file].read
+      StatementImportHelper.process_statement(current_user, @ledger_account,csv_text)
+      flash[:notice] =  "File has been uploaded successfully"
+    end
+    respond_with @ledger_account
+  end
   private
 
   def load_ledger_account

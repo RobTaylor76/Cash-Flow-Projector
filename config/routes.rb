@@ -13,8 +13,10 @@ Cashflowprojector::Application.routes.draw do
 
   resources :ledger_accounts do
     get :series
+    post :import_statement
 
     resources :balance_corrections
+    resources :statement_imports, :only => [:index, :destroy]
   end
 
   resources :transactions

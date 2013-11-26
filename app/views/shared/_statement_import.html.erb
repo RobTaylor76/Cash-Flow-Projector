@@ -1,0 +1,8 @@
+
+<h1>File Upload</h1>
+
+<%= form_for(FileUpload.new, :url => locals[:statement_import_path]) do |f| %>
+  <p><label for="upload_file">Select File</label> : 
+  <%= f.file_field(:file) %></p>
+  <%= f.submit %>
+<% end%>

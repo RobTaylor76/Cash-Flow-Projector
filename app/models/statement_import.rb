@@ -1,4 +1,6 @@
 class StatementImport < ActiveRecord::Base
+  extend DateValidator
+  include DateRangeScopes
 
   belongs_to :user
   belongs_to :ledger_account

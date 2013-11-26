@@ -1,17 +1,14 @@
-class BankAccountImport
+class StatementImportHelper
   class << self
 
-    def process_statement(user,bank_account, csv_text)
+    def process_statement(user, statement_ledger, csv_text)
       ActiveRecord::Base.transaction do
-        bank_ledger = bank_ledger_account(bank_account)
-        import_ledger = import_ledger_account(user, bank_account)
-        statement_import = bank_ledger.statement_imports.create(:date => Date.today)
-        analysis_code = user.default_analysis_code
+        statement_import = statement_ledger.statement_imports.create(:date => Date.today)
 
         import_details = {:user => user,
-          :bank_ledger => bank_ledger,
-          :default_ledger_account => import_ledger,
-          :default_analysis_code => analysis_code,
+          :statement_ledger => statement_ledger,
+          :default_ledger_account => user.import_ledger_account,
+          :default_analysis_code => user.default_analysis_code,
           :statement_import => statement_import}
 
         DataImporter.import_file(csv_text, header_map) do |row_data, md5|
@@ -23,7 +20,7 @@ class BankAccountImport
     private
     def process_transaction(row_data, md5, import_details)
       user = import_details[:user]
-      bank_ledger = import_details[:bank_ledger]
+      statement_ledger = import_details[:statement_ledger]
       amount = row_data[:amount].to_d
 
       import_ledger = if row_data[:ledger_account].present?
@@ -39,21 +36,21 @@ class BankAccountImport
                       end
 
       debit,credit,type = if amount > 0
-                  [bank_ledger,import_ledger,:debit]
+                  [statement_ledger,import_ledger,:debit]
                 else
-                  [import_ledger,bank_ledger,:credit]
+                  [import_ledger,statement_ledger,:credit]
                 end
 
       amount = amount.abs
       tran_details = {:amount => amount,
                       :debit => debit.id, :credit => credit.id,
-                      :bank => bank_ledger.id, :import => import_ledger.id,
+                      :bank => statement_ledger.id, :import => import_ledger.id,
                       :date => Date.parse(row_data[:date]),
                       :reference => row_data[:reference],
                       :analysis_code => analysis_code.id,
                       :type => type,
                       :source => import_details[:statement_import],
-                      :md5 => "#{md5}-#{bank_ledger.id}"}
+                      :md5 => "#{md5}-#{statement_ledger.id}"}
 
       unless transaction_exits?(user, tran_details)
         TransactionHelper.create_transaction(user, tran_details)
@@ -146,14 +143,6 @@ class BankAccountImport
       else
         scope.for_date(transaction_details[:date]).where(:amount => transaction_details[:amount])
       end
-    end
-
-    def bank_ledger_account(bank_account)
-      bank_account.main_ledger_account
-    end
-
-    def import_ledger_account(user,bank_account)
-      user.ledger_accounts.control_account('statement_import')
     end
 
     def lookup_analysis_code(user, name)
