@@ -10,6 +10,7 @@ gem 'devise' , '~> 3.0.0'
 gem 'pg'
 
 gem 'puma'
+gem 'rails_serve_static_assets'
 
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
