@@ -1,4 +1,5 @@
 class LedgerEntry < ActiveRecord::Base
+  include RelationshipValidator
   extend DateValidator
   include DateRangeScopes
 
@@ -11,10 +12,14 @@ class LedgerEntry < ActiveRecord::Base
   after_initialize :set_defaults, :if => :new_record?
 
   validates_date :date
-  validates :analysis_code_id, :presence => true
+  validates_relationship :analysis_code_id, :valid_values => :valid_analysis_codes
+  validates_relationship :ledger_account_id, :valid_values => :valid_ledger_accounts
 
+  validates :analysis_code_id, :presence => true
+  validates :ledger_account_id, :presence => true
 
   private
+
   def set_defaults
     self.date ||= Date.today
     self.credit ||= 0

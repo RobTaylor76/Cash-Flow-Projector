@@ -1,4 +1,5 @@
 class BalanceCorrection < ActiveRecord::Base
+  include RelationshipValidator
   include DateRangeScopes
   extend DateValidator
 
@@ -13,6 +14,8 @@ class BalanceCorrection < ActiveRecord::Base
   validates_date :date
   validates_date :correction_date
   validate :validate_correction_before_balance
+
+  validates_relationship :ledger_account_id, :valid_values => :valid_ledger_accounts
 
   private
   def set_defaults

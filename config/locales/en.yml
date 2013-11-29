@@ -17,6 +17,8 @@ en:
         submit: 'Apply Filter'
 
   errors:
+    security:
+      invalid_lookup_id: 'The Supplied Value Is Not Allowed'
     balance_correction:
       correction_before_balance: 'Correction needs to occur before balance date to affect the opening balance'
     transaction:

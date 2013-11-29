@@ -1,11 +1,10 @@
 class BankAccount < ActiveRecord::Base
 
-  after_initialize :create_ledger_accounts
-
   belongs_to :user
   belongs_to :main_ledger_account, :class_name => LedgerAccount
   belongs_to :charges_ledger_account, :class_name => LedgerAccount
 
+  after_initialize :create_ledger_accounts, :if => :new_record?
   after_save :update_ledger_account_names, :if => :name_changed?
 
   def deposit(ammount, date)

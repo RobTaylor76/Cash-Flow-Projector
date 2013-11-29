@@ -1,4 +1,5 @@
 class RecurringTransaction < ActiveRecord::Base
+  include RelationshipValidator
   extend DateValidator
 
   belongs_to :user
@@ -10,6 +11,8 @@ class RecurringTransaction < ActiveRecord::Base
 
   validates_date :start_date
   validates_date :end_date
+  validates_relationship :from_id, :to_id, :valid_values => :valid_ledger_accounts
+
   validate :validate_amount_or_percentage
 
   validates :amount, :percentage , :numericality => true
