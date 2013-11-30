@@ -1,8 +1,8 @@
 
-<h1>File Upload</h1>
-
+<h1>Import Statement</h1>
 <%= form_for(FileUpload.new, :url => locals[:statement_import_path]) do |f| %>
   <p><label for="upload_file">Select File</label> : 
   <%= f.file_field(:file) %></p>
-  <%= f.submit %>
+  <%= f.submit 'Upload & Import Statement' %>
 <% end%>
+<%= link_to 'Download Sample Statement','/assets/sample_statement.csv' %>
