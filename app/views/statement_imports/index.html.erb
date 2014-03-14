@@ -5,6 +5,7 @@
 <table>
   <tr>
     <th>Import Date</th>
+    <th>Impored File</th>
     <th></th>
     <th></th>
     <th></th>
@@ -13,8 +14,10 @@
 <% @statement_imports.each do |import| %>
   <tr>
     <td><%= I18n.l(import.date)%></td>
+    <td><%= import.file_name %></td>
     <td><%= link_to 'Delete', ledger_account_statement_import_path(@ledger_account, import), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
   </tr>
 <% end %>
 </table>
 
+<%= render 'shared/statement_import', :locals => {:statement_import_path => ledger_account_import_statement_path(@ledger_account)} %>
