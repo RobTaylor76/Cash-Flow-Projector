@@ -26,7 +26,7 @@ class BankAccount < ActiveRecord::Base
 
   # return daily balances for a date range...
   def daily_balances(start_date, end_date)
-    main_ledger_account.daily_balances(start_date, end_date)
+    LedgerAccountHelper.daily_balances(main_ledger_account, start_date, end_date)
   end
 
   private

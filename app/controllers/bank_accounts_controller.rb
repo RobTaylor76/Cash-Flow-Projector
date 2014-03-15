@@ -71,9 +71,9 @@ class BankAccountsController < ApplicationController
 
     series = []
     @bank_accounts.each do |bank_account|
-      activity =  bank_account.main_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
+      activity =  LedgerAccountHelper.daily_balances(bank_account.main_ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
       bucket_size ||= GraphHelper.calculate_optimal_bucket_size(activity)
-      series << GraphHelper.generate_graph_series(bank_account.name, activity, :balance, bucket_size)
+      series << GraphHelper.generate_line_chart_series(bank_account.name, activity, :balance, bucket_size)
     end
     json = {:series => series}
     respond_with json
@@ -82,10 +82,10 @@ class BankAccountsController < ApplicationController
   def bank_account_graph
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@main_activity)
-    json = {:series => [GraphHelper.generate_graph_series(@bank_account.main_ledger_account.name, @main_activity, :balance, bucket_size),
-                        GraphHelper.generate_graph_series(@bank_account.main_ledger_account.name + 'Activity' , @main_activity, :activity, bucket_size),
-                        GraphHelper.generate_graph_series(@bank_account.charges_ledger_account.name, @charges_activity, :balance, bucket_size),
-                        GraphHelper.generate_graph_series(@bank_account.charges_ledger_account.name + 'Activity', @charges_activity, :activity, bucket_size)]}
+    json = {:series => [GraphHelper.generate_line_chart_series(@bank_account.main_ledger_account.name, @main_activity, :balance, bucket_size),
+                        GraphHelper.generate_line_chart_series(@bank_account.main_ledger_account.name + 'Activity' , @main_activity, :activity, bucket_size),
+                        GraphHelper.generate_line_chart_series(@bank_account.charges_ledger_account.name, @charges_activity, :balance, bucket_size),
+                        GraphHelper.generate_line_chart_series(@bank_account.charges_ledger_account.name + 'Activity', @charges_activity, :activity, bucket_size)]}
     respond_with json
   end
 
@@ -108,7 +108,7 @@ class BankAccountsController < ApplicationController
   end
 
   def load_activity
-    @main_activity = @bank_account.main_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
-    @charges_activity = @bank_account.charges_ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
+    @main_activity = LedgerAccountHelper.daily_balances(@bank_account.main_ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
+    @charges_activity = LedgerAccountHelper.daily_balances(@bank_account.charges_ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
   end
 end

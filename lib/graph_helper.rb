@@ -1,7 +1,6 @@
 class GraphHelper
   class << self
-
-    def generate_graph_series(series_name, daily_balances, field_to_graph, bucket_size)
+    def generate_line_chart_series(series_name, daily_balances, field_to_graph, bucket_size)
       series_data = []
       start_date = daily_balances.first[:date]
       end_date = daily_balances.last[:date]
@@ -56,6 +55,5 @@ class GraphHelper
     def format_date(date)
      date.to_datetime.to_i * 1000 
     end
-
   end
 end

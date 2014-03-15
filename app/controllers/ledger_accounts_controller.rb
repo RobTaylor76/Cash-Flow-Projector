@@ -58,8 +58,8 @@ class LedgerAccountsController < ApplicationController
   def series
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
-    json = {:series => [GraphHelper.generate_graph_series(@ledger_account.name, @activity, :balance, bucket_size),
-                        GraphHelper.generate_graph_series(@ledger_account.name + ' Activity', @activity, :activity, bucket_size)]}
+    json = {:series => [GraphHelper.generate_line_chart_series(@ledger_account.name, @activity, :balance, bucket_size),
+                        GraphHelper.generate_line_chart_series(@ledger_account.name + ' Activity', @activity, :activity, bucket_size)]}
     respond_with json
   end
 
@@ -89,7 +89,7 @@ class LedgerAccountsController < ApplicationController
 
   def load_activity
     set_up_date_range_filter ledger_account_path(@ledger_account)
-    @activity = @ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
+    @activity = LedgerAccountHelper.daily_balances(@ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
   end
 
   def strong_params

@@ -2,6 +2,15 @@ require 'spec_helper'
 
 describe GraphHelper do
 
+  before :each do
+    @user = User.find_by_email('test_user@cashflowprojector.com')
+    @ledger_account = @user.ledger_accounts.create!( :name => 'test' )
+  end
+
+  it 'should summarize the activity by analysis code' do
+
+  end
+
   it 'should take a legder account and a date range and generate the daily balances in JSON for high charts' do
 
     daily_balances = []
@@ -17,7 +26,7 @@ describe GraphHelper do
 
     end
     series_name = 'test'
-    json = GraphHelper.generate_graph_series(series_name , daily_balances, :balance, :week)
+    json = GraphHelper.generate_line_chart_series(series_name , daily_balances, :balance, :week)
 
     expected_series_data =  generate_expected_data(daily_balances, start_date, end_date, :week)
     expected_series_data.first[0].should == format_date(start_date)
