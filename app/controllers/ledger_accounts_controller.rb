@@ -78,10 +78,15 @@ class LedgerAccountsController < ApplicationController
   def analysis_code_graph
     set_up_date_range_filter
 
+    which_series = if params[:data].present? && params[:data] == 'debits'
+                     :debits
+                   else
+                     :credits
+                   end
     analysis_code_summary = LedgerAccountHelper.analysis_code_summary(@ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
 
     series_data = GraphHelper.generate_pie_chart_series(:series_name => 'Analysis Code Summary',
-                                                  :data => analysis_code_summary[:credits],
+                                                  :data => analysis_code_summary[which_series],
                                                   :label_field => :analysis_code,
                                                   :value_field => :total)
 

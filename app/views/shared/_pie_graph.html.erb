@@ -1,4 +1,4 @@
-<div id="piechartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
+<div id="<%=locals[:id]%>piechartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
 <script type="text/javascript">
 
   $(document).ready(function() {
@@ -8,7 +8,7 @@
             text: '<%=locals[:graph_title]%>'
         },
         chart: {
-          renderTo: 'piechartcontainer',
+          renderTo: '<%=locals[:id]%>piechartcontainer',
           type: 'pie'
         },
         series: [{}]
