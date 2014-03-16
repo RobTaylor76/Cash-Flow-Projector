@@ -2,6 +2,22 @@ require 'spec_helper'
 
 describe GraphHelper do
 
+  it 'should take a series of data and generate the data for a pie chart' do
+
+    series_name = 'Activity Breakdown'
+    input = [{:key => 'key1', :value => 100},  {:key => 'key2', :value => 200 }, {:key => 'key3', :value => 700}]
+
+    json = GraphHelper.generate_pie_chart_series(:series_name => series_name,
+                                                  :data => input,
+                                                  :label_field => :key,
+                                                  :value_field => :value)
+
+    expected_output = [{:name => 'key1', :y => 100.0}, {:name => 'key2', :y => 200.0}, {:name => 'key3', :y => 700.0}]
+
+    json[:name].should == series_name
+    json[:data].should == expected_output
+  end
+
   it 'should take a legder account and a date range and generate the daily balances in JSON for high charts' do
 
     daily_balances = []

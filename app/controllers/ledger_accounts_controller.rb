@@ -2,7 +2,7 @@ class LedgerAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :series, :import_statement]
+  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :activity_graph, :analysis_code_graph, :import_statement]
 
   # GET /ledger_accounts
   # GET /ledger_accounts.json
@@ -55,7 +55,7 @@ class LedgerAccountsController < ApplicationController
     respond_with @ledger_account
   end
 
-  def series
+  def activity_graph
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
     series_data = []
@@ -72,6 +72,20 @@ class LedgerAccountsController < ApplicationController
     end
 
     json = {:series => series_data }
+    respond_with json
+  end
+
+  def analysis_code_graph
+    set_up_date_range_filter
+
+    analysis_code_summary = LedgerAccountHelper.analysis_code_summary(@ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
+
+    series_data = GraphHelper.generate_pie_chart_series(:series_name => 'Analysis Code Summary',
+                                                  :data => analysis_code_summary[:credits],
+                                                  :label_field => :analysis_code,
+                                                  :value_field => :total)
+
+    json = {:series => [series_data] }
     respond_with json
   end
 

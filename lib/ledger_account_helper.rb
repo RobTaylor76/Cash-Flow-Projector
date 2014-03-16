@@ -27,16 +27,17 @@ class LedgerAccountHelper
       sql = analysis_code_summary_sql(ledger_account, start_date, end_date)
       data = execute_sql(sql)
 
-      summary = { :income => [], :expense => []}
+      summary = { :debits => [], :credits => []}
       data.each do |row|
-        total = row['total'].to_d
-        target = if total > 0
-                   summary[:income]
-                 else
-                   total = total * -1
-                   summary[:expense]
-                 end
-        target <<  {:name => row['analysis_code'], :total => total}
+        dr_total = row['debits'].to_d
+        cr_total = row['credits'].to_d
+
+        if dr_total > 0
+          summary[:debits] << {:analysis_code => row['analysis_code'], :total => dr_total}
+        end
+        if cr_total > 0
+          summary[:credits] << {:analysis_code => row['analysis_code'], :total => cr_total}
+        end
       end
       summary
     end
@@ -44,7 +45,7 @@ class LedgerAccountHelper
     private
 
     def analysis_code_summary_sql(ledger_account, start_date, end_date)
-      sql =  "select sum(debit-credit) as total, analysis_codes.name as analysis_code "
+      sql =  "select sum(debit) as debits, sum(credit) as credits, analysis_codes.name as analysis_code "
       sql += "from ledger_entries, analysis_codes "
       sql += "where ledger_account_id = #{ledger_account.id} "
       sql += "and analysis_code_id = analysis_codes.id "

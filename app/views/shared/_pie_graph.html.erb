@@ -1,0 +1,22 @@
+<div id="piechartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
+<script type="text/javascript">
+
+  $(document).ready(function() {
+
+      var options = {
+       title: {
+            text: '<%=locals[:graph_title]%>'
+        },
+        chart: {
+          renderTo: 'piechartcontainer',
+          type: 'pie'
+        },
+        series: [{}]
+     };
+
+     $.getJSON('<%=locals[:pie_graph_url]%>', function(json_data) {
+       options.series = json_data.series;
+       var chart = new Highcharts.Chart(options);
+       });
+});
+</script>

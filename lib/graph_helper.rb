@@ -1,5 +1,19 @@
 class GraphHelper
   class << self
+
+    def generate_pie_chart_series(series_def)
+      series_name = series_def[:series_name]
+      series_data = series_def[:data]
+      label_field = series_def[:label_field]
+      value_field = series_def[:value_field]
+
+      series = {:data => [], :name => series_name}
+      series_data.each do |data|
+         series[:data] << {:name => data[label_field], :y => data[value_field].to_f.round(2)}
+      end
+      series
+    end
+
     def generate_line_chart_series(series_def)
       series_name = series_def[:series_name]
       daily_balances = series_def[:daily_balances]

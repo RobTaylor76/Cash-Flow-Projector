@@ -12,7 +12,8 @@ Cashflowprojector::Application.routes.draw do
   end
 
   resources :ledger_accounts do
-    get :series
+    get :activity_graph
+    get :analysis_code_graph
     post :import_statement
 
     resources :balance_corrections

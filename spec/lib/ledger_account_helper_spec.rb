@@ -38,12 +38,13 @@ describe LedgerAccountHelper do
 
     summary = LedgerAccountHelper.analysis_code_summary(@ledger_account, start_date, end_date)
     #assert equal to our expected analysis code
-    income = summary[:income]
-    income.should include( {:total => 190.00, :name => 'AC1'})
-    income.should include( {:total => 200.00, :name  => 'AC2'})
+    income = summary[:debits]
+    income.should include( {:total => 200.00, :analysis_code => 'AC1'})
+    income.should include( {:total => 200.00, :analysis_code => 'AC2'})
 
-    expense = summary[:expense]
-    expense.should include( {:total => 100.00, :name  => 'AC3'})
+    expense = summary[:credits]
+    expense.should include( {:total => 10.00, :analysis_code => 'AC1'})
+    expense.should include( {:total => 100.00, :analysis_code => 'AC3'})
 
   end
 end
