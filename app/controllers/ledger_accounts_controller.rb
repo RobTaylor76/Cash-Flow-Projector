@@ -58,8 +58,20 @@ class LedgerAccountsController < ApplicationController
   def series
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
-    json = {:series => [GraphHelper.generate_line_chart_series(@ledger_account.name, @activity, :balance, bucket_size),
-                        GraphHelper.generate_line_chart_series(@ledger_account.name + ' Activity', @activity, :activity, bucket_size)]}
+    series_data = []
+    [{:series_name => @ledger_account.name,
+      :daily_balances => @activity,
+      :field_to_graph => :balance,
+      :bucket_size => bucket_size },
+    {:series_name => @ledger_account.name + 'Activity',
+      :daily_balances => @activity,
+      :field_to_graph => :activity,
+      :bucket_size => bucket_size }].each do |series_def|
+
+      series_data << GraphHelper.generate_line_chart_series(series_def)
+    end
+
+    json = {:series => series_data }
     respond_with json
   end
 

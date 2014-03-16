@@ -4,7 +4,9 @@ class LedgerAccountHelper
     def daily_balances(ledger_account, start_date, end_date)
       balance = ledger_account.balance(start_date)
 
-      data = execute_sql(daily_balances_sql(ledger_account, start_date, end_date))
+      sql = daily_balances_sql(ledger_account, start_date, end_date)
+      key_proc = ->(item){Date.parse(item['date'])}
+      data = execute_sql(sql, key_proc)
 
       balances = Array.new
       ((start_date)..(end_date)).each do |date|
@@ -19,7 +21,35 @@ class LedgerAccountHelper
       balances
     end
 
+    # return analysis code summary for a date range...
+    def analysis_code_summary(ledger_account, start_date, end_date)
+      sql = analysis_code_summary_sql(ledger_account, start_date, end_date)
+      key_proc = ->(item){ item['analysis_code'] }
+      data = execute_sql(sql, key_proc)
+
+      summary = { :income => [], :expense => []}
+      data.each do |k,v|
+        total = v['total'].to_d
+        target = if total > 0
+                   summary[:income]
+                 else
+                   total = total * -1
+                   summary[:expense]
+                 end
+        target <<  {:name => k, :total => total}
+      end
+      summary
+    end
     private
+
+    def analysis_code_summary_sql(ledger_account, start_date, end_date)
+      sql =  "select sum(debit-credit) as total, analysis_codes.name as analysis_code "
+      sql += "from ledger_entries, analysis_codes "
+      sql += "where ledger_account_id = #{ledger_account.id} "
+      sql += "and analysis_code_id = analysis_codes.id "
+      sql += "and (date >= Date('#{start_date}') AND date <= Date('#{end_date}')) "
+      sql += "group by analysis_codes.name, analysis_code_id"
+    end
 
     def daily_balances_sql(ledger_account, start_date, end_date)
       sql = "select date, sum(debit) - sum(credit) as activity "
@@ -28,15 +58,15 @@ class LedgerAccountHelper
       sql +="group by date"
     end
 
-    def execute_sql(sql)
+    def execute_sql(sql, key_proc)
       results = ActiveRecord::Base.connection.select_all(sql)
-      transform_data_to_hash(results)
+      transform_data_to_hash(results, key_proc)
     end
 
-    def transform_data_to_hash(data_set)
+    def transform_data_to_hash(data_set, key_proc)
       hash = {}
       data_set.each do |item|
-        key = Date.parse(item['date'])
+        key = key_proc.call(item)
         hash[key] = item
       end
       hash

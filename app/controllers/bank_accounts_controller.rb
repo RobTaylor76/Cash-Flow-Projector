@@ -71,9 +71,14 @@ class BankAccountsController < ApplicationController
 
     series = []
     @bank_accounts.each do |bank_account|
-      activity =  LedgerAccountHelper.daily_balances(bank_account.main_ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
+      activity =  LedgerAccountHelper.daily_balances(bank_account.main_ledger_account,
+                                                     @date_range_filter.start_date,
+                                                     @date_range_filter.end_date)
       bucket_size ||= GraphHelper.calculate_optimal_bucket_size(activity)
-      series << GraphHelper.generate_line_chart_series(bank_account.name, activity, :balance, bucket_size)
+      series << GraphHelper.generate_line_chart_series(:series_name => bank_account.name,
+                                                        :daily_balances => activity,
+                                                        :field_to_graph => :balance,
+                                                        :bucket_size => bucket_size)
     end
     json = {:series => series}
     respond_with json
@@ -82,10 +87,29 @@ class BankAccountsController < ApplicationController
   def bank_account_graph
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@main_activity)
-    json = {:series => [GraphHelper.generate_line_chart_series(@bank_account.main_ledger_account.name, @main_activity, :balance, bucket_size),
-                        GraphHelper.generate_line_chart_series(@bank_account.main_ledger_account.name + 'Activity' , @main_activity, :activity, bucket_size),
-                        GraphHelper.generate_line_chart_series(@bank_account.charges_ledger_account.name, @charges_activity, :balance, bucket_size),
-                        GraphHelper.generate_line_chart_series(@bank_account.charges_ledger_account.name + 'Activity', @charges_activity, :activity, bucket_size)]}
+
+    series_data = []
+    [{:series_name => @bank_account.main_ledger_account.name,
+      :daily_balances => @main_activity,
+      :field_to_graph => :balance,
+      :bucket_size => bucket_size },
+    {:series_name => @bank_account.main_ledger_account.name + 'Activity',
+      :daily_balances => @main_activity,
+      :field_to_graph => :activity,
+      :bucket_size => bucket_size },
+    {:series_name => @bank_account.charges_ledger_account.name,
+      :daily_balances =>  @charges_activity,
+    :field_to_graph => :balance,
+      :bucket_size => bucket_size },
+    {:series_name => @bank_account.charges_ledger_account.name + 'Activity',
+      :daily_balances => @charges_activity,
+      :field_to_graph => :activity,
+      :bucket_size => bucket_size }].each do |series_def|
+
+      series_data << GraphHelper.generate_line_chart_series(series_def)
+    end
+
+    json = {:series => series_data }
     respond_with json
   end
 

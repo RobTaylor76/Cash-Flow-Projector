@@ -1,6 +1,11 @@
 class GraphHelper
   class << self
-    def generate_line_chart_series(series_name, daily_balances, field_to_graph, bucket_size)
+    def generate_line_chart_series(series_def)
+      series_name = series_def[:series_name]
+      daily_balances = series_def[:daily_balances]
+      field_to_graph = series_def[:field_to_graph]
+      bucket_size = series_def[:bucket_size]
+
       series_data = []
       start_date = daily_balances.first[:date]
       end_date = daily_balances.last[:date]

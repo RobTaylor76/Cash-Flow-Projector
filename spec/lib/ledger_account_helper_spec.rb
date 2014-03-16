@@ -28,5 +28,22 @@ describe LedgerAccountHelper do
 
   it 'should summarize the activity by analysis code' do
 
+    #import some test data
+    csv_text = File.read('spec/data/activity_summary_import.csv')
+    StatementImportHelper.process_statement(@user, @ledger_account, csv_text, 'filename')
+
+    #summarize the ledger enties for the ledger account by analysis code
+    start_date = Date.parse('1/2/2014')
+    end_date = Date.parse('28/2/2014')
+
+    summary = LedgerAccountHelper.analysis_code_summary(@ledger_account, start_date, end_date)
+    #assert equal to our expected analysis code
+    income = summary[:income]
+    income.should include( {:total => 190.00, :name => 'AC1'})
+    income.should include( {:total => 200.00, :name  => 'AC2'})
+
+    expense = summary[:expense]
+    expense.should include( {:total => 100.00, :name  => 'AC3'})
+
   end
 end
