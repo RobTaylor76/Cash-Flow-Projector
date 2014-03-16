@@ -6,7 +6,8 @@ class LedgerAccountHelper
 
       sql = daily_balances_sql(ledger_account, start_date, end_date)
       key_proc = ->(item){Date.parse(item['date'])}
-      data = execute_sql(sql, key_proc)
+      data = execute_sql(sql)
+      data = transform_data_to_hash(data, key_proc)
 
       balances = Array.new
       ((start_date)..(end_date)).each do |date|
@@ -24,22 +25,22 @@ class LedgerAccountHelper
     # return analysis code summary for a date range...
     def analysis_code_summary(ledger_account, start_date, end_date)
       sql = analysis_code_summary_sql(ledger_account, start_date, end_date)
-      key_proc = ->(item){ item['analysis_code'] }
-      data = execute_sql(sql, key_proc)
+      data = execute_sql(sql)
 
       summary = { :income => [], :expense => []}
-      data.each do |k,v|
-        total = v['total'].to_d
+      data.each do |row|
+        total = row['total'].to_d
         target = if total > 0
                    summary[:income]
                  else
                    total = total * -1
                    summary[:expense]
                  end
-        target <<  {:name => k, :total => total}
+        target <<  {:name => row['analysis_code'], :total => total}
       end
       summary
     end
+
     private
 
     def analysis_code_summary_sql(ledger_account, start_date, end_date)
@@ -58,9 +59,8 @@ class LedgerAccountHelper
       sql +="group by date"
     end
 
-    def execute_sql(sql, key_proc)
-      results = ActiveRecord::Base.connection.select_all(sql)
-      transform_data_to_hash(results, key_proc)
+    def execute_sql(sql)
+      ActiveRecord::Base.connection.select_all(sql)
     end
 
     def transform_data_to_hash(data_set, key_proc)
