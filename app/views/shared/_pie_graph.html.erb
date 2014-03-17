@@ -1,15 +1,17 @@
-<div id="<%=locals[:id]%>piechartcontainer">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
+<div id="<%=locals[:id]%>piechartcontainer" style="float:<%=locals[:float]%>;width=50%">This is just a replacement in case Javascript is not available or used for SEO purposes</div>
 <script type="text/javascript">
 
   $(document).ready(function() {
 
       var options = {
        title: {
-            text: '<%=locals[:graph_title]%>'
-        },
-        chart: {
-          renderTo: '<%=locals[:id]%>piechartcontainer',
-          type: 'pie'
+         text: '<%=locals[:graph_title]%>'
+       },
+       chart: {
+         renderTo: '<%=locals[:id]%>piechartcontainer',
+         type: 'pie',
+         height: 500,
+         width: 500,
         },
         series: [{}]
      };

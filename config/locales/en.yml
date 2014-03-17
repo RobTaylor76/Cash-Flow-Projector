@@ -15,6 +15,9 @@ en:
         start_date: 'From'
         end_date: 'To'
         submit: 'Apply Filter'
+      graph_helper:
+        pie:
+          no_activity: "No Activity"
 
   errors:
     security:

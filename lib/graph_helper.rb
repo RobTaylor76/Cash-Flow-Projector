@@ -11,6 +11,7 @@ class GraphHelper
       series_data.each do |data|
          series[:data] << {:name => data[label_field], :y => data[value_field].to_f.round(2)}
       end
+      series[:data] << {:name => I18n.t('helpers.label.graph_helper.pie.no_activity'), :y => 0.0} if series[:data].empty?
       series
     end
 
