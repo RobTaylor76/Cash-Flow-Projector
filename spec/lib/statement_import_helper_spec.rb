@@ -9,13 +9,14 @@ describe StatementImportHelper do
     @data_import_la = @user.ledger_accounts.control_account('statement_import')
     @income_control_account  = @user.ledger_accounts.control_account('income')
     @analysis_type= @user.analysis_codes.create(:name => 'existing analysis code')
+    @filename = '/import/file.csv'
   end
 
   it 'should install all three transactions' do
     expect do
       expect do
         expect do
-          StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+          StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
         end.to change{@user.transactions.count}.by(3)
       end.to change{@user.analysis_codes.count}.by(1)
     end.to change{@bank_account_la.statement_imports.count}.by(1)
@@ -53,7 +54,7 @@ describe StatementImportHelper do
     @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
 
     expect do
-      StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+      StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
     end.to change{@user.transactions.count}.by(2)
 
     tran.reload
@@ -75,7 +76,7 @@ describe StatementImportHelper do
     @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 0
 
     expect do
-      StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+      StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
     end.to change{@user.transactions.count}.by(2)
 
     @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
@@ -96,7 +97,7 @@ describe StatementImportHelper do
     @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
     expect do
-      StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+      StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
     end.to change{@user.transactions.count}.by(3)
 
     @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
@@ -121,7 +122,7 @@ describe StatementImportHelper do
     @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
     expect do
-      StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+      StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
     end.to change{@user.transactions.count}.by(2)
 
     @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
@@ -149,7 +150,7 @@ describe StatementImportHelper do
     @user.transactions.for_date(Date.parse('7/1/2014')).count.should == 1
 
     expect do
-      StatementImportHelper.process_statement(@user, @bank_account_la ,@csv_text)
+      StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
     end.to change{@user.transactions.count}.by(2)
 
     tran.reload

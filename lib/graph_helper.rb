@@ -1,7 +1,26 @@
 class GraphHelper
   class << self
 
-    def generate_graph_series(series_name, daily_balances, field_to_graph, bucket_size)
+    def generate_pie_chart_series(series_def)
+      series_name = series_def[:series_name]
+      series_data = series_def[:data]
+      label_field = series_def[:label_field]
+      value_field = series_def[:value_field]
+
+      series = {:data => [], :name => series_name}
+      series_data.each do |data|
+         series[:data] << {:name => data[label_field], :y => data[value_field].to_f.round(2)}
+      end
+      series[:data] << {:name => I18n.t('helpers.label.graph_helper.pie.no_activity'), :y => 0.0} if series[:data].empty?
+      series
+    end
+
+    def generate_line_chart_series(series_def)
+      series_name = series_def[:series_name]
+      daily_balances = series_def[:daily_balances]
+      field_to_graph = series_def[:field_to_graph]
+      bucket_size = series_def[:bucket_size]
+
       series_data = []
       start_date = daily_balances.first[:date]
       end_date = daily_balances.last[:date]
@@ -56,6 +75,5 @@ class GraphHelper
     def format_date(date)
      date.to_datetime.to_i * 1000 
     end
-
   end
 end

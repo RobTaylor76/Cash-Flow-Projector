@@ -20,6 +20,7 @@
           <%= readonly.text_field :name %>
           <%= ff.label :balance %>
           <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
+          <%= link_to 'Ledger Account', ledger_account_path(@bank_account.main_ledger_account) %>
         </div>
       </div>
     <% end %>
@@ -32,6 +33,7 @@
           <%= readonly.text_field :name %>
           <%= ff.label :balance %>
           <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
+          <%= link_to 'Ledger Account', ledger_account_path(@bank_account.charges_ledger_account) %>
         </div>
       </div>
     <% end %>
