@@ -5,7 +5,15 @@
 <%= render 'form', :locals => {:form_readonly => true } %>
 
 <%= render 'shared/date_range_filter', :locals => {:show_balance_date => true } %>
-<%= render 'shared/balance_graph', :locals => {:balance_graph_url => ledger_account_series_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json)) } %>
+
+
+<%= render 'shared/balance_graph', :locals => {:graph_title => 'Account Balance/Activity', :balance_graph_url => ledger_account_activity_graph_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json)) } %>
+
+<div id='piecharts'>
+  <%= render 'shared/pie_graph', :locals => {:id => 'debits', :float => 'left', :graph_title => 'Analysis Code Breakdown(Debits)',:pie_graph_url => ledger_account_analysis_code_graph_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json, :data => :debits)) } %>
+<%= render 'shared/pie_graph', :locals => {:id => 'credits', :float => 'left',:graph_title => 'Analysis Code Breakdown(Credits)',:pie_graph_url => ledger_account_analysis_code_graph_path(@ledger_account, @date_range_filter.to_json.merge(:format => :json, :data => :credits)) } %>
+
+</div>
 <%= render 'shared/ledger_entries' %>
 
 <%= render 'shared/statement_import', :locals => {:statement_import_path => ledger_account_import_statement_path(@ledger_account)} %>

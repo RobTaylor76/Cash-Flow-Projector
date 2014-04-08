@@ -1,9 +1,9 @@
 class StatementImportHelper
   class << self
 
-    def process_statement(user, statement_ledger, csv_text)
+    def process_statement(user, statement_ledger, csv_text, filename)
       ActiveRecord::Base.transaction do
-        statement_import = statement_ledger.statement_imports.create(:date => Date.today)
+        statement_import = statement_ledger.statement_imports.create(:date => Date.today, :file_name => filename)
 
         import_details = {:user => user,
           :statement_ledger => statement_ledger,

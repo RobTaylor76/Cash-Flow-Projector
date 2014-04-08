@@ -14,7 +14,7 @@ module DateRangeFilterable
     session[key]
   end
 
-  def set_up_date_range_filter(filter_path)
+  def set_up_date_range_filter(filter_path = '')
     date_range_params =  params[:date_range_filter] ||= {}
 
     if date_range_params[:start_date].present?

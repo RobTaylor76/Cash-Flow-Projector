@@ -2,7 +2,7 @@ class LedgerAccountsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
-  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :series, :import_statement]
+  before_action :load_ledger_account, :only => [:edit, :show, :destroy, :update, :activity_graph, :analysis_code_graph, :import_statement]
 
   # GET /ledger_accounts
   # GET /ledger_accounts.json
@@ -55,11 +55,42 @@ class LedgerAccountsController < ApplicationController
     respond_with @ledger_account
   end
 
-  def series
+  def activity_graph
     load_activity
     bucket_size = GraphHelper.calculate_optimal_bucket_size(@activity)
-    json = {:series => [GraphHelper.generate_graph_series(@ledger_account.name, @activity, :balance, bucket_size),
-                        GraphHelper.generate_graph_series(@ledger_account.name + ' Activity', @activity, :activity, bucket_size)]}
+    series_data = []
+    [{:series_name => @ledger_account.name,
+      :daily_balances => @activity,
+      :field_to_graph => :balance,
+      :bucket_size => bucket_size },
+    {:series_name => @ledger_account.name + 'Activity',
+      :daily_balances => @activity,
+      :field_to_graph => :activity,
+      :bucket_size => bucket_size }].each do |series_def|
+
+      series_data << GraphHelper.generate_line_chart_series(series_def)
+    end
+
+    json = {:series => series_data }
+    respond_with json
+  end
+
+  def analysis_code_graph
+    set_up_date_range_filter
+
+    which_series = if params[:data].present? && params[:data] == 'debits'
+                     :debits
+                   else
+                     :credits
+                   end
+    analysis_code_summary = LedgerAccountHelper.analysis_code_summary(@ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
+
+    series_data = GraphHelper.generate_pie_chart_series(:series_name => 'Analysis Code Summary',
+                                                  :data => analysis_code_summary[which_series],
+                                                  :label_field => :analysis_code,
+                                                  :value_field => :total)
+
+    json = {:series => [series_data] }
     respond_with json
   end
 
@@ -67,7 +98,8 @@ class LedgerAccountsController < ApplicationController
   def import_statement
     if params[:file_upload] && params[:file_upload][:file]
       csv_text = params[:file_upload][:file].read
-      StatementImportHelper.process_statement(current_user, @ledger_account,csv_text)
+      file_name = params[:file_upload][:file].original_filename
+      StatementImportHelper.process_statement(current_user, @ledger_account, csv_text, file_name)
       flash[:notice] =  "File has been uploaded successfully"
     end
     respond_with @ledger_account
@@ -88,7 +120,7 @@ class LedgerAccountsController < ApplicationController
 
   def load_activity
     set_up_date_range_filter ledger_account_path(@ledger_account)
-    @activity = @ledger_account.daily_balances(@date_range_filter.start_date, @date_range_filter.end_date)
+    @activity = LedgerAccountHelper.daily_balances(@ledger_account, @date_range_filter.start_date, @date_range_filter.end_date)
   end
 
   def strong_params
