@@ -59,7 +59,8 @@ class BankAccountsController < ApplicationController
   def import_statement
     if params[:file_upload] && params[:file_upload][:file]
       csv_text = params[:file_upload][:file].read
-      StatementImportHelper.process_statement(current_user, @bank_account.main_ledger_account,csv_text)
+      file_name = params[:file_upload][:file].original_filename
+      StatementImportHelper.process_statement(current_user, @bank_account.main_ledger_account,csv_text, file_name)
       flash[:notice] =  "File has been uploaded successfully"
     end
     respond_with @bank_account
