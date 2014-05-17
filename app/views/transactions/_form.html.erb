@@ -11,6 +11,9 @@
     </div>
   <% end %>
 
+  <% ledger_account_choices =  current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] } 
+  analysis_code_choices = current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }%>
+
   <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
     <div class='field'>
       <%= form.label :reference %>
@@ -34,24 +37,21 @@
           <th><%= form.label :analysis_code %></th>
         </tr>
       </thead>
-      <tbody>
+      <tbody id='ledger_entries'>
         <%= form.fields_for :ledger_entries do |ff_form| %>
-
-          <% ledger_account_choices =  current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] } 
-          analysis_code_choices = current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }%>
-
-          <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
-            <tr class="ledger_entry">
+          <tr class="ledger_entry">
+            <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
               <td>  <%= entry.select :ledger_account_id , ledger_account_choices , {},{:disabled => locals[:form_readonly]}%></td>
               <td><%= entry.text_field :debit %>
               </td>
               <td><%= entry.text_field :credit %>
               </td>
               <td><%= entry.select :analysis_code_id ,analysis_code_choices  , {},{:disabled => locals[:form_readonly]}%></td>
-            </tr>
-          <% end %>
+            <% end %>
+          </tr>
         <% end %>
       </tbody>
+      <% unless locals[:form_readonly] %>
       <tfoot>
         <tr><td>
         <%= button_tag(type: 'button', id: 'add-table-row') do
@@ -60,6 +60,7 @@
         %></td>
         </tr>
       </tfoot>
+    <% end%>
     </table>
 
   <% end %>

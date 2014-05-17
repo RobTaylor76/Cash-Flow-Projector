@@ -26,10 +26,21 @@
           <th><label for="transaction_analysis_code">Analysis code</label></th>
         </tr>
       </thead>
-      <tbody>
-        
+      <tbody id="ledger_entries">
 
-
+            <tr class="ledger_entry">
+              <td>  <select id="transaction_ledger_entries_attributes_1_ledger_account_id" name="transaction[ledger_entries_attributes][1][ledger_account_id]"><option value="20">Amazon</option>
+<option value="8">Balance Correction</option>
+<option value="7">Statement Import</option></select></td>
+              <td><input id="transaction_ledger_entries_attributes_1_debit" name="transaction[ledger_entries_attributes][1][debit]" type="text" value="0.0" />
+              </td>
+              <td><input id="transaction_ledger_entries_attributes_1_credit" name="transaction[ledger_entries_attributes][1][credit]" type="text" value="0.0" />
+              </td>
+              <td><select id="transaction_ledger_entries_attributes_1_analysis_code_id" name="transaction[ledger_entries_attributes][1][analysis_code_id]"><option value="16">Account Fee</option>
+<option value="38">amazon.co.uk</option>
+<option value="43">Balance Transfer</option>
+<option value="37">Travel Insurance</option></select></td>
+            </tr>
             <tr class="ledger_entry">
               <td>  <select id="transaction_ledger_entries_attributes_0_ledger_account_id" name="transaction[ledger_entries_attributes][0][ledger_account_id]"><option value="20">Amazon</option>
 <option value="8">Balance Correction</option>
