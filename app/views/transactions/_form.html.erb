@@ -25,21 +25,34 @@
       <%= form.check_box :approximation %>
     </div>
 
-    <%= form.fields_for :ledger_entries do |ff_form| %>
+    <table>
+      <thead>
+        <tr>
+          <th><%= form.label :ledger_account %></th>
+          <th><%= form.label :debit %></th>
+          <th><%= form.label :credit %></th>
+          <th><%= form.label :analysis_code %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= form.fields_for :ledger_entries do |ff_form| %>
 
-      <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
-        <div class='field'>
-          <%= entry.label :ledger_account %>
-          <%= entry.select :ledger_account_id , current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
-          <%= entry.label :debit %>
-          <%= entry.text_field :debit %>
-          <%= entry.label :credit %>
-          <%= entry.text_field :credit %>
-          <%= entry.label :analysis_code %>
-          <%= entry.select :analysis_code_id , current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
-        </div>
-      <% end %>
-    <% end %>
+          <% ledger_account_choices =  current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] } 
+          analysis_code_choices = current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }%>
+
+          <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
+            <tr class="ledger_entry">
+              <td>  <%= entry.select :ledger_account_id , ledger_account_choices , {},{:disabled => locals[:form_readonly]}%></td>
+              <td><%= entry.text_field :debit %>
+              </td>
+              <td><%= entry.text_field :credit %>
+              </td>
+              <td><%= entry.select :analysis_code_id ,analysis_code_choices  , {},{:disabled => locals[:form_readonly]}%></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
 
   <% end %>
   <% unless locals[:form_readonly] %>
