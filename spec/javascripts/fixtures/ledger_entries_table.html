@@ -1,0 +1,62 @@
+<h1>Ledger Entries Test Page</h1>
+<div class='container'>
+  <section id='content'>
+    <a href="/transactions">Back</a>
+<form accept-charset="UTF-8" action="/transactions" class="new_transaction" id="new_transaction" method="post"><div style="margin:0;padding:0;display:inline"><input name="utf8" type="hidden" value="&#x2713;" /><input name="authenticity_token" type="hidden" value="nIoVrCeKlGzdiFjTI+Iwl9AQHfwK0zbCPx+kdp6WoSc=" /></div>
+
+    <div class='field'>
+      <label for="transaction_reference">Reference</label>
+      <input id="transaction_reference" name="transaction[reference]" type="text" value="" />
+    </div>
+    <div class='field'>
+      <label for="transaction_date">Date</label>
+      <input id="transaction_date" name="transaction[date]" type="date" value="2014-05-17" />
+    </div>
+    <div class='field'>
+      <label for="transaction_approximation">Approximation</label>
+      <input name="transaction[approximation]" type="hidden" value="0" /><input id="transaction_approximation" name="transaction[approximation]" type="checkbox" value="1" />
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th><label for="transaction_ledger_account">Ledger account</label></th>
+          <th><label for="transaction_debit">Debit</label></th>
+          <th><label for="transaction_credit">Credit</label></th>
+          <th><label for="transaction_analysis_code">Analysis code</label></th>
+        </tr>
+      </thead>
+      <tbody>
+        
+
+
+            <tr class="ledger_entry">
+              <td>  <select id="transaction_ledger_entries_attributes_0_ledger_account_id" name="transaction[ledger_entries_attributes][0][ledger_account_id]"><option value="20">Amazon</option>
+<option value="8">Balance Correction</option>
+<option value="7">Statement Import</option></select></td>
+              <td><input id="transaction_ledger_entries_attributes_0_debit" name="transaction[ledger_entries_attributes][0][debit]" type="text" value="0.0" />
+              </td>
+              <td><input id="transaction_ledger_entries_attributes_0_credit" name="transaction[ledger_entries_attributes][0][credit]" type="text" value="0.0" />
+              </td>
+              <td><select id="transaction_ledger_entries_attributes_0_analysis_code_id" name="transaction[ledger_entries_attributes][0][analysis_code_id]"><option value="16">Account Fee</option>
+<option value="38">amazon.co.uk</option>
+<option value="43">Balance Transfer</option>
+<option value="37">Travel Insurance</option></select></td>
+            </tr>
+      </tbody>
+      <tfoot>
+        <tr><td>
+        <button id="add-table-row" type="button"><strong>Add a row</strong></button></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="actions">
+      <input name="commit" type="submit" value="Create Transaction" />
+    </div>
+
+</form>
+
+  </section>
+</div>
+
