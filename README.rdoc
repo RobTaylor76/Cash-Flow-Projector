@@ -10,7 +10,8 @@ Current Functionality
     * +/- 4 days, amount matching
   * support for analysis code and defining custom ledger accounts for the double entry
   * a transaction loaded for one bank can be matched against a transaction for another bank account for the double entry
-* Ability to create double entry transactions for any ledger accounts (limited to 2 ledger accounts per trasnaction by UI at mo)
+* Ability to create double entry transactions for any ledger accounts
+* Ability to add more ledger entries than simple double entry for more detailed analysis and breakdown
 * Ability to create recurring trasnactions, historic and future
   * Ability to ensure transactions only occur on weekdays
   * Ability to flag a transction as an approximation to enable Bank Statement import to fuzzy match on amount
