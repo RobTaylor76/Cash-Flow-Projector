@@ -1,5 +1,31 @@
 # Sample localization file for English. Add more files in this directory for other locales.
 # See https://github.com/svenfuchs/rails-i18n/tree/master/rails%2Flocale for starting points.
-
 en:
-  hello: "Hello world"
+  date:
+    formats:
+      default: "%d/%m/%Y"
+
+  helpers:
+    label:
+      recurring_transaction:
+        from: 'Source Ledger Account'
+        to: 'Destination Ledger Account'
+        percentage_of: 'Ledger Account to calculate %age of'
+      date_range_filter:
+        start_date: 'From'
+        end_date: 'To'
+        submit: 'Apply Filter'
+      graph_helper:
+        pie:
+          no_activity: "No Activity"
+
+  errors:
+    security:
+      invalid_lookup_id: 'The Supplied Value Is Not Allowed'
+    balance_correction:
+      correction_before_balance: 'Correction needs to occur before balance date to affect the opening balance'
+    transaction:
+      unbalanced_transaction: 'Sum of Credits must equal Debits'
+    recurring_transaction:
+      cannot_have_amount_and_percentage: 'You need to specify either Amount or Percentage'
+      need_to_specify_which_account_to_take_percentage_of: 'You need to specify an account to calculate percentage of'

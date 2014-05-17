@@ -1,7 +1,12 @@
 <h1>Bank Account</h1>
 <p id="notice"><%= notice %></p>
-<%= render 'form', :locals => {:form_readonly => true } %>
-
-
 <%= link_to 'Edit', edit_bank_account_path(@bank_account) %> |
 <%= link_to 'Back', bank_accounts_path %>
+
+<%= render 'form', :locals => {:form_readonly => true } %>
+
+<%= render 'shared/date_range_filter', :locals => {:show_balance_date => true } %>
+<%= render 'shared/balance_graph', :locals => {:balance_graph_url => bank_account_bank_account_graph_path(@bank_account, @date_range_filter.to_json.merge(:format => :json)) } %>
+<%= render 'shared/ledger_entries' %>
+
+<%= render 'shared/statement_import', :locals => {:statement_import_path => bank_account_import_statement_path(@bank_account)} %>

@@ -1,0 +1,69 @@
+<%= form_for(@recurring_transaction) do |f| %>
+  <% if @recurring_transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@recurring_transaction.errors.count, "error") %> prohibited this recurring transaction from being saved:</h2>
+
+      <ul>
+        <% @recurring_transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :reference %>
+      <%= form.text_field :reference %>
+    </div>
+    <div class='field'>
+      <%= form.label :start_date %>
+      <%= form.date_field :start_date%>
+    </div>
+    <div class='field'>
+      <%= form.label :end_date %>
+      <%= form.date_field :end_date %>
+    </div>
+    <div class='field'>
+      <%= form.label :amount %>
+      <%= form.text_field :amount %>
+      <%= form.label :percentage %>
+      <%= form.text_field :percentage %>
+    </div>
+    <div class='field'>
+      <%= form.label :working_days_only%>
+      <%= form.check_box :working_days_only%>
+    </div>
+    <div class='field'>
+      <%= form.label :approximation %>
+      <%= form.check_box :approximation %>
+    </div>
+    <div class='field'>
+      <%= form.label :frequency %>
+      <%= form.select :frequency_id, TransactionFrequency.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+    </div>
+    <div class='field'>
+      <%= form.label :analysis_code %>
+      <%= form.select :analysis_code_id , current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+    </div>
+    <div class='field'>
+      <%= form.label :from %>
+      <%= form.select :from_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+    </div>
+    <div class='field'>
+      <%= form.label :to %>
+      <%= form.select :to_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+    </div>
+    <div class='field'>
+      <%= form.label :percentage_of%>
+      <%= form.select :percentage_of_id, current_user.ledger_accounts.collect {|p| [ p.name, p.id ] }, {include_blank: 'N/A'},{:disabled => locals[:form_readonly]}%>
+    </div>
+
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+<%end%>

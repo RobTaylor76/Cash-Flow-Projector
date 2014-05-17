@@ -1,0 +1,17 @@
+<header id="page_header">
+  <nav id="utility_nav">
+    <ul>
+      <li><%=link_to "[Logout]", destroy_user_session_path, :method => :delete%></li>
+    </ul>
+  </nav>
+  <nav id="main_nav">
+    <ul>
+      <li><%=link_to "Bank Accounts", bank_accounts_path  %></li>
+      <li><%=link_to "Ledger Accounts", ledger_accounts_path  %></li>
+      <li><%=link_to "Transactions", transactions_path  %></li>
+      <li><%=link_to "Recurring Transactions", recurring_transactions_path  %></li>
+    </ul>
+  </nav>
+
+
+</header>

@@ -1,0 +1,8 @@
+<h1>Editing Balance Correction</h1>
+
+<%= link_to 'Show', ledger_account_balance_correction_path(@ledger_account, @balance_correction) %> |
+<%= link_to 'Back', ledger_account_balance_corrections_path(@ledger_account) %>
+
+<%= render 'form', :locals => {:form_readonly => false} %>
+
+

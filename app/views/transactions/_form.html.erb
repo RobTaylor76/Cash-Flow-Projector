@@ -1,0 +1,51 @@
+<%= form_for(@transaction) do |f| %>
+  <% if @transaction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@transaction.errors.count, "error") %> prohibited this transaction from being saved:</h2>
+
+      <ul>
+        <% @transaction.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% f.with_options(:disabled => locals[:form_readonly] ) do |form| %>
+    <div class='field'>
+      <%= form.label :reference %>
+      <%= form.text_field :reference %>
+    </div>
+    <div class='field'>
+      <%= form.label :date %>
+      <%= form.date_field :date%>
+    </div>
+    <div class='field'>
+      <%= form.label :approximation %>
+      <%= form.check_box :approximation %>
+    </div>
+
+    <%= form.fields_for :ledger_entries do |ff_form| %>
+
+      <% ff_form.with_options(:disabled => locals[:form_readonly] ) do |entry| %>
+        <div class='field'>
+          <%= entry.label :ledger_account %>
+          <%= entry.select :ledger_account_id , current_user.ledger_accounts.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+          <%= entry.label :debit %>
+          <%= entry.text_field :debit %>
+          <%= entry.label :credit %>
+          <%= entry.text_field :credit %>
+          <%= entry.label :analysis_code %>
+          <%= entry.select :analysis_code_id , current_user.analysis_codes.all.collect {|p| [ p.name, p.id ] }, {},{:disabled => locals[:form_readonly]}%>
+        </div>
+      <% end %>
+    <% end %>
+
+  <% end %>
+  <% unless locals[:form_readonly] %>
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+  <% end %>
+
+<%end%>

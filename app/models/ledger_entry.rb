@@ -1,21 +1,34 @@
 class LedgerEntry < ActiveRecord::Base
+  include RelationshipValidator
   extend DateValidator
+  include DateRangeScopes
 
-  attr_accessible :credit, :debit, :date, :ledger_account_id, :transaction
+  belongs_to :user
+
   belongs_to :ledger_account
   belongs_to :transaction
-  belongs_to :user
-  after_initialize :init
+  belongs_to :analysis_code
+
+  after_initialize :set_defaults, :if => :new_record?
 
   validates_date :date
+  validates_relationship :analysis_code_id, :valid_values => :valid_analysis_codes
+  validates_relationship :ledger_account_id, :valid_values => :valid_ledger_accounts
 
-  scope :before_date, lambda { |cutoff|  where('ledger_entries.date < ?', cutoff) }
-  scope :for_date, lambda { |required_date| where('ledger_entries.date  = ?', required_date) }
+  validates :analysis_code_id, :presence => true
+  validates :ledger_account_id, :presence => true
 
-  def init
+  private
+
+  def set_defaults
     self.date ||= Date.today
     self.credit ||= 0
     self.debit ||= 0
-    self.user ||= ledger_account.user if ledger_account
+    if ledger_account_id.present?
+      self.user_id ||= ledger_account.user_id
+    end
+    if self.user_id.present?
+      self.analysis_code_id ||= user.default_analysis_code.id
+    end
   end
 end

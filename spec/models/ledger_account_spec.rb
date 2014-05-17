@@ -5,13 +5,14 @@ describe LedgerAccount do
 
   describe :relationships do
     it { should have_many :ledger_entries }
+    it { should have_many :balance_corrections }
+    it { should have_many :statement_imports }
     it { should belong_to :user}
   end
 
-
   before :each do
-    user = User.create!(:email => 'r@rob.com', :password => '##12##34')
-    @ledger_account = user.ledger_accounts.create!( :name => 'test' )
+    @user = User.find_by_email('test_user@cashflowprojector.com')
+    @ledger_account = @user.ledger_accounts.create!( :name => 'test' )
   end
 
   subject { @ledger_account }
@@ -22,6 +23,25 @@ describe LedgerAccount do
 
   describe :new_ledger_account do 
     its(:balance) { should == 0 }
+  end
+
+  describe :control_account do
+    it 'should be psooible to find control account by name' do
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
+      @user.ledger_accounts.control_account('special_purpose').should == control_account
+    end
+
+    it 'cannot delete them' do
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
+      expect { control_account.destroy }.to change {@user.ledger_accounts.count}.by(0)
+    end
+
+    it 'cannot have its control name changed/cleared' do
+      control_account = @user.ledger_accounts.create!( :name => 'blah blah blah', :control_name => 'special_purpose' )
+      control_account.control_name = nil
+      control_account.valid?
+      control_account.errors[:base].should include 'cannot change control name'
+    end
   end
 
   describe :debits do
@@ -88,7 +108,7 @@ describe LedgerAccount do
       @ledger_account.debit 100.02, Date.today
       @ledger_account.debit 234.00, Date.tomorrow
 
-      ledger_entries = @ledger_account.ledger_entries.find_all_by_date(Date.today)
+      ledger_entries = @ledger_account.ledger_entries.where(:date => Date.today)
       ledger_entries.size.should == 2  
       ledger_entries.each { |tran| tran.date.should == Date.today }
 
@@ -111,24 +131,6 @@ describe LedgerAccount do
 
     end
 
-    it "should return a list of daily balances for a given date range" do
-
-      @ledger_account.debit 100.02, Date.today
-      @ledger_account.debit 234.00, Date.tomorrow
-      @ledger_account.debit 111.02, Date.today+2
-      @ledger_account.debit 321.00, Date.today+3
-
-      balances = @ledger_account.daily_balances Date.today, Date.today+4
-
-      balances.size.should == 5
-
-      balances.inject(Date.today) do |date,balance|
-        balance[:date].should == date
-        balance[:activity].should ==  @ledger_account.activity(date)
-        balance[:balance].should ==  @ledger_account.balance(date)
-        date+=1
-      end
-    end
   end
 
   describe :get_daily_balance_transaction_totals do

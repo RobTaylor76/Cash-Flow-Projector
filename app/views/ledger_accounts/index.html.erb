@@ -1,15 +1,16 @@
 <h1>Listing ledger_accounts</h1>
 
+<%= link_to 'New Ledger account', new_ledger_account_path %>
 <table>
   <tr>
-    <th></th>
+    <th>Account Name</th>
     <th></th>
     <th></th>
   </tr>
 
 <% @ledger_accounts.each do |ledger_account| %>
   <tr>
-    <td><%= ledger_account.name %><td>
+    <td><%= ledger_account.name %></td>
     <td><%= link_to 'Show', ledger_account_path(ledger_account) %></td>
     <td><%= link_to 'Edit', edit_ledger_account_path(ledger_account) %></td>
   </tr>
@@ -18,4 +19,3 @@
 
 <br />
 
-<%= link_to 'New Ledger account', new_ledger_account_path %>

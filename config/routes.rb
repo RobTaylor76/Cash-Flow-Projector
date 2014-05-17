@@ -2,10 +2,33 @@ Cashflowprojector::Application.routes.draw do
 
   devise_for :users
 
-  resources :bank_accounts
-  resources :ledger_accounts
+  resources :bank_accounts do
+    get :bank_account_graph
+    post :import_statement
 
-  root :to => 'cashflow/bank_accounts#index'
+    collection do
+      get :bank_accounts_graph
+    end
+  end
+
+  resources :ledger_accounts do
+    get :activity_graph
+    get :analysis_code_graph
+    post :import_statement
+
+    resources :balance_corrections
+    resources :statement_imports, :only => [:index, :destroy]
+  end
+
+  resources :transactions
+
+  resources :recurring_transactions do
+    collection do
+      get :recur_transaction
+    end
+  end
+
+  root :to => 'bank_accounts#index'
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

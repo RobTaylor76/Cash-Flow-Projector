@@ -1,4 +1,6 @@
-<%= form_for(@ledger_account,:as => :ledger_account, :url => (@ledger_account.new_record? ? ledger_accounts_url :  ledger_account_url(@ledger_account))) do |f| %>
+<%= link_to 'Balance Corrections', ledger_account_balance_corrections_path(@ledger_account) %>|
+<%= link_to 'Statement Imports', ledger_account_statement_imports_path(@ledger_account) %>
+<%= form_for(@ledger_account) do |f| %>
   <% if @ledger_account.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(@ledger_account.errors.count, "error") %> prohibited this ledger_account from being saved:</h2>
@@ -15,10 +17,14 @@
       <%= form.label :name %>
       <%= form.text_field :name %>
     </div>
-    <div class='field'>
-      <%= form.label :balance %>
-      <%= form.text_field :balance ,:disabled => true %>
-    </div>
+    <% if locals[:form_readonly] %>
+      <% balance_on_date = @ledger_account.balance(@date_range_filter.balance_date)%>
+
+      <div class='field'>
+        <%= form.label :balance %>
+        <%= text_field_tag(:balance, format_number(balance_on_date), :disabled => true) %>
+      </div>
+    <% end %>
   <% end %>
   <% unless locals[:form_readonly] %>
     <div class="actions">

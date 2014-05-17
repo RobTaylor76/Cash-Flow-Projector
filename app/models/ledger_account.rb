@@ -1,8 +1,18 @@
 class LedgerAccount < ActiveRecord::Base
-  has_many :ledger_entries, :class_name => LedgerEntry, :dependent => :destroy
   belongs_to :user
 
-  attr_accessible :name
+  has_many :ledger_entries, :dependent => :destroy
+  has_many :balance_corrections, :dependent => :destroy
+  has_many :statement_imports , :dependent => :destroy
+
+  before_destroy :delete_account_validation
+  validate :control_name_restrictions
+
+  default_scope -> {order(:name => :asc)}
+
+  def self.control_account(name)
+    where(:control_name => name).first
+  end
 
   def debit(amount, date, transaction = nil)
     ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)
@@ -31,15 +41,24 @@ class LedgerAccount < ActiveRecord::Base
     ledger_entries.for_date(date).sum(:debit) - ledger_entries.for_date(date).sum(:credit)
   end
 
-  # return daily balances for a date range...
-  def daily_balances(start_date, end_date)
-    balance = balance(start_date)
-    balances = Array.new
-    ((start_date)..(end_date)).each do |date|
-      delta = activity(date)
-      balances << {:date => date, :balance => balance, :activity => delta }
-      balance += delta
-    end
-    balances
+  def is_control_account?
+    control_name.present?
   end
+
+  private
+
+  def delete_account_validation
+    if is_control_account?
+      errors.add(:base, 'cannot delete a control account')
+      return false
+    end
+  end
+
+  def control_name_restrictions
+    if persisted? && control_name_changed?
+      errors.add(:base, 'cannot change control name')
+      return false
+    end
+  end
+
 end

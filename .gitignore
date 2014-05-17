@@ -15,6 +15,11 @@
 /tmp
 # Ignore all swap files.
 *.swp
+#ignore uploaded files
+/public/data
 
 #Ignore coverage files
 /coverage
+
+#Ignore sass cache
+/.sass-cache/

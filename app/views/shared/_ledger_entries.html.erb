@@ -1,0 +1,23 @@
+<table>
+  <tr>
+    <th>Date</th>
+    <th>Reference</th>
+    <th>In</th>
+    <th>Out</th>
+    <th>Analysis Code</th>
+  </tr>
+
+  <% LedgerEntryDecorator.build_collection(@ledger_entries).each do |entry| %>
+    <tr>
+      <td><%= entry.date %></td>
+      <td><%= entry.reference %></td>
+      <td><%= entry.debit %></td>
+      <td><%= entry.credit %></td>
+      <td><%= entry.analysis_code %></td>
+      <td><%= link_to 'Show', transaction_path(:id => entry.transaction_id) %></td>
+      <td><%= link_to 'Edit', edit_transaction_path(:id => entry.transaction_id) %></td>
+      <td><%= link_to 'Delete', transaction_path(:id => entry.transaction_id), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
+    </tr>
+  <% end %>
+
+</table>

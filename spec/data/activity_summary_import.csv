@@ -1,0 +1,13 @@
+Date,Reference,Amount,Ledger Account,Analysis Code
+1/1/2014,Already Imported,-10.00,,AC1
+2/1/2014,Import This,100,Income,AC1
+3/1/2014,Approximation Import,100,,AC1
+1/2/2014,Already Imported,-10.00,,AC1
+2/2/2014,Import This,100,Income,AC1
+3/2/2014,Approximation Import,100,,AC1
+4/2/2014,Approximation Import,100,,AC2
+5/2/2014,Approximation Import,100,,AC2
+7/2/2014,Approximation Import,-100,,AC3
+1/3/2014,Already Imported,-10.00,,AC1
+2/3/2014,Import This,100,Income,AC2
+3/3/2014,Approximation Import,100,,AC1

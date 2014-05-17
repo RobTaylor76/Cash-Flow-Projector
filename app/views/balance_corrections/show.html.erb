@@ -1,0 +1,7 @@
+<p id="notice"><%= notice %></p>
+
+<%= link_to 'Edit', edit_ledger_account_balance_correction_path(@ledger_account, @balance_correction) %> |
+<%= link_to 'Back', ledger_account_balance_corrections_path(@ledger_account) %>
+
+<%= render 'form', :locals => {:form_readonly => true } %>
+
