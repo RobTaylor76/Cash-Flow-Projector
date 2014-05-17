@@ -27,6 +27,7 @@ group :development, :test do
   gem 'rspec-rails', '>= 2.13.2'
   gem 'guard-rails'
   gem 'pry'
+  gem 'teaspoon'
 end
 
 group :development do
