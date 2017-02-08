@@ -1,11 +1,11 @@
 development:
   adapter: postgresql
-  host: localhost
+  host: postgresql
   username: rails_user
   database: cashflowprojector_dev
 
 test:
   adapter: postgresql
-  host: localhost
+  host:  postgresql
   username: rails_user
   database: cashflowprojector_test
