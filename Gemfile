@@ -25,16 +25,16 @@ end
 
 group :development, :test do
   gem 'rspec-rails', '>= 2.13.2'
-  gem 'guard-rails'
+#  gem 'guard-rails'
   gem 'pry'
-  gem 'teaspoon'
+#  gem 'teaspoon'
 end
 
 group :development do
   gem 'bullet'
 end
 
-gem 'rails4_upgrade'
+#gem 'rails4_upgrade'
 
 
 gem 'actionpack-action_caching', '~>1.0.0'
