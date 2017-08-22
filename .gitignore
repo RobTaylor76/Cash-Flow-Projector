@@ -23,3 +23,5 @@
 
 #Ignore sass cache
 /.sass-cache/
+
+.idea

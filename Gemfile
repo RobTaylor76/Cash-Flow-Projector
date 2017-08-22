@@ -26,8 +26,9 @@ end
 group :development, :test do
   gem 'rspec-rails', '>= 2.13.2'
 #  gem 'guard-rails'
-  gem 'pry'
+  gem 'pry-byebug'
 #  gem 'teaspoon'
+  gem 'rack-mini-profiler'
 end
 
 group :development do
