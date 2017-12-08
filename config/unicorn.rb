@@ -1,7 +1,10 @@
 # need :tcp_nopush => false 	# for streaming
 # see https://gist.github.com/nathany/5058140 for more info
 # nb backlog has a minimum size of 16 iirc
-listen ENV['PORT'], :backlog => Integer(ENV['UNICORN_BACKLOG'] || 32), :tcp_nopush => false
+#listen ENV['PORT'], :backlog => Integer(ENV['UNICORN_BACKLOG'] || 32), :tcp_nopush => false
+
+require 'fileutils'
+listen '/tmp/nginx.socket'
 
 worker_processes (ENV["unicorn_workers"] || 3).to_i     # number of unicorn workers to spin up
 
@@ -17,6 +20,7 @@ preload_app true
 
 
 before_fork do |server, worker|
+  FileUtils.touch('/tmp/app-initialized')
   Signal.trap 'TERM' do
     puts 'Unicorn master intercepting TERM and sending myself QUIT instead'
     Process.kill 'QUIT', Process.pid
