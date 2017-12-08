@@ -12,8 +12,8 @@ timeout 30
 # combine Ruby 2.0.0dev or REE with "preload_app true" for memory savings
 # http://rubyenterpriseedition.com/faq.html#adapt_apps_for_cow
 preload_app true
-GC.respond_to?(:copy_on_write_friendly=) and
-    GC.copy_on_write_friendly = true
+#GC.respond_to?(:copy_on_write_friendly=) and
+#   GC.copy_on_write_friendly = true
 
 
 before_fork do |server, worker|
