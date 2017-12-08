@@ -18,12 +18,17 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'jquery-rails'
 
+group :production do
+  gem 'unicorn'
+end
+
 group :test do
   gem 'simplecov', :require => false
   gem "shoulda-matchers"
 end
 
 group :development, :test do
+  gem 'puma'
   gem 'rspec-rails', '>= 2.13.2'
 #  gem 'guard-rails'
   gem 'pry-byebug'
