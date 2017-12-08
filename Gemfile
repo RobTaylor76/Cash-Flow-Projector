@@ -1,5 +1,5 @@
 source 'https://rubygems.org'
-
+ruby '2.2.5'
 gem 'rails', '~> 4.0.0'
 #gem 'therubyracer', :require => 'v8'
 gem 'execjs'
@@ -8,8 +8,6 @@ gem 'devise' , '~> 3.0.0'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-
-gem 'puma'
 
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
