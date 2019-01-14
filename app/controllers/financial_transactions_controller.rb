@@ -1,4 +1,4 @@
-class TransactionsController < ApplicationController
+class FinancialTransactionsController < ApplicationController
   include DateRangeFilterable
 
   respond_to :html, :json
@@ -7,8 +7,8 @@ class TransactionsController < ApplicationController
   # GET /transactions
   # GET /transactions.json
   def index
-    set_up_date_range_filter transactions_path
-    @transactions = apply_date_range_filter current_user.transactions.order(:date => :asc)
+    set_up_date_range_filter financial_transactions_path
+    @transactions = apply_date_range_filter current_user.financial_transactions.order(:date => :asc)
 
     respond_with @transactions
   end
@@ -22,7 +22,7 @@ class TransactionsController < ApplicationController
   # GET /transactions/new
   # GET /transactions/new.json
   def new
-    @transaction = current_user.transactions.build
+    @transaction = current_user.financial_transactions.build
     2.times { @transaction.ledger_entries.build } # shortcut to enable us to add ledger entries on form
     respond_with @transaction
   end
@@ -34,7 +34,7 @@ class TransactionsController < ApplicationController
   # POST /transactions
   # POST /transactions.json
   def create
-    @transaction = current_user.transactions.build(strong_params)
+    @transaction = current_user.financial_transactions.build(strong_params)
     flash[:notice] =  'transaction was successfully created.' if @transaction.save
     respond_with @transaction
   end
@@ -57,16 +57,16 @@ class TransactionsController < ApplicationController
 
   private
   def load_transaction
-    @transaction = current_user.transactions.find(transaction_id)
-    set_up_date_range_filter transaction_path(@transaction)
+    @transaction = current_user.financial_transactions.find(transaction_id)
+    set_up_date_range_filter financial_transaction_path(@transaction)
   end
 
   def transaction_id
-    params[:id] || params[:transaction_id]
+    params[:id] || params[:financial_transaction_id]
   end
 
   def strong_params
-    params[:transaction].permit([:date,
+    params[:financial_transaction].permit([:date,
                                 :reference,
                                 :approximation,
     :ledger_entries_attributes => [:id,

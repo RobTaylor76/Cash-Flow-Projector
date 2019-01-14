@@ -1,13 +1,15 @@
 require 'spec_helper'
 
 describe LedgerEntry do
-  describe :class do
-    it 'should have relationships' do
-      subject.should belong_to(:ledger_account)
-      subject.should belong_to(:user)
-      subject.should belong_to(:analysis_code)
-    end
-  end
+  # describe :class do
+  #   it 'should have relationships' do
+  #     subject.should belong_to(:ledger_account)
+  #     subject.should belong_to(:user)
+  #     subject.should belong_to(:analysis_code)
+  #   end
+  # end
+
+  subject { LedgerEntry.new }
 
   describe :new_record do
     it 'should init correctly' do
@@ -21,7 +23,7 @@ describe LedgerEntry do
     fail_fast_translations
     before :each do
       @user = User.find_by_email('test_user@cashflowprojector.com')
-      tran = @user.transactions.build
+      tran = @user.financial_transactions.build
       @le = tran.ledger_entries.build(:analysis_code_id => @user.default_analysis_code.id,
                                       :ledger_account_id => @user.ledger_accounts.pluck(:id).first)
 

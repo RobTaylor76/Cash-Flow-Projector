@@ -20,7 +20,7 @@ Cashflowprojector::Application.routes.draw do
     resources :statement_imports, :only => [:index, :destroy]
   end
 
-  resources :transactions
+  resources :financial_transactions
 
   resources :recurring_transactions do
     collection do

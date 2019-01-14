@@ -11,19 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140314152813) do
+ActiveRecord::Schema.define(version: 20190114193109) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "analysis_codes", force: true do |t|
+  create_table "analysis_codes", force: :cascade do |t|
     t.integer  "user_id",    null: false
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "balance_corrections", force: true do |t|
+  create_table "balance_corrections", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "ledger_account_id"
     t.decimal  "balance",           precision: 14, scale: 2, default: 0.0
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20140314152813) do
     t.datetime "updated_at"
   end
 
-  create_table "bank_accounts", force: true do |t|
+  create_table "bank_accounts", force: :cascade do |t|
     t.string   "name"
     t.integer  "main_ledger_account_id"
     t.integer  "charges_ledger_account_id"
@@ -44,7 +44,24 @@ ActiveRecord::Schema.define(version: 20140314152813) do
     t.datetime "updated_at"
   end
 
-  create_table "ledger_accounts", force: true do |t|
+  create_table "financial_transactions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.string   "reference",                              default: ""
+    t.date     "date"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "source_id"
+    t.string   "source_type"
+    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
+    t.string   "import_sig"
+    t.boolean  "approximation",                          default: false
+  end
+
+  add_index "financial_transactions", ["user_id", "date"], name: "transactions_user_date_idx", using: :btree
+  add_index "financial_transactions", ["user_id", "import_sig"], name: "transactions_user_import_sig_idx", using: :btree
+  add_index "financial_transactions", ["user_id"], name: "transactions_user_id_fk", using: :btree
+
+  create_table "ledger_accounts", force: :cascade do |t|
     t.integer  "user_id",      null: false
     t.string   "name"
     t.datetime "created_at"
@@ -52,13 +69,13 @@ ActiveRecord::Schema.define(version: 20140314152813) do
     t.string   "control_name"
   end
 
-  create_table "ledger_entries", force: true do |t|
-    t.integer  "ledger_account_id",                                        null: false
-    t.integer  "user_id",                                                  null: false
-    t.integer  "transaction_id"
-    t.decimal  "debit",             precision: 14, scale: 2, default: 0.0
-    t.decimal  "credit",            precision: 14, scale: 2, default: 0.0
-    t.date     "date",                                                     null: false
+  create_table "ledger_entries", force: :cascade do |t|
+    t.integer  "ledger_account_id",                                               null: false
+    t.integer  "user_id",                                                         null: false
+    t.integer  "financial_transaction_id"
+    t.decimal  "debit",                    precision: 14, scale: 2, default: 0.0
+    t.decimal  "credit",                   precision: 14, scale: 2, default: 0.0
+    t.date     "date",                                                            null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "analysis_code_id"
@@ -68,7 +85,7 @@ ActiveRecord::Schema.define(version: 20140314152813) do
   add_index "ledger_entries", ["ledger_account_id"], name: "lgr_entries_ledger_account_fk", using: :btree
   add_index "ledger_entries", ["user_id", "analysis_code_id"], name: "le_user_analysis_code_idx", using: :btree
 
-  create_table "recurring_transactions", force: true do |t|
+  create_table "recurring_transactions", force: :cascade do |t|
     t.date     "start_date"
     t.date     "end_date"
     t.string   "reference",                                  default: ""
@@ -87,7 +104,7 @@ ActiveRecord::Schema.define(version: 20140314152813) do
     t.integer  "analysis_code_id"
   end
 
-  create_table "statement_imports", force: true do |t|
+  create_table "statement_imports", force: :cascade do |t|
     t.integer  "ledger_account_id", null: false
     t.integer  "user_id",           null: false
     t.date     "date",              null: false
@@ -98,30 +115,13 @@ ActiveRecord::Schema.define(version: 20140314152813) do
     t.string   "file_name"
   end
 
-  create_table "transaction_frequencies", force: true do |t|
+  create_table "transaction_frequencies", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "transactions", force: true do |t|
-    t.integer  "user_id"
-    t.string   "reference",                              default: ""
-    t.date     "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "source_id"
-    t.string   "source_type"
-    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
-    t.string   "import_sig"
-    t.boolean  "approximation",                          default: false
-  end
-
-  add_index "transactions", ["user_id", "date"], name: "transactions_user_date_idx", using: :btree
-  add_index "transactions", ["user_id", "import_sig"], name: "transactions_user_import_sig_idx", using: :btree
-  add_index "transactions", ["user_id"], name: "transactions_user_id_fk", using: :btree
-
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
     t.string   "reset_password_token"

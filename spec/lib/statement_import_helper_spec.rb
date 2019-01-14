@@ -12,12 +12,12 @@ describe StatementImportHelper do
     @filename = '/import/file.csv'
   end
 
-  it 'should install all three transactions' do
+  it 'should install all three financial_transactions' do
     expect do
       expect do
         expect do
           StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-        end.to change{@user.transactions.count}.by(3)
+        end.to change{@user.financial_transactions.count}.by(3)
       end.to change{@user.analysis_codes.count}.by(1)
     end.to change{@bank_account_la.statement_imports.count}.by(1)
 
@@ -25,16 +25,16 @@ describe StatementImportHelper do
     @data_import_la.ledger_entries.count.should == 2
     @income_control_account.ledger_entries.count.should == 1
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
-    @user.transactions.for_date(Date.parse('2/1/2014')).first.tap do |tran|
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).first.tap do |tran|
       tran.ledger_entries.find {|le| le.ledger_account == @income_control_account }.should be_present
       tran.ledger_entries.find {|le| le.analysis_code.name == 'new analysis code'}.should be_present
     end
 
-    @user.transactions.for_date(Date.parse('3/1/2014')).first.tap do |tran|
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).first.tap do |tran|
       tran.ledger_entries.find {|le| le.analysis_code.name == 'existing analysis code'}.should be_present
     end
   end
@@ -51,11 +51,11 @@ describe StatementImportHelper do
     bank_la_id = @bank_account_la.id
     tran.ledger_entries.map(&:ledger_account_id).should_not include bank_la_id
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
 
     expect do
       StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-    end.to change{@user.transactions.count}.by(2)
+    end.to change{@user.financial_transactions.count}.by(2)
 
     tran.reload
     tran.ledger_entries.map(&:ledger_account_id).should include bank_la_id
@@ -71,16 +71,16 @@ describe StatementImportHelper do
       :amount => 1234.56,
       :approximation => false})
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 0
 
     expect do
       StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-    end.to change{@user.transactions.count}.by(2)
+    end.to change{@user.financial_transactions.count}.by(2)
 
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
   end
 
   it 'should not match the existing transaction and import them all it' do
@@ -92,17 +92,17 @@ describe StatementImportHelper do
       :amount => 234.56,
       :approximation => false })
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
     expect do
       StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-    end.to change{@user.transactions.count}.by(3)
+    end.to change{@user.financial_transactions.count}.by(3)
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 2
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 2
 
     tran.reload
     tran.amount.should == 234.56
@@ -117,17 +117,17 @@ describe StatementImportHelper do
       :amount => 234.56,
       :approximation => true})
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
     expect do
       StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-    end.to change{@user.transactions.count}.by(2)
+    end.to change{@user.financial_transactions.count}.by(2)
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
     tran.reload
     tran.amount.should == 2345.56
@@ -145,28 +145,28 @@ describe StatementImportHelper do
                         # used to unlink from recurrence so it isn't deleted when recurrence edited/deleted
     tran.save
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 0
-    @user.transactions.for_date(Date.parse('7/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 0
+    @user.financial_transactions.for_date(Date.parse('7/1/2014')).count.should == 1
 
     expect do
       StatementImportHelper.process_statement(@user, @bank_account_la , @csv_text, @filename)
-    end.to change{@user.transactions.count}.by(2)
+    end.to change{@user.financial_transactions.count}.by(2)
 
     tran.reload
     tran.date.should == Date.parse('3/1/2014')
     tran.amount.should == 2345.56
-    tran.approximation.should be_false
+    expect(tran.approximation).to be_falsey
     tran.source.should == @bank_account_la.statement_imports.last
 
-    @user.transactions.for_date(Date.parse('1/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('2/1/2014')).count.should == 1
-    @user.transactions.for_date(Date.parse('3/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('1/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('2/1/2014')).count.should == 1
+    @user.financial_transactions.for_date(Date.parse('3/1/2014')).count.should == 1
 
   end
 
   def create_transaction(tran_spec)
-    tran = tran_spec[:user].transactions.create(
+    tran = tran_spec[:user].financial_transactions.create(
                                 :reference => tran_spec[:reference],
                                 :date => tran_spec[:date],
                                 :approximation => tran_spec[:approximation])

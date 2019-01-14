@@ -4,7 +4,7 @@ class RecurringTransactionsController < ApplicationController
 
 
   def recur_transaction
-    @transaction = current_user.transactions.find(params[:transaction_id])
+    @transaction = current_user.financial_transactions.find(params[:financial_transaction_id])
     @recurring_transaction = TransactionHelper.create_recurrable_transaction(@transaction)
     render :new
   end
@@ -64,10 +64,10 @@ class RecurringTransactionsController < ApplicationController
   private
 
   def load_transaction
-    @recurring_transaction = current_user.recurring_transactions.find(transaction_id)
+    @recurring_transaction = current_user.recurring_transactions.find(financial_transaction_id)
   end
 
-  def transaction_id
+  def financial_transaction_id
     params[:id]
   end
 

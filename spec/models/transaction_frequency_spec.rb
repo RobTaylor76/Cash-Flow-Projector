@@ -10,7 +10,7 @@ describe TransactionFrequency do
 
     it 'should have a method for each row in database' do
       TransactionFrequency.all.each do |freq|
-        described_class.should respond_to(freq.name.downcase)
+        expect(TransactionFrequency.send(freq.name.downcase)).to  be_an_instance_of(TransactionFrequency)
       end
     end
 

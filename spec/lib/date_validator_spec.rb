@@ -22,7 +22,7 @@ it {should validate_date :date }
   describe :validates_date do
     context 'when date is valid' do
       it 'has no errors' do
-        subject.valid?.should be_true
+        expect(subject.valid?).to be true
       end
     end
 
@@ -31,14 +31,14 @@ it {should validate_date :date }
       context 'when nil option is true' do
         it 'has no errors' do
           subject.nillable_date = nil
-          subject.valid?.should be_true
+          expect(subject.valid?).to be true
         end
       end
 
       context 'when nil option is false' do
         it 'has errors' do
           subject.date = nil
-          subject.valid?.should_not be_true
+          expect(subject.valid?).to be false
           subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
         end
       end
@@ -47,17 +47,17 @@ it {should validate_date :date }
     context 'when date is invalid' do
       it 'has errors' do
         subject.date = Date.new(1975,1,1)
-        subject.valid?.should_not be_true
+        expect(subject.valid?).to be false
         subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
       end
       it 'has errors' do
         subject.date = Date.new(2300,1,1)
-        subject.valid?.should_not be_true
+        expect(subject.valid?).to be false
         subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
       end
       it 'has errors' do
         subject.date = '01/01/201222222'
-        subject.valid?.should_not be_true
+        expect(subject.valid?).to be false
         subject.errors[:date].should include(I18n.t('activerecord.errors.messages.invalid_date'))
       end
     end

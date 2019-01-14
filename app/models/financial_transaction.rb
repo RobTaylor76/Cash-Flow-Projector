@@ -1,4 +1,4 @@
-class Transaction < ActiveRecord::Base
+class FinancialTransaction < ActiveRecord::Base
   extend DateValidator
   include DateRangeScopes
 
@@ -47,7 +47,7 @@ class Transaction < ActiveRecord::Base
 
   def propogate_date_to_ledger_entries
     ActiveRecord::Base.transaction do
-      ledger_entries.where(:transaction_id => self.id).update_all(:date => self.date)
+      ledger_entries.where(:financial_transaction_id => self.id).update_all(:date => self.date)
       ledger_entries.reload
     end
   end

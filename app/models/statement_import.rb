@@ -6,7 +6,7 @@ class StatementImport < ActiveRecord::Base
   belongs_to :user
   belongs_to :ledger_account
 
-  has_many :transactions, :dependent => :destroy, :as => :source
+  has_many :financial_transactions, :dependent => :destroy, :as => :source
 
   validates_relationship :ledger_account_id, :valid_values => :valid_ledger_accounts
   after_initialize :set_defaults, :if => :new_record?

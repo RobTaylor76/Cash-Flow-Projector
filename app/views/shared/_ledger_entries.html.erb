@@ -14,9 +14,9 @@
       <td><%= entry.debit %></td>
       <td><%= entry.credit %></td>
       <td><%= entry.analysis_code %></td>
-      <td><%= link_to 'Show', transaction_path(:id => entry.transaction_id) %></td>
-      <td><%= link_to 'Edit', edit_transaction_path(:id => entry.transaction_id) %></td>
-      <td><%= link_to 'Delete', transaction_path(:id => entry.transaction_id), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
+      <td><%= link_to 'Show', financial_transaction_path(:id => entry.financial_transaction_id) %></td>
+      <td><%= link_to 'Edit', edit_financial_transaction_path(:id => entry.financial_transaction_id) %></td>
+      <td><%= link_to 'Delete', financial_transaction_path(:id => entry.financial_transaction_id), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
     </tr>
   <% end %>
 

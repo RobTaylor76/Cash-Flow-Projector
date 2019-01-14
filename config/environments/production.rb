@@ -66,4 +66,8 @@ Cashflowprojector::Application.configure do
   # Log the query plan for queries taking more than this (works
   # with SQLite, MySQL, and PostgreSQL)
   # config.active_record.auto_explain_threshold_in_seconds = 0.5
+  #
+  config.secret_key = '410a3f2455b7e007931cc2ba9d2078bf1a7af679c92a9a78da4cfacc4dca3c56dcb3130504369ced3f9aa414ca76e1b07ee37f9d155278207e1112f2f5b37ccb'
+
+
 end

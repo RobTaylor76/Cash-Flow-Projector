@@ -13,7 +13,7 @@ class User < ActiveRecord::Base
   has_many :ledger_accounts
   has_many :ledger_entries
   has_many :bank_accounts
-  has_many :transactions
+  has_many :financial_transactions
   has_many :recurring_transactions
   has_many :analysis_codes
 

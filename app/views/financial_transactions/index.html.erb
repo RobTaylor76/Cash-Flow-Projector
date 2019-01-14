@@ -1,5 +1,5 @@
 <h1>Listing Transactions</h1>
-<%= link_to 'New Transaction', new_transaction_path %>
+<%= link_to 'New Transaction', new_financial_transaction_path %>
 <%= render 'shared/date_range_filter', :locals => {:show_balance_date => false} %>
 
 <table>
@@ -17,9 +17,9 @@
     <td><%= I18n.l(transaction.date)%></td>
     <td><%= transaction.reference %></td>
     <td><%= transaction.amount %></td>
-    <td><%= link_to 'Show', transaction_path(transaction) %></td>
-    <td><%= link_to 'Edit', edit_transaction_path(transaction) %></td>
-    <td><%= link_to 'Delete', transaction_path(transaction), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
+    <td><%= link_to 'Show', financial_transaction_path(transaction) %></td>
+    <td><%= link_to 'Edit', edit_financial_transaction_path(transaction) %></td>
+    <td><%= link_to 'Delete', financial_transaction_path(transaction), :data => {confirm: 'Are you sure?'}, method: :delete %></td>
   </tr>
 <% end %>
 </table>
