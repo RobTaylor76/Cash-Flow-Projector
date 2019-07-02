@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby '2.5.3'
+ruby '2.5.5'
 gem 'rails', '~> 4.2'
 
 #gem 'therubyracer', :require => 'v8'
