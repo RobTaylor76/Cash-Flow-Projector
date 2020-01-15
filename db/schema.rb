@@ -17,8 +17,8 @@ ActiveRecord::Schema.define(version: 20190114193109) do
   enable_extension "plpgsql"
 
   create_table "analysis_codes", force: :cascade do |t|
-    t.integer  "user_id",    null: false
-    t.string   "name"
+    t.integer  "user_id",                null: false
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -26,17 +26,17 @@ ActiveRecord::Schema.define(version: 20190114193109) do
   create_table "balance_corrections", force: :cascade do |t|
     t.integer  "user_id"
     t.integer  "ledger_account_id"
-    t.decimal  "balance",           precision: 14, scale: 2, default: 0.0
-    t.decimal  "correction",        precision: 14, scale: 2, default: 0.0
+    t.decimal  "balance",                       precision: 14, scale: 2, default: 0.0
+    t.decimal  "correction",                    precision: 14, scale: 2, default: 0.0
     t.date     "date"
     t.date     "correction_date"
-    t.string   "reference"
+    t.string   "reference",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "bank_accounts", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",                      limit: 255
     t.integer  "main_ledger_account_id"
     t.integer  "charges_ledger_account_id"
     t.integer  "user_id"
@@ -46,15 +46,15 @@ ActiveRecord::Schema.define(version: 20190114193109) do
 
   create_table "financial_transactions", force: :cascade do |t|
     t.integer  "user_id"
-    t.string   "reference",                              default: ""
+    t.string   "reference",     limit: 255,                          default: ""
     t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "source_id"
-    t.string   "source_type"
-    t.decimal  "amount",        precision: 14, scale: 2, default: 0.0
-    t.string   "import_sig"
-    t.boolean  "approximation",                          default: false
+    t.string   "source_type",   limit: 255
+    t.decimal  "amount",                    precision: 14, scale: 2, default: 0.0
+    t.string   "import_sig",    limit: 255
+    t.boolean  "approximation",                                      default: false
   end
 
   add_index "financial_transactions", ["user_id", "date"], name: "transactions_user_date_idx", using: :btree
@@ -62,11 +62,11 @@ ActiveRecord::Schema.define(version: 20190114193109) do
   add_index "financial_transactions", ["user_id"], name: "transactions_user_id_fk", using: :btree
 
   create_table "ledger_accounts", force: :cascade do |t|
-    t.integer  "user_id",      null: false
-    t.string   "name"
+    t.integer  "user_id",                  null: false
+    t.string   "name",         limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "control_name"
+    t.string   "control_name", limit: 255
   end
 
   create_table "ledger_entries", force: :cascade do |t|
@@ -88,50 +88,50 @@ ActiveRecord::Schema.define(version: 20190114193109) do
   create_table "recurring_transactions", force: :cascade do |t|
     t.date     "start_date"
     t.date     "end_date"
-    t.string   "reference",                                  default: ""
+    t.string   "reference",         limit: 255,                          default: ""
     t.integer  "user_id"
     t.integer  "from_id"
     t.integer  "to_id"
     t.integer  "percentage_of_id"
     t.integer  "frequency_id"
-    t.decimal  "amount",            precision: 14, scale: 2, default: 0.0
-    t.decimal  "percentage",        precision: 14, scale: 8, default: 0.0
+    t.decimal  "amount",                        precision: 14, scale: 2, default: 0.0
+    t.decimal  "percentage",                    precision: 14, scale: 8, default: 0.0
     t.integer  "day_of_month"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "working_days_only",                          default: true
-    t.boolean  "approximation",                              default: true
+    t.boolean  "working_days_only",                                      default: true
+    t.boolean  "approximation",                                          default: true
     t.integer  "analysis_code_id"
   end
 
   create_table "statement_imports", force: :cascade do |t|
-    t.integer  "ledger_account_id", null: false
-    t.integer  "user_id",           null: false
-    t.date     "date",              null: false
+    t.integer  "ledger_account_id",             null: false
+    t.integer  "user_id",                       null: false
+    t.date     "date",                          null: false
     t.date     "from"
     t.date     "to"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "file_name"
+    t.string   "file_name",         limit: 255
   end
 
   create_table "transaction_frequencies", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "", null: false
-    t.string   "encrypted_password",     default: "", null: false
-    t.string   "reset_password_token"
+    t.string   "email",                  limit: 255, default: "", null: false
+    t.string   "encrypted_password",     limit: 255, default: "", null: false
+    t.string   "reset_password_token",   limit: 255
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0
+    t.integer  "sign_in_count",                      default: 0
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
+    t.string   "current_sign_in_ip",     limit: 255
+    t.string   "last_sign_in_ip",        limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
