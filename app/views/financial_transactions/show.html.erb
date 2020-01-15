@@ -1,0 +1,9 @@
+
+<p id="notice"><%= notice %></p>
+
+<%= link_to 'Edit', edit_financial_transaction_path(@transaction) %> |
+<%= link_to 'Back', financial_transactions_path %>
+
+<%= render 'form', :locals => {:form_readonly => true } %>
+
+<%= link_to 'Recur Transaction', recur_transaction_recurring_transactions_path(:financial_transaction_id => @transaction.id) %>

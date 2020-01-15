@@ -5,7 +5,7 @@ class BalanceCorrection < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :ledger_account
-  has_one :transaction, :as => :source, :dependent => :destroy
+  has_one :financial_transaction, :as => :source, :dependent => :destroy
 
   after_initialize :set_defaults, :if => :new_record?
   before_save :save_transaction
@@ -32,7 +32,7 @@ class BalanceCorrection < ActiveRecord::Base
   end
 
   def save_transaction
-    self.transaction.destroy if self.transaction.present?
+    self.financial_transaction.destroy if self.financial_transaction.present?
     correct_balance
   end
 
@@ -55,7 +55,7 @@ class BalanceCorrection < ActiveRecord::Base
     transaction_details[:credit] = credit.id
     transaction_details[:amount] = amount
     transaction_details[:analysis_code] = user.default_analysis_code.id
-    self.transaction = TransactionHelper.create_transaction(user, transaction_details)
+    self.financial_transaction = TransactionHelper.create_transaction(user, transaction_details)
   end
 
 end

@@ -5,7 +5,7 @@ class LedgerEntryDecorator
   end
 
   def self.build_collection(entries)
-    entries.includes(:transaction,:analysis_code).map {|entry| LedgerEntryDecorator.new(entry)}
+    entries.includes(:financial_transaction,:analysis_code).map {|entry| LedgerEntryDecorator.new(entry)}
   end
 
   def date
@@ -21,7 +21,7 @@ class LedgerEntryDecorator
   end
 
   def reference
-    @entry.transaction.reference
+    @entry.financial_transaction.reference
   end
 
   def analysis_code

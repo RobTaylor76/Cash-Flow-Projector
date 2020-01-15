@@ -15,11 +15,11 @@ class LedgerAccount < ActiveRecord::Base
   end
 
   def debit(amount, date, transaction = nil)
-    ledger_entries.create(:debit => amount, :date => date, :transaction => transaction)
+    ledger_entries.create(:debit => amount, :date => date, :financial_transaction => transaction)
   end
 
   def credit(amount, date, transaction = nil)
-    ledger_entries.create(:credit => amount, :date => date, :transaction => transaction)
+    ledger_entries.create(:credit => amount, :date => date, :financial_transaction => transaction)
   end
 
   def increase(amount, date, transaction = nil)

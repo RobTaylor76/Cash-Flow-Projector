@@ -1,22 +1,25 @@
 require 'spec_helper'
 
-describe Transaction do
+describe FinancialTransaction do
   fail_fast_translations
 
-  it { subject.should have_many(:ledger_entries) }
-  it { subject.should belong_to(:user) }
-  it { subject.should belong_to(:source) }
+  # it { subject.should have_many(:ledger_entries) }
+  # it { subject.should belong_to(:user) }
+  # it { subject.should belong_to(:source) }
+
+  subject { FinancialTransaction.new }
 
   describe :new_record do
-    its(:reference) { should == '' }
-    its(:date)  { should == Date.today }
+    it {expect(subject.reference).to eq '' }
+    it {expect(subject.date).to eq Date.today }
   end
+
   before :each do
     @user = User.find_by_email('test_user@cashflowprojector.com')
     @from = @user.ledger_accounts.create!( :name => 'from' )
     @from.debit 100.00, Date.yesterday
     @to = @user.ledger_accounts.create!( :name => 'to' )
-    @tr = @user.transactions.create(:date => Date.yesterday)
+    @tr = @user.financial_transactions.create(:date => Date.yesterday)
   end
 
   context :validations do
@@ -56,7 +59,7 @@ describe Transaction do
 
     it 'it should set the dates correctly on create' do
 
-      tr = @user.transactions.build
+      tr = @user.financial_transactions.build
       new_date = Date.today + 7.days
       tr.date = new_date
 
@@ -75,7 +78,7 @@ describe Transaction do
 
   describe :dates do
     it 'should use the supplied date for ledger entries and transaction' do
-      tr = @user.transactions.create(:date => Date.today + 5.days)
+      tr = @user.financial_transactions.create(:date => Date.today + 5.days)
       tr.move_money(@from,@to, 30.00)
       tr.ledger_entries.each {|entry| entry.date.should == (Date.today + 5.days) }
     end

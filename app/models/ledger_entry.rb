@@ -6,7 +6,7 @@ class LedgerEntry < ActiveRecord::Base
   belongs_to :user
 
   belongs_to :ledger_account
-  belongs_to :transaction
+  belongs_to :financial_transaction
   belongs_to :analysis_code
 
   after_initialize :set_defaults, :if => :new_record?

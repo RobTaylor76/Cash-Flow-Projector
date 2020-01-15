@@ -7,7 +7,7 @@ class RecurringTransaction < ActiveRecord::Base
   belongs_to :to, :class_name => LedgerAccount
   belongs_to :percentage_of, :class_name => LedgerAccount
   belongs_to :frequency, :class_name => TransactionFrequency
-  has_many :transactions, :class_name => Transaction, :dependent => :destroy, :as => :source
+  has_many :financial_transactions, :class_name => FinancialTransaction, :dependent => :destroy, :as => :source
 
   validates_date :start_date
   validates_date :end_date
@@ -56,7 +56,7 @@ class RecurringTransaction < ActiveRecord::Base
   end
 
   def possible_duplicates(date, amount)
-    scope = user.transactions.includes(:ledger_entries)
+    scope = user.financial_transactions.includes(:ledger_entries)
     if approximation
       scope.date_range_filter((date - 4.days),(date + 4.days)).where(:reference => reference)
     else

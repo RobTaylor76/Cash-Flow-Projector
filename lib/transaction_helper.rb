@@ -20,7 +20,7 @@ class TransactionHelper
     end
 
     def create_transaction(user,transaction_details)
-      tran = user.transactions.build(:reference => transaction_details[:reference],
+      tran = user.financial_transactions.build(:reference => transaction_details[:reference],
                                      :date => transaction_details[:date],
                                      :source => transaction_details[:source],
                                      :approximation => transaction_details[:approximation],

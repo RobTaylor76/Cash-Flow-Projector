@@ -3,12 +3,12 @@ require 'spec_helper'
 describe LedgerAccount do
 
 
-  describe :relationships do
-    it { should have_many :ledger_entries }
-    it { should have_many :balance_corrections }
-    it { should have_many :statement_imports }
-    it { should belong_to :user}
-  end
+  # describe :relationships do
+  #   it { should have_many :ledger_entries }
+  #   it { should have_many :balance_corrections }
+  #   it { should have_many :statement_imports }
+  #   it { should belong_to :user}
+  # end
 
   before :each do
     @user = User.find_by_email('test_user@cashflowprojector.com')
@@ -21,8 +21,8 @@ describe LedgerAccount do
     it { should respond_to(:name) }
   end
 
-  describe :new_ledger_account do 
-    its(:balance) { should == 0 }
+  describe :new_ledger_account do
+    it {expect(subject.balance).to eq 0 }
   end
 
   describe :control_account do

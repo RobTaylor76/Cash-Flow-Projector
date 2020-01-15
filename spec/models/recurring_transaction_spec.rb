@@ -3,10 +3,10 @@ require 'spec_helper'
 describe RecurringTransaction do
 
   fail_fast_translations
-
-  it { should have_many :transactions }
-  it { should belong_to :user }
-  it { should belong_to :frequency }
+  #
+  # it { should have_many :financial_transactions }
+  # it { should belong_to :user }
+  # it { should belong_to :frequency }
 
 
   context 'recur a money transfer' do
@@ -51,7 +51,7 @@ describe RecurringTransaction do
     end
     context :supporting_records do
       it 'should create a transaction for each month' do
-        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(12)
+        expect { @recurring.create_recurrences}.to change { @user.financial_transactions.count }.by(12)
       end
 
       it 'should create a 2 legder entries for each month' do
@@ -68,43 +68,43 @@ describe RecurringTransaction do
         @recurring.amount = 30.00
       end
       it 'should not duplicate if tran exists for same date and amount for same ledger accounts' do
-        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'wibble')
+        tran = @user.financial_transactions.create(:date => Date.parse('2013/06/01'), :reference => 'wibble')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.00)
 
-        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+        expect { @recurring.create_recurrences}.to change { @user.financial_transactions.count }.by(2)
 
-        @recurring.transactions[0].date.should == Date.parse('2013/05/01')
-        @recurring.transactions[1].date.should == Date.parse('2013/07/01')
+        @recurring.financial_transactions[0].date.should == Date.parse('2013/05/01')
+        @recurring.financial_transactions[1].date.should == Date.parse('2013/07/01')
       end
 
       it 'should not duplicate if approximation and within +/- 4 days and reference  and ledger accounts match' do
-        tran = @user.transactions.create(:date => Date.parse('2013/6/4'), :reference => 'XXXXXXXX')
+        tran = @user.financial_transactions.create(:date => Date.parse('2013/6/4'), :reference => 'XXXXXXXX')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
 
-        tran = @user.transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
+        tran = @user.financial_transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
 
         @recurring.approximation = true
 
-        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+        expect { @recurring.create_recurrences}.to change { @user.financial_transactions.count }.by(2)
 
-        @recurring.transactions[0].date.should == Date.parse('2013/05/01')
-        @recurring.transactions[1].date.should == Date.parse('2013/07/01')
+        @recurring.financial_transactions[0].date.should == Date.parse('2013/05/01')
+        @recurring.financial_transactions[1].date.should == Date.parse('2013/07/01')
 
       end
 
       it 'should not duplicate if approximation and same date,reference  and ledger accounts matches' do
-        tran = @user.transactions.create(:date => Date.parse('2013/06/01'), :reference => 'XXXXXXXX')
+        tran = @user.financial_transactions.create(:date => Date.parse('2013/06/01'), :reference => 'XXXXXXXX')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
 
-        tran = @user.transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
+        tran = @user.financial_transactions.create(:date => Date.parse('2013/07/01'), :reference => 'bibble')
         tran.move_money(@from_ledger_account,@to_ledger_account, 30.33)
 
         @recurring.approximation = true
 
-        expect { @recurring.create_recurrences}.to change { @user.transactions.count }.by(2)
+        expect { @recurring.create_recurrences}.to change { @user.financial_transactions.count }.by(2)
 
-        trans = @recurring.transactions.order(:date => :asc)
+        trans = @recurring.financial_transactions.order(:date => :asc)
         trans[0].date.should == Date.parse('2013/05/01')
         trans[1].date.should == Date.parse('2013/07/01')
 
@@ -113,20 +113,20 @@ describe RecurringTransaction do
     context :transaction_dates do
 
       context :avoid_weekends do
-        it 'should not be recurred on the weekend, future transactions still occur on same date' do
+        it 'should not be recurred on the weekend, future financial_transactions still occur on same date' do
           @start_date = Date.parse('2013/05/01')
           @recurring.start_date = @start_date
           @recurring.end_date = @start_date + 3.months
           @recurring.working_days_only = true
           @recurring.approximation = true
           @recurring.create_recurrences
-          trans = @recurring.transactions.order(:date => :asc)
-          trans[0].date.should == @start_date
-          trans[0].approximation.should be_true
-          trans[1].date.should == Date.parse('2013/06/03') #1st is sunday
-          trans[1].approximation.should be_true
-          trans[2].date.should == Date.parse('2013/07/01')
-          trans[2].approximation.should be_true
+          trans = @recurring.financial_transactions.order(:date => :asc)
+          expect(trans[0].date).to eq(@start_date)
+          expect(trans[0].approximation).to be_truthy
+          expect(trans[1].date).to eq(Date.parse('2013/06/03')) #1st is sunday
+          expect(trans[1].approximation).to be_truthy
+          expect(trans[2].date).to eq(Date.parse('2013/07/01'))
+          expect(trans[2].approximation).to be_truthy
         end
 
       end
@@ -136,13 +136,13 @@ describe RecurringTransaction do
           @recurring.end_date = @start_date + 11.months
           @recurring.create_recurrences
         end
-        it 'should create the transactions on correct dates'do
+        it 'should create the financial_transactions on correct dates'do
         #it 'should create first transaction for the start date' do
-          @user.transactions.for_date(@start_date).count.should == 1
-        #it 'should create repeating transactions for the correct day of the month' do
-          @user.transactions.for_date(@start_date + 1.month).count.should == 1
-        #it 'should create last transactions for the correct date' do
-          @user.transactions.last.date.should == @start_date + 11.months
+          @user.financial_transactions.for_date(@start_date).count.should == 1
+        #it 'should create repeating financial_transactions for the correct day of the month' do
+          @user.financial_transactions.for_date(@start_date + 1.month).count.should == 1
+        #it 'should create last financial_transactions for the correct date' do
+          @user.financial_transactions.last.date.should == @start_date + 11.months
         end
 
       end
@@ -152,15 +152,15 @@ describe RecurringTransaction do
           @recurring.end_date = @start_date + 51.weeks
           @recurring.create_recurrences
         end
-        it 'should create the transactions on correct dates'do
+        it 'should create the financial_transactions on correct dates'do
         #it 'should create first transaction for the start date' do
-          @user.transactions.for_date(@start_date).count.should == 1
-        #it 'should create repeating transactions for 1 weeks time' do
-          @user.transactions.for_date(@start_date + 1.week).count.should == 1
-        #it 'should create repeating transactions for 2 weeks time' do
-          @user.transactions.for_date(@start_date + 2.weeks).count.should == 1
-        #it 'should create last transactions for the correct date' do
-          @user.transactions.last.date.should == @start_date + 51.weeks
+          @user.financial_transactions.for_date(@start_date).count.should == 1
+        #it 'should create repeating financial_transactions for 1 weeks time' do
+          @user.financial_transactions.for_date(@start_date + 1.week).count.should == 1
+        #it 'should create repeating financial_transactions for 2 weeks time' do
+          @user.financial_transactions.for_date(@start_date + 2.weeks).count.should == 1
+        #it 'should create last financial_transactions for the correct date' do
+          @user.financial_transactions.last.date.should == @start_date + 51.weeks
         end
 
       end
@@ -171,15 +171,15 @@ describe RecurringTransaction do
           @recurring.end_date = @start_date + 30.days
           @recurring.create_recurrences
         end
-        it 'should create the transactions on correct dates'do
+        it 'should create the financial_transactions on correct dates'do
         #it 'should create first transaction for the start date' do
-          @user.transactions.for_date(@start_date).count.should == 1
-        #it 'should create repeating transactions for 1 days time' do
-          @user.transactions.for_date(@start_date + 1.day).count.should == 1
-        #it 'should create repeating transactions for 2 days time' do
-          @user.transactions.for_date(@start_date + 2.days).count.should == 1
-        #it 'should create last transactions for the correct date' do
-          @user.transactions.last.date.should == @start_date + 30.days
+          @user.financial_transactions.for_date(@start_date).count.should == 1
+        #it 'should create repeating financial_transactions for 1 days time' do
+          @user.financial_transactions.for_date(@start_date + 1.day).count.should == 1
+        #it 'should create repeating financial_transactions for 2 days time' do
+          @user.financial_transactions.for_date(@start_date + 2.days).count.should == 1
+        #it 'should create last financial_transactions for the correct date' do
+          @user.financial_transactions.last.date.should == @start_date + 30.days
         end
 
       end
@@ -192,15 +192,15 @@ describe RecurringTransaction do
           @recurring.end_date = @start_date + 4.years
           @recurring.create_recurrences
         end
-        it 'should create the transactions on correct dates'do
+        it 'should create the financial_transactions on correct dates'do
         #it 'should create first transaction for the start date' do
-          @user.transactions.for_date(@start_date).count.should == 1
-        #it 'should create repeating transactions for 1 years time' do
-          @user.transactions.for_date(@start_date + 1.year).count.should == 1
-        #it 'should create repeating transactions for 2 years time' do
-          @user.transactions.for_date(@start_date + 2.years).count.should == 1
-        #it 'should create last transactions for the correct date' do
-          @user.transactions.last.date.should == @start_date + 4.years
+          @user.financial_transactions.for_date(@start_date).count.should == 1
+        #it 'should create repeating financial_transactions for 1 years time' do
+          @user.financial_transactions.for_date(@start_date + 1.year).count.should == 1
+        #it 'should create repeating financial_transactions for 2 years time' do
+          @user.financial_transactions.for_date(@start_date + 2.years).count.should == 1
+        #it 'should create last financial_transactions for the correct date' do
+          @user.financial_transactions.last.date.should == @start_date + 4.years
         end
 
       end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 
-describe LedgerAccountsController do
+describe LedgerAccountsController, :type => :controller do
   before :each do
     @user = User.find_by_email('test_user@cashflowprojector.com')
     sign_in @user

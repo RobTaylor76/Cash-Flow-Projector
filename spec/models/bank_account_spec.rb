@@ -8,11 +8,11 @@ describe BankAccount do
 
   subject { @bank_account }
 
-  describe :relationships do
-    it { should belong_to :main_ledger_account}
-    it { should belong_to :charges_ledger_account}
-    it { should belong_to :user}
-  end
+  # describe :relationships do
+  #   it { should belong_to :main_ledger_account}
+  #   it { should belong_to :charges_ledger_account}
+  #   it { should belong_to :user}
+  # end
 
   describe :create_new_bank_account do
     it 'should create 2 ledger accounts' do
@@ -36,10 +36,10 @@ describe BankAccount do
     it { should respond_to(:name) }
   end
 
-  describe :new_bank_account do 
-    its(:balance) { should == 0 }
-    its(:main_ledger_account) { should_not == nil }
-    its(:charges_ledger_account) { should_not == nil }
+  describe :new_bank_account do
+    it {expect(subject.balance).to eq 0 }
+    it {expect(subject.main_ledger_account).to_not be_nil }
+    it {expect(subject.charges_ledger_account).to_not be_nil }
   end
 
   context :banking do

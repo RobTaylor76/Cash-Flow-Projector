@@ -101,7 +101,7 @@ class StatementImportHelper
     end
 
     def already_imported?(user,transaction_details)
-      user.transactions.where(:import_sig => transaction_details[:md5]).present?
+      user.financial_transactions.where(:import_sig => transaction_details[:md5]).present?
     end
 
     def matching_transaction_entries(user, transaction_details)
@@ -135,7 +135,7 @@ class StatementImportHelper
     end
 
     def possible_matching_transactions(user, transaction_details, find_approximations = false)
-      scope = user.transactions.includes(:ledger_entries)
+      scope = user.financial_transactions.includes(:ledger_entries)
       if find_approximations
         min_date = transaction_details[:date] - 4.days
         max_date = transaction_details[:date] + 4.days
