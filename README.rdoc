@@ -19,3 +19,9 @@ Current Functionality
 * Balance Corrections/Opening Balances (WIP) Ability to alter a balance on a specifed date to match the actual one (if you have gaps in you data for example)
 * Ability to visualise balances for bank accounts/legder accounts using High Charts
 * To Come, Analysis Code breakdowns for activity.  i.e. how much did i spent on petrol this month, last three moths? Break down by month/year etc/
+
+
+
+Nginx proxy plugin build pack used is ...
+
+https://github.com/heroku/heroku-buildpack-nginx

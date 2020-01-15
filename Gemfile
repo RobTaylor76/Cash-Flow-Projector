@@ -11,8 +11,6 @@ gem 'devise' # , '~> 3.0.0'
 
 gem 'pg'
 
-gem 'puma'
-
 gem 'sass-rails',   '~> 4.0.0'
 gem 'coffee-rails', '~> 4.0.0'
 
@@ -20,12 +18,17 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'jquery-rails'
 
+group :production do
+  gem 'unicorn'
+end
+
 group :test do
   gem 'simplecov', :require => false
   gem "shoulda-matchers"
 end
 
 group :development, :test do
+  gem 'puma'
   gem 'rspec-rails', '>= 2.13.2'
 #  gem 'guard-rails'
   gem 'pry-byebug'
@@ -39,7 +42,7 @@ end
 
 #gem 'rails4_upgrade'
 
-
+gem 'jquery-rails'
 gem 'rails-observers' # https://github.com/rails/rails-observers
 gem 'actionpack-xml_parser'
 
