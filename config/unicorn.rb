@@ -38,11 +38,6 @@ after_fork do |server, worker|
   # the following is *required* for Rails + "preload_app true",
   # more details added from https://devcenter.heroku.com/articles/concurrency-and-database-connections
   if defined?(ActiveRecord::Base)
-    config = Rails.application.config.database_configuration[Rails.env]
-    config['reaping_frequency'] = ENV['DB_REAP_FREQ'] || 10 # seconds
-    config[:reaping_frequency]  = ENV['DB_REAP_FREQ'] || 10 # seconds
-    config['pool']              = ENV['DB_POOL'] || 5
-    config[:pool]               = ENV['DB_POOL'] || 5
-    info = ActiveRecord::Base.establish_connection(config)
+    ActiveRecord::Base.establish_connection
   end
 end
