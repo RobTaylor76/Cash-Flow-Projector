@@ -42,7 +42,7 @@ end
 
 #gem 'rails4_upgrade'
 
-
+gem 'jquery-rails'
 gem 'rails-observers' # https://github.com/rails/rails-observers
 gem 'actionpack-xml_parser'
 
