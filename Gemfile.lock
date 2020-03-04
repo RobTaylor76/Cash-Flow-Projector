@@ -95,7 +95,7 @@ GEM
     pry-byebug (3.4.3)
       byebug (>= 9.0, < 9.1)
       pry (~> 0.10)
-    puma (3.12.2)
+    puma (3.12.4)
     rack (1.6.12)
     rack-mini-profiler (0.10.5)
       rack (>= 1.2.0)
