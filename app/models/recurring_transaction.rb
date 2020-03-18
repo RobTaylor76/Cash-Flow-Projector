@@ -23,7 +23,7 @@ class RecurringTransaction < ActiveRecord::Base
   def edit_recurrences
     return false unless valid?
     ActiveRecord::Base.transaction do
-      transactions.destroy_all
+      financial_transactions.destroy_all
       create_recurrences
       save!
     end
@@ -46,10 +46,10 @@ class RecurringTransaction < ActiveRecord::Base
   private
 
   def duplication?(date,amount)
-    transactions = possible_duplicates(date,amount)
-    return false unless transactions.present?
+    financial_transactions = possible_duplicates(date,amount)
+    return false unless financial_transactions.present?
     ledger_ids = [to.id, from.id].sort
-    transactions.each do |tran|
+    financial_transactions.each do |tran|
       return true if tran.ledger_entries.map(&:ledger_account_id).sort == ledger_ids
     end
     false

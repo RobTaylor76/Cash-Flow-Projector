@@ -1,5 +1,7 @@
+<% unless @ledger_account.new_record?  %>
 <%= link_to 'Balance Corrections', ledger_account_balance_corrections_path(@ledger_account) %>|
 <%= link_to 'Statement Imports', ledger_account_statement_imports_path(@ledger_account) %>
+<% end %>
 <%= form_for(@ledger_account) do |f| %>
   <% if @ledger_account.errors.any? %>
     <div id="error_explanation">

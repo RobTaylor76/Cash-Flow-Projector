@@ -5,8 +5,8 @@ class BalanceCorrectionsController < ApplicationController
 
   before_action :load_ledger_account
   before_action :load_balance_correction,
-                  :only => [:edit, :show, :destroy, :update],
-                  :after => :load_ledger_account
+                :only => [:edit, :show, :destroy, :update],
+                :after => :load_ledger_account
 
   def index
     set_up_date_range_filter ledger_account_balance_corrections_path(@ledger_account)
@@ -28,36 +28,35 @@ class BalanceCorrectionsController < ApplicationController
   def create
     @balance_correction = @ledger_account.balance_corrections.build(strong_params)
 
-    resource = if @balance_correction.save
-                 flash[:notice] =  'Correction was successfully created.'
-                 [@ledger_account, @balance_correction]
-               else
-                 @balance_correction
-               end
-    respond_with resource
+    if @balance_correction.save
+      flash[:notice] = 'Correction was successfully created.'
+      respond_with @ledger_account, @balance_correction
+    else
+      respond_with @balance_correction
+    end
+
   end
 
   def update
-    resource = if @balance_correction.update_attributes(strong_params)
-                 flash[:notice] =  'Correction was successfully updated.'
-                 [@ledger_account, @balance_correction]
-               else
-                 @balance_correction
-               end
-    respond_with resource
+    if @balance_correction.update_attributes(strong_params)
+      flash[:notice] = 'Correction was successfully updated.'
+      respond_with @ledger_account, @balance_correction
+    else
+      @balance_correction
+    end
   end
 
   def destroy
-    resource = if @balance_correction.destroy
-                 flash[:notice] =  'Correction was successfully deleted.'
-                 [@ledger_account, @balance_correction]
-               else
-                 @balance_correction
-               end
-    respond_with resource
+    if @balance_correction.destroy
+      flash[:notice] = 'Correction was successfully deleted.'
+      respond_with @ledger_account, @balance_correction
+    else
+      respond_with @balance_correction
+    end
   end
 
   private
+
   def strong_params
     params[:balance_correction].permit(:date, :balance, :reference, :correction_date)
   end
